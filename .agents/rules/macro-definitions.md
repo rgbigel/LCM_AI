@@ -151,6 +151,7 @@ MACRO: ar
 - syntax: ar [offset] | AnalyzeReasoning [offset]
 - aliases: ar, AR, AnalyzeReasoning
 - rules:
-  - 'ar', 'AR', or 'AnalyzeReasoning' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-ReasoningAnalysis.ps1 -Offset 0' (or LCM_Inventory/Cmd/ar.cmd)
-  - 'ar <offset>' or 'AnalyzeReasoning <offset>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-ReasoningAnalysis.ps1 -Offset <offset>'
+  - In an active Copilot or Antigravity chat, 'ar -From <quoted text>' -> executes 'ar -Auto -From <quoted text>'; the active host exports only its own current session to a temporary JSONL source via its dedicated provider, invokes the analyzer, and deletes the source afterward.
+  - 'ar -TranscriptPath <file> -From <quoted text>' -> analyzes an explicit offline JSON or JSONL export.
+  - Legacy numeric offsets require an explicit transcript path and remain a fallback only.
   - generates a structured report in LCM_Inventory/data/logs/ containing Execution Trace, Error Triage & Avoidance Matrix, and Decision Rationale

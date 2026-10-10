@@ -123,6 +123,8 @@ All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are au
 
 ## Operator Remarks (open, for the next session)
 
+* 2026-10-10: Beyond Compare review staging still uses a scratch directory as the right-hand comparison side. Avoid this where possible; review the live target directly or make the staging side clearly distinguishable from the live working tree.
+* 2026-10-10: Format generated `.lcm_review.json` files with line breaks so their filter lists are easy to read during review.
 * 2026-10-09: `docs/Architecture/LCM_Subsystem_Architecture.md` (v2.1.0) is **NOT ACCEPTED** and needs significant further work. Do not treat it as authoritative. The old text is in git (`git show 5fc0ab5^:docs/Architecture/LCM_LCD_Subsystem_Architecture.md`). Ask the operator what is wrong before editing (RULE-DOC-008).
 * 2026-10-09: the Giant Review is finished and accepted except where indicated; the publish gate is forced to proceed (operator order). All pending corrections are future work.
 * 2026-10-09 CRPs to complete BEFORE the push (operator order):

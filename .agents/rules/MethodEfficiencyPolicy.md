@@ -27,6 +27,7 @@ To maximize **Method Efficiency** and eliminate ceremonial overhead, this policy
 
 ### RULE-EFF-001 (Mechanical Artifact Auto-Acceptance)
 Changes strictly modifying tool-generated evidence, audit databases, dashboard summaries, and logs are **automatically accepted** without requiring manual review gates. This applies to:
+* Generated artifacts and scratch content (`**/data/artifacts/**`, `**/scratch/**`)
 * `LCM_Inventory/data/inventory.json`
 * `LCM_Inventory/docs/INVENTORY_DASHBOARD.md`
 * `LCM_Inventory/data/baselines/*.json`
@@ -34,7 +35,7 @@ Changes strictly modifying tool-generated evidence, audit databases, dashboard s
 * `*_Inventory/data/subsystem_inventory.json` (Subsystem Inventories e.g. `HaSSD06_Inventory`)
 * `*_Inventory/docs/SUBSYSTEM_DASHBOARD.md`
 * `*_Inventory/logs/*.log` and `*_Inventory/data/proposals/*.json`
-* `**/out/test_results.json`
+* `**/out/test_results.json` and routine test output
 * `.copilot/Logs/*.log` and `.agents/logs/*.log`
 
 ### RULE-EFF-002 (Zero-Test Cascade Invariant)
@@ -84,11 +85,13 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 
 - **Readiness Runners**: `Test-RepoReadiness.ps1` and `Test-WorkspaceReadiness.ps1` treat changes in log directories and `out/` as non-invalidating evidence and enforce short-circuiting on failure.
 - **Git Commit Workflow**: Automated audit syncs and baseline captures may be committed and pushed directly as `chore(audit)` or `chore(telemetry)` without entering formal Change Request review loops.
+- **Optional BCR Peek**: Exempt artifacts may be shown in an explicitly unfiltered BCR session on
+  request. Any observation is advisory only and does not convert the exempt artifact into a
+  mandatory review candidate.
 - **Agent Execution Policy**: Agents must operate in direct execution mode; interactive approval loops in chat UI are superseded by the RR pipeline.
 - **Search Enforcement (RULE-EFF-007)**: All agents and tooling must use `es.exe` (directly or through `Search-Everything.ps1`) for file-system searches; `rg.exe` is the fallback content-search tool when the Everything content index is unavailable.
 - **Tool Discovery Enforcement (RULE-EFF-008)**: `tool_catalog.json` is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
 - **Path Safety Enforcement (RULE-ENV-003)**: All path constructions must be grounded via `$PSScriptRoot`, registered trampolines, or explicit pre-flight resolution; speculative traversal is prohibited.
-
 
 
 

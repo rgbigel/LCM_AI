@@ -107,19 +107,21 @@ MACRO: log
   - 'log <ToolName>' -> executes 'pwsh -File tools/Show-LastLog.ps1 -ToolName <ToolName>'
 
 MACRO: BCR
-- description: launch Beyond Compare 5 visual review display for a repository against baseline commit
-- syntax: bcr <repo> [commit] | BCR <repo> [commit]
+- description: launch Beyond Compare 5 visual review for an exact CRP/BUG, repository, or declared cohort
+- syntax: bcr <CRP-ID|BUG-ID|repo|cohort> [commit] | BCR <CRP-ID|BUG-ID|repo|cohort> [commit]
 - aliases: bcr, BCR, @bcr
 - rules:
-  - 'bcr <repo>' or 'BCR <repo>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <repo>'
-  - 'bcr <repo> <commit>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <repo> -BaseCommit <commit>'
+  - exact CRP/BUG, repository, and declared cohort forms are valid; the dispatcher must record the resolved scope and fail closed only when it remains ambiguous.
+  - the dispatcher resolves the requested scope and executes `Invoke-BeyondCompareReview.ps1` against its declared baseline.
+  - an optional baseline commit is accepted only when it matches the resolved review scope.
+  - generated artifacts, scratch, data, logs, and routine test output require no review, but `BCR` may peek at them unfiltered and report non-blocking advice.
 
 MACRO: COMPLETE
-- description: submit a completed review result, close the Beyond Compare review window, run quality gates, and commit locally
-- syntax: complete [repo] | COMPLETE [repo]
+- description: submit a completed review result for an exact CRP/BUG, repository, declared cohort, or all eligible cohorts, then commit locally
+- syntax: complete <CRP-ID|BUG-ID|repo|cohort|all> | COMPLETE <CRP-ID|BUG-ID|repo|cohort|all>
 - aliases: complete, COMPLETE, completed
 - rules:
-  - 'complete <repo>' or 'COMPLETE <repo>' -> executes 'pwsh -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath <repo> -Result Completed'
+  - completion supports exact CRP/BUG, repository, declared cohort, and `all` forms. `complete all` processes eligible cohorts stepwise and reports every cohort outcome; unresolved or ambiguous scope is invalid.
   - automatically closes matching Beyond Compare review window
   - never invokes a remote push
 

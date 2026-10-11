@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-10-09 18:46:23 | Host: D5P0-SSD980-Z | Version: 1.2.0*
+> *Exported on: 2026-10-11 20:05:06 | Host: D5P0-SSD980-Z | Version: 1.2.0*
 
 ---
 
@@ -315,6 +315,32 @@ When working in LCM mode (`active`), all user ideas, questions, and exploratory 
 - When discussion yields a conclusive path of action, register the Change Request / Proposal with State `suggested` in `LCM_Inventory\data\proposals\proposals.json`.
 
 ### RULE-LCM-002: Batch Execution, Control Commands & Flow Switch Activation
+#### CRP-261 Transition Compatibility Rule
+Until legacy documentation and historical ledger records are reconciled, the following lifecycle
+matrix is authoritative for all new or modified tooling. Legacy terms such as `Scoped`,
+`Decided`, `Approved`, `Committed`, `Published`, `processed`, and `deferred` are
+compatibility vocabulary only; they MUST NOT create a second lifecycle authority or determine
+available operator actions.
+
+| Authoritative `state` | Valid actions | Valid next states |
+|:---|:---|:---|
+| `suggested` | `edit`, `do`, `hold`, `withdraw`, `supersede` | `in_progress`, `held`, `withdrawn`, `superseded` |
+| `in_progress` | `edit`, `verify`, `hold`, `reset`, `withdraw`, `supersede` | `verified`, `held`, `suggested`, `withdrawn`, `superseded` |
+| `verified` | `bcr`, `reopen`, `hold`, `supersede` | `in_review`, `in_progress`, `held`, `superseded` |
+| `in_review` | `complete`, `commit`, `reject`, `reopen`, `hold` | `completed`, `rejected`, `in_progress`, `held` |
+| `completed` | `push`, `hold` | `pushed`, `held` |
+| `held` | `continue`, `edit`, `withdraw` | the recorded `resume_state`, `withdrawn` |
+| `pushed`, `withdrawn`, `rejected`, `superseded` | view-only actions defined by the lifecycle model | terminal except documented supersession |
+
+`state` and its companion `state_reason` form the single flat current lifecycle record:
+`state_reason` explains why the current state applies and is not a second state. `progress_state`
+and `disposition` may be retained only as derived compatibility fields. Existing history is
+immutable; new events append forward-only records and may add richer transition, revision,
+cohort, review, and test metadata. `BCR` enters the Review Gate for an exact CRP/BUG, a resolved
+repository, or a declared cohort; Gate 2 begins only when the review launcher has succeeded and
+the resolved scope is in `in_review`. `COMPLETE` accepts the same resolved forms and can
+transition only `in_review` work to `completed`. Unresolved or ambiguous scope MUST fail closed.
+
 Proposals transition through the defined lifecycle via deterministic operator commands:
 - **`Proceed` / `Proceed <ID>`**: **Single-step status increment**. Deterministically advances matching proposal(s) forward by exactly one discrete Sync Point along the flat lifecycle continuum (`Suggested` $\rightarrow$ `Scoped` $\rightarrow$ `Decided` $\rightarrow$ `In_Progress` $\rightarrow$ `Verified` $\rightarrow$ `Committed` $\rightarrow$ `Published`).
 - **`do <all, #n, #n-#m> Proposals`**: **Sets flow switches!** Specifically activates the **`-DOIT` switch** (`always-proceed = $true`), bypassing Gate 1 planning pauses and executing continuously through `In_Progress` and verification until the downstream Review Decision checkpoint (Gate 2) is reached per `RULE-EFF-004`.
@@ -338,12 +364,15 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 - **Governed Repositories & Root Container**: Every governed repository and the Root Container (`D:\Git_Repositories`) `MUST` undergo visual diff review via `Invoke-BeyondCompareReview.ps1 <RepoName>` before commit, subject to authorized exceptions in `RULE-REV-001`.
 - **Dual-Session Junction Review**: For repositories containing NTFS directory junctions (e.g. `.agents` pointing to `LCM_AI\.agents`, or `.agents\rules` pointing to `LCM_AI\.agents\rules`), `Invoke-BeyondCompareReview.ps1` `MUST` automatically dispatch a second Beyond Compare review session targeting the live junction destination on the right pane per `RULE-REV-008`.
 - **Privileged Subsystem Data Exemption vs. Tool Scrutiny**:
-  - **Dynamic Configuration & Ledger Data Exemption (`RULE-EFF-001`)**: Ledger data, review staging receipts, baseline manifests, telemetry logs, and scratch generation outputs located in `LCM_Inventory` (`data/`, `logs/`, `scratch/`) are auto-accepted mechanical evidence and exempt from visual diff review stops.
+  - **Dynamic Configuration & Ledger Data Exemption (`RULE-EFF-001`)**: Ledger data, review staging receipts, baseline manifests, telemetry logs, generated artifacts, routine test output, and scratch generation outputs located in `LCM_Inventory` (`data/`, `logs/`, `scratch/`) are auto-accepted mechanical evidence and exempt from visual diff review stops. An operator may request an unfiltered BCR peek at exempt paths; resulting advice is non-blocking.
   - **Executable Tools & Documentation Scrutiny**: All permanent scripts, PowerShell modules, test suites, and architectural documentation located in `LCM_Inventory` (`tools/`, `modules/`, `docs/`, `tests/`, `Cmd/`) are first-class governed LCM software assets and `MUST` undergo visual diff review via `Invoke-BeyondCompareReview.ps1 LCM_Inventory` prior to commit.
 
 ### RULE-LCM-005: Dual-Commit and Push Synchronization Invariant
 1. Whenever code changes in a target repository are accepted and committed, `LCM_Inventory` `MUST ALWAYS` be updated (updating proposal state to `completed`, recording review evidence) and **committed immediately**.
 2. On any `PUSH`, all completed target repositories and `LCM_Inventory` `MUST` pass a non-mutating lockstep preflight before any remote dispatch. A failed preflight blocks the entire cohort.
+3. A cohort coordination bundle MAY declare repository and/or proposal members, dependencies,
+   shared semantic deltas, and aggregate verification. It coordinates members but does not
+   replace their individual immutable histories.
 
 ### RULE-LCM-006: Pause, Resume, and Escape Controls
 1. **`LCM OFF` (Emergency Escape Switch)**:
@@ -380,11 +409,13 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 4. **Governed Flow Switches**:
    Flow switches modify execution behavior and velocity across sync points:
    - **`-DOIT`** (`always-proceed = $true`): Activated by `do` command or `BUG` disposition. Bypasses Gate 1 planning pause and executes continuously through `In_Progress` to `Verified`.
-   - **`-Force` / `-Immediately`**: Authorizes bypass of Gate 2 visual diff review under strict emergency exception criteria (`RULE-REV-001`).
+   - **`-Force`**: Authorizes only the Gate 2 visual-review exception under strict emergency criteria (`RULE-REV-001`).
+   - **`-Immediately`**: A distinct, temporary quality-check deferral for an exact recovery cohort containing at least one `BUG-<id>`. It requires an operator-recorded reason describing a severity condition, repair deadlock, loop, race condition, or inability to self-remedy. It does not waive exact identity or Gate 2 review, and ends at the BCR/Gate 2 handoff.
    - **`-MinimalTests`**: Single-cycle execution switch restricting test DAG to fast regression checks (`RULE-LCM-023`).
    - **`-Coarse` / `-Tight`**: Granularity switch controlling single combined review stop per batch (`-Coarse`) vs. stop per proposal (`-Tight`) (`RULE-LCM-003`).
    - **`LCM OFF`**: Emergency escape switch suspending governance scaffolding and gating (`RULE-LCM-006`).
    - **`Testing OFF`**: Deferred deep testing switch suppressing heavy cascades during interactive development (`RULE-LCM-006`).
+   - **`ADMINMODE`**: A per-tool design criterion recording whether a tool requires elevation. Setting a tool's Admin value off during redesign marks elevation as no longer required but does not remove any existing auto-elevation code; the redesign must remove obsolete elevation behavior and validate the result. It does not alter lifecycle transitions, testing obligations, review requirements, or rule-change authorization checks.
 5. **Mandatory CM Plan & Walkthrough Archival**:
    - All Markdown implementation plans and execution walkthroughs `MUST` be persistently archived in the governed CM repository under:
      - `LCM_Inventory/data/proposals/plans/Proposal-{ID:03d}_{CR_ID}_Plan.md`
@@ -514,8 +545,13 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - Review Decision: `REVIEW` $\rightarrow$ `COMMITTED` (satisfies review, records audit disposition, increments SemVer, and commits to local Git).
 2. **`do <ID>` / `do <batch>`**:
    - Activates **`DOIT` Mode** (`always-proceed = $true`), running all planned tool operations continuously from Gate 1 to the Review Decision checkpoint.
-3. **`COMPLETE` / `COMPLETE ALL`**:
-   - Records review completion, creates a local commit, and transitions eligible proposals to `COMPLETED`.
+3. **`COMPLETE <CRP-ID|BUG-ID|repository|cohort>` / `COMPLETE ALL`**:
+   - Records review completion, creates a local commit, and transitions the exact staged proposal,
+     resolved repository scope, or declared cohort to `COMPLETED`.
+   - The staging manifest MUST identify the resolved CRP/BUG, repository, or cohort. Completion
+     MUST refuse only when that scope is unresolved or ambiguous.
+   - Before committing, the operator-facing result MUST list the exact changed files and disclose
+     any scope amendment, linked BUG, or cohort membership.
    - Never invokes a remote push.
 4. **`PUSH`**:
    - Pushes only `COMPLETED` proposal repositories in a preflighted cohort with `LCM_Inventory`.
@@ -612,6 +648,20 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - The AI agent `MUST NOT` skip tests or assert that code is valid, ready, or functional based on visual inspection alone.
    - Declaring or reporting completion, review readiness, or success without executing mechanical verification is strictly prohibited.
 
+### RULE-LCM-025: Temporary Specification Absorption and Semantic-Delta Restart
+1. CRP/BUG bundles are temporary active specifications. On push, delivered behavior is absorbed
+   into the affected repository baseline documentation while ledger and history evidence remain
+   retained.
+2. When further work is needed after push, the same identifier MUST reopen at `suggested` with a
+   forward-only revision event; creating a replacement CRP solely to revise the prior work is not
+   required.
+3. A semantic change to an active specification MUST restart each affected CRP at `suggested`,
+   record the declared semantic delta, and require review/testing only for that delta. Previously
+   valid, unaffected evidence remains historical evidence.
+4. `ShowCM` is both the lifecycle overview and requested state-navigation surface. It MUST expose
+   state-appropriate accept/reject actions and repository, cohort, and complete forms. Managed
+   lifecycle hooks remain retained for governed transitions.
+
 ---
 
 <a id="reviewcommitgovernancepolicymd"></a>
@@ -633,7 +683,7 @@ Date: 2026-10-03
 ## 1. Governance Rules
 
 ### RULE-REV-001: Mandatory Review-Gated Commits & Gate 2 Non-Circumvention Invariant
-1. **Mandatory Visual Review Gate (Gate 2)**: Every Git commit action for source code, configuration, tools, modules, or structural assets (`*.ps1`, `*.psm1`, `.vscode/settings.json`, `LCM_Inventory/*`, `docs/*`) in any LCM-governed repository requires a prior validated review disposition (`COMPLETED` or `COMPLETED_WITH_EDITS`) produced via the formal Beyond Compare 5 visual review gate (`Invoke-BeyondCompareReview.ps1`), with transparent junction traversal via `FollowSymLinks` (`RULE-REV-008`).
+1. **Mandatory Visual Review Gate (Gate 2)**: Every Git commit action for source code, configuration, tools, modules, or structural assets (`*.ps1`, `*.psm1`, `.vscode/settings.json`, `LCM_Inventory/*`, `docs/*`) in any LCM-governed repository requires a prior validated review disposition (`COMPLETED` or `COMPLETED_WITH_EDITS`) produced via the formal Beyond Compare 5 visual review gate (`Invoke-BeyondCompareReview.ps1`), with transparent junction traversal via `FollowSymLinks` (`RULE-REV-008`). The gate may resolve an exact CRP/BUG, a repository, or a declared cohort; it must reject only unresolved or ambiguous scope.
 2. **Strict Gate 2 Non-Circumvention Baseline**: Beyond Compare visual diff review is non-circumventable for code/tools/specs across all items by default. Even critical, urgent, or internally generated BUGs normally execute in `DOIT` mode (`always-proceed = $true`) without a Gate 1 planning pause, but halt at Gate 2 for operator review before reaching `COMMITTED`.
 3. **Authorized Exceptions to Gating**:
    There are two (2) authorized exceptions to this rule:
@@ -641,8 +691,11 @@ Date: 2026-10-03
    2. **Critical Flow-Impeding BUG & Loop Breaker**: The system has detected a BUG that impedes the intended flow in a critical manner, especially when the task would lead to an unavoidable loop or recursion that the user cannot circumvent or fix. In this scenario, the system may proceed autonomously, engaging `-MinimalTests` to prevent cascading test recursions, but there `MUST BE NO MORE THAN TWO (2) ATTEMPTS` to resolve the issue before halting.
    - **Mandatory Audit Logging Invariant**: In either exception case, the fact, rationale, and specific trigger `MUST` be explicitly documented in the accompanying `BUG` or `CRP` proposal bundle and recorded in the Configuration Management ledger.
    - **Quality Gate, Syntax & Language Non-Bypass Invariant**: Taking an authorized exception to bypass manual visual review strictly waives only the interactive visual diff inspection step. It `MUST NEVER` bypass, waive, or relax syntax validation (PowerShell AST parser checks, Python compilation), language rules ([`LanguagePolicy.md`](file:///d:/Git_Repositories/.agents/rules/LanguagePolicy.md) English invariant), or baseline repository readiness quality gates (`Test-RepoReadiness.ps1`). All modified files `MUST` compile cleanly with zero syntax errors and satisfy all language and formatting invariants prior to commit.
-4. **Exemption Scope**: Only purely mechanical telemetry artifacts defined in `RULE-EFF-001` (`inventory.json`, `INVENTORY_DASHBOARD.md`, `out/test_results.json`, and activity logs) are exempt from visual review gating.
-5. **BCompare Materiality Authority**: Beyond Compare is the sole authority for whether a difference is material. The review launcher MUST enable its insignificant-difference controls, and post-review staging MUST record only explicit operator selections made in the visual session. Raw-byte, Git-diff, line-ending, or whitespace comparisons MUST NOT create review candidates or obstruct review disposition.
+4. **Exemption Scope**: Generated artifacts, scratch content, data, logs, and routine test output
+   defined in `RULE-EFF-001` are exempt from mandatory visual review gating. BCR may inspect
+   them unfiltered on request and may emit helpful advisory findings, but those findings do not
+   create a review gate.
+5. **BCompare Materiality Authority**: Beyond Compare is the sole authority for whether a difference is material. The review launcher MUST enable its insignificant-difference controls. The left pane is a read-only baseline; the operator accepts or rejects the live right-pane worktree on review exit, and any live-pane edits are recorded as "accepted with changes". Raw-byte, Git-diff, line-ending, or whitespace comparisons MUST NOT create review candidates or obstruct review disposition.
 6. **Non-Interactive / Headless Environment Fallback**: If Beyond Compare 5 or Session 1 interactive GUI execution is physically unavailable (e.g. running inside a headless CI/CD runner, container, or non-GUI remote SSH terminal), the agent `SHALL` present unified console diffs alongside the proposal's `Walkthrough.md` verification evidence for explicit terminal disposition before committing.
 
 ### RULE-REV-002: Completed with Edits Qualification
@@ -748,6 +801,7 @@ To maximize **Method Efficiency** and eliminate ceremonial overhead, this policy
 
 ### RULE-EFF-001 (Mechanical Artifact Auto-Acceptance)
 Changes strictly modifying tool-generated evidence, audit databases, dashboard summaries, and logs are **automatically accepted** without requiring manual review gates. This applies to:
+* Generated artifacts and scratch content (`**/data/artifacts/**`, `**/scratch/**`)
 * `LCM_Inventory/data/inventory.json`
 * `LCM_Inventory/docs/INVENTORY_DASHBOARD.md`
 * `LCM_Inventory/data/baselines/*.json`
@@ -755,7 +809,7 @@ Changes strictly modifying tool-generated evidence, audit databases, dashboard s
 * `*_Inventory/data/subsystem_inventory.json` (Subsystem Inventories e.g. `HaSSD06_Inventory`)
 * `*_Inventory/docs/SUBSYSTEM_DASHBOARD.md`
 * `*_Inventory/logs/*.log` and `*_Inventory/data/proposals/*.json`
-* `**/out/test_results.json`
+* `**/out/test_results.json` and routine test output
 * `.copilot/Logs/*.log` and `.agents/logs/*.log`
 
 ### RULE-EFF-002 (Zero-Test Cascade Invariant)
@@ -805,6 +859,9 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 
 - **Readiness Runners**: `Test-RepoReadiness.ps1` and `Test-WorkspaceReadiness.ps1` treat changes in log directories and `out/` as non-invalidating evidence and enforce short-circuiting on failure.
 - **Git Commit Workflow**: Automated audit syncs and baseline captures may be committed and pushed directly as `chore(audit)` or `chore(telemetry)` without entering formal Change Request review loops.
+- **Optional BCR Peek**: Exempt artifacts may be shown in an explicitly unfiltered BCR session on
+  request. Any observation is advisory only and does not convert the exempt artifact into a
+  mandatory review candidate.
 - **Agent Execution Policy**: Agents must operate in direct execution mode; interactive approval loops in chat UI are superseded by the RR pipeline.
 - **Search Enforcement (RULE-EFF-007)**: All agents and tooling must use `es.exe` (directly or through `Search-Everything.ps1`) for file-system searches; `rg.exe` is the fallback content-search tool when the Everything content index is unavailable.
 - **Tool Discovery Enforcement (RULE-EFF-008)**: `tool_catalog.json` is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
@@ -1572,19 +1629,21 @@ MACRO: log
   - 'log <ToolName>' -> executes 'pwsh -File tools/Show-LastLog.ps1 -ToolName <ToolName>'
 
 MACRO: BCR
-- description: launch Beyond Compare 5 visual review display for a repository against baseline commit
-- syntax: bcr <repo> [commit] | BCR <repo> [commit]
+- description: launch Beyond Compare 5 visual review for an exact CRP/BUG, repository, or declared cohort
+- syntax: bcr <CRP-ID|BUG-ID|repo|cohort> [commit] | BCR <CRP-ID|BUG-ID|repo|cohort> [commit]
 - aliases: bcr, BCR, @bcr
 - rules:
-  - 'bcr <repo>' or 'BCR <repo>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <repo>'
-  - 'bcr <repo> <commit>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1 -RepositoryName <repo> -BaseCommit <commit>'
+  - exact CRP/BUG, repository, and declared cohort forms are valid; the dispatcher must record the resolved scope and fail closed only when it remains ambiguous.
+  - the dispatcher resolves the requested scope and executes `Invoke-BeyondCompareReview.ps1` against its declared baseline.
+  - an optional baseline commit is accepted only when it matches the resolved review scope.
+  - generated artifacts, scratch, data, logs, and routine test output require no review, but `BCR` may peek at them unfiltered and report non-blocking advice.
 
 MACRO: COMPLETE
-- description: submit a completed review result, close the Beyond Compare review window, run quality gates, and commit locally
-- syntax: complete [repo] | COMPLETE [repo]
+- description: submit a completed review result for an exact CRP/BUG, repository, declared cohort, or all eligible cohorts, then commit locally
+- syntax: complete <CRP-ID|BUG-ID|repo|cohort|all> | COMPLETE <CRP-ID|BUG-ID|repo|cohort|all>
 - aliases: complete, COMPLETE, completed
 - rules:
-  - 'complete <repo>' or 'COMPLETE <repo>' -> executes 'pwsh -File LCM_Inventory/tools/Submit-ReviewResult.ps1 -RepositoryPath <repo> -Result Completed'
+  - completion supports exact CRP/BUG, repository, declared cohort, and `all` forms. `complete all` processes eligible cohorts stepwise and reports every cohort outcome; unresolved or ambiguous scope is invalid.
   - automatically closes matching Beyond Compare review window
   - never invokes a remote push
 
@@ -1616,8 +1675,9 @@ MACRO: ar
 - syntax: ar [offset] | AnalyzeReasoning [offset]
 - aliases: ar, AR, AnalyzeReasoning
 - rules:
-  - 'ar', 'AR', or 'AnalyzeReasoning' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-ReasoningAnalysis.ps1 -Offset 0' (or LCM_Inventory/Cmd/ar.cmd)
-  - 'ar <offset>' or 'AnalyzeReasoning <offset>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-ReasoningAnalysis.ps1 -Offset <offset>'
+  - In an active Copilot or Antigravity chat, 'ar -From <quoted text>' -> executes 'ar -Auto -From <quoted text>'; the active host exports only its own current session to a temporary JSONL source via its dedicated provider, invokes the analyzer, and deletes the source afterward.
+  - 'ar -TranscriptPath <file> -From <quoted text>' -> analyzes an explicit offline JSON or JSONL export.
+  - Legacy numeric offsets require an explicit transcript path and remain a fallback only.
   - generates a structured report in LCM_Inventory/data/logs/ containing Execution Trace, Error Triage & Avoidance Matrix, and Decision Rationale
 
 ---

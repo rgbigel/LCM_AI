@@ -14,8 +14,9 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 8.8.0
+Version: 8.9.0
 Changelog:
+- 2026-10-12: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
 - 2026-10-03: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
 - 2026-09-27: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
 - 2026-09-26: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
@@ -32,6 +33,7 @@ POWERSHELL-RULES
 - utf8-without-bom: scripts must be UTF-8 without BOM
 - newline-crlf: scripts must end with CRLF
 - no-backticks: forbidden
+- no-posix-backslash-escapes: backslash (\) is strictly a filesystem path separator, never an escape character; \$ and \" escaping are forbidden
 - no-interpolated-calls: forbid method calls inside interpolated strings
 - assign-$_-first: always assign $_ to a variable before use
 - no-non-ascii-identifiers: identifiers must be ASCII-only

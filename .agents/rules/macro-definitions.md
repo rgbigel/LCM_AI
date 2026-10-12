@@ -108,13 +108,36 @@ MACRO: log
 
 MACRO: BCR
 - description: launch Beyond Compare 5 visual review for an exact CRP/BUG, repository, or declared cohort
-- syntax: bcr <CRP-ID|BUG-ID|repo|cohort> [commit] | BCR <CRP-ID|BUG-ID|repo|cohort> [commit]
+- syntax: bcr [CRP-ID|BUG-ID|repo|cohort] [commit] | BCR [CRP-ID|BUG-ID|repo|cohort] [commit]
 - aliases: bcr, BCR, @bcr
 - rules:
-  - exact CRP/BUG, repository, and declared cohort forms are valid; the dispatcher must record the resolved scope and fail closed only when it remains ambiguous.
-  - the dispatcher resolves the requested scope and executes `Invoke-BeyondCompareReview.ps1` against its declared baseline.
+  - exact CRP/BUG, repository, and declared cohort forms are valid. Declared cohorts use `COH-<prime CRP/BUG number>` and contain their prime member.
+  - when scope is omitted, the dispatcher resolves exactly one declared open cohort. If none exists, it constructs a bounded proposed cohort from open `in_progress`, `verified`, and `in_review` proposals.
+  - the dispatcher records a cohort-resolution receipt before launch. `in_progress` members are reported as pending verification, `verified` members are review-ready, and `in_review` members refresh rather than duplicate a review session.
+  - omitted or broadened scope requires an interactive confirmation. A scope that exceeds configured proposal or repository limits, has incompatible baselines, or has unresolved overlap/conflict evidence requires explicit operator selection; non-interactive or cancelled resolution fails closed.
+  - only review-ready `verified` members may transition to `in_review`, and only after their review handoff succeeds.
+  - the dispatcher executes `Invoke-BeyondCompareReview.ps1` against the resolved baseline and preserves the configured coarse or tight review granularity.
   - an optional baseline commit is accepted only when it matches the resolved review scope.
   - generated artifacts, scratch, data, logs, and routine test output require no review, but `BCR` may peek at them unfiltered and report non-blocking advice.
+
+MACRO: cohort
+- description: create and manage the one declared review cohort
+- syntax: cohort <create|add|remove|hold|reopen|close> [CRP-ID|BUG-ID|list] | COHORT <create|add|remove|hold|reopen|close> [CRP-ID|BUG-ID|list]
+- aliases: cohort, COHORT
+- rules:
+  - at most one declared cohort may be open. It is named `COH-<prime CRP/BUG number>` and must contain its prime member.
+  - `hold` pauses the declared cohort without changing its members' lifecycle states; `reopen` restores one held cohort only when no cohort is open.
+  - `create` uses the first selected proposal as the prime member; `add` and `remove` update the open cohort; `close` ends it without altering member lifecycle state.
+  - a prime member cannot be removed; close the cohort instead. Cross-repository creation or membership changes require explicit confirmation and produce per-repository BCR baselines.
+
+MACRO: ReOpen
+- description: restore a held CRP, BUG, or declared cohort
+- syntax: reopen <CRP-ID|BUG-ID> | ReOpen <CRP-ID|BUG-ID> | cohort reopen [COH-nnn]
+- aliases: reopen, ReOpen, CONTINUE
+- rules:
+  - a held CRP or BUG restores its recorded `resume_state`; it re-enters OPEN only when that restored state is active.
+  - `cohort reopen` restores a held declared cohort only when no cohort is open; it does not change any member lifecycle state.
+  - `CONTINUE` remains a backward-compatible alias for `ReOpen`.
 
 MACRO: COMPLETE
 - description: submit a completed review result for an exact CRP/BUG, repository, declared cohort, or all eligible cohorts, then commit locally
@@ -122,6 +145,9 @@ MACRO: COMPLETE
 - aliases: complete, COMPLETE, completed
 - rules:
   - completion supports exact CRP/BUG, repository, declared cohort, and `all` forms. `complete all` processes eligible cohorts stepwise and reports every cohort outcome; unresolved or ambiguous scope is invalid.
+  - `complete COH-<nnn>` reads the matching BCR staging receipt, validates that every member is `in_review`, and commits once per affected repository. It then advances that repository's reviewed members together.
+  - before staging, completion displays unreviewed live paths from the repository staging manifest and requires explicit operator inclusion; cancellation leaves every member in `in_review`.
+  - cohort-resolution receipts remain under `LCM_Inventory\scratch\BC_Review\COH-<nnn>` until review completion; permanent commit receipts remain governed CM evidence.
   - automatically closes matching Beyond Compare review window
   - never invokes a remote push
 

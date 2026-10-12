@@ -9,9 +9,9 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.7.0  
+Version: 8.8.0  
 Status: Authoritative Policy  
-Date: 2026-10-03  
+Date: 2026-10-12  
 
 ---
 
@@ -297,5 +297,20 @@ When performing static AST validation on PowerShell scripts that utilize custom 
 Whenever a permanent repository script (`*.ps1`, `*.psm1`, `*.psd1`) or test file is created or modified by an AI agent or developer:
 1. **Mandatory Pre-Handoff AST Parse Gate**: The agent `MUST` validate the script using PowerShell's native AST parser `[System.Management.Automation.Language.Parser]::ParseInput()` before declaring a task complete, proposing completion, or handing control back to the operator. Zero syntax errors or parse warnings are tolerated.
 2. **Zero-Assumption Testing Invariant**: The agent `MUST NOT` assume or assert that code is valid, ready, or functional without executing either its unit tests (Pester) or an explicit syntax parse first. Relying on visual inspection alone or declaring ready without executing test verification is strictly prohibited.
+
+---
+
+### RULE-PS-022: Prohibition of POSIX/Bash Backslash Escaping in PowerShell
+1. **Backslash Literal Character Invariant**:
+   In PowerShell language syntax, the backslash (`\`) is strictly a literal character—primarily reserved for filesystem directory separation or inside regular expression strings. It is **never** a language escape character. (PowerShell's language escape character is the backtick `` ` ``, which is separately forbidden per `no-backticks: forbidden`).
+2. **Prohibition of POSIX Escaping (`\$`, `\"`, `\n`)**:
+   Developers and AI agents `MUST NEVER` use Unix/POSIX-style backslash escaping (`\$`, `\"`, `\n`, `\t`) inside PowerShell double-quoted strings, script blocks, or inline `-Command` parameters to suppress variable interpolation or escape quotes.
+   - Using `\$var` causes PowerShell to treat `\` as part of the token, parsing it as a command/executable invocation (e.g. `\.status: The term '\.status' is not recognized as a name of a cmdlet, function, script file, or executable program`).
+3. **Mandatory Interpolation Suppression & Quote Boundary Standards**:
+   - To prevent outer or intermediate shell variable pre-expansion in inline `pwsh -Command` blocks, enclose the code in **single quotes (`'...'`)** or single-quoted here-strings (`@' ... '@`) per `RULE-PS-016`.
+   - To include literal dollar signs or quotes in strings, use single-quoted literals, the format operator (`"{0}" -f '$literal'`), or string concatenation (`'$' + $var`).
+4. **Pre-Flight Linter & AST Scan Pattern**:
+   Any occurrence of `\$[a-zA-Z0-9_]` or `\$PSItem` or `\$_` in PowerShell scripts or command blocks represents a fatal syntax defect and fails workspace readiness gates.
+
 
 

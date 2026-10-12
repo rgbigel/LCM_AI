@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-10-11 20:05:06 | Host: D5P0-SSD980-Z | Version: 1.2.0*
+> *Exported on: 2026-10-12 18:49:28 | Host: D5P0-SSD980-Z | Version: 1.2.0*
 
 ---
 
@@ -879,9 +879,9 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.7.0  
+Version: 8.8.0  
 Status: Authoritative Policy  
-Date: 2026-10-03  
+Date: 2026-10-12  
 
 ---
 
@@ -1170,6 +1170,20 @@ Whenever a permanent repository script (`*.ps1`, `*.psm1`, `*.psd1`) or test fil
 
 ---
 
+### RULE-PS-022: Prohibition of POSIX/Bash Backslash Escaping in PowerShell
+1. **Backslash Literal Character Invariant**:
+   In PowerShell language syntax, the backslash (`\`) is strictly a literal character—primarily reserved for filesystem directory separation or inside regular expression strings. It is **never** a language escape character. (PowerShell's language escape character is the backtick `` ` ``, which is separately forbidden per `no-backticks: forbidden`).
+2. **Prohibition of POSIX Escaping (`\$`, `\"`, `\n`)**:
+   Developers and AI agents `MUST NEVER` use Unix/POSIX-style backslash escaping (`\$`, `\"`, `\n`, `\t`) inside PowerShell double-quoted strings, script blocks, or inline `-Command` parameters to suppress variable interpolation or escape quotes.
+   - Using `\$var` causes PowerShell to treat `\` as part of the token, parsing it as a command/executable invocation (e.g. `\.status: The term '\.status' is not recognized as a name of a cmdlet, function, script file, or executable program`).
+3. **Mandatory Interpolation Suppression & Quote Boundary Standards**:
+   - To prevent outer or intermediate shell variable pre-expansion in inline `pwsh -Command` blocks, enclose the code in **single quotes (`'...'`)** or single-quoted here-strings (`@' ... '@`) per `RULE-PS-016`.
+   - To include literal dollar signs or quotes in strings, use single-quoted literals, the format operator (`"{0}" -f '$literal'`), or string concatenation (`'$' + $var`).
+4. **Pre-Flight Linter & AST Scan Pattern**:
+   Any occurrence of `\$[a-zA-Z0-9_]` or `\$PSItem` or `\$_` in PowerShell scripts or command blocks represents a fatal syntax defect and fails workspace readiness gates.
+
+---
+
 <a id="powershellrulesmd"></a>
 ## Rule #10: PowerShellRules.md
 > **Category**: 3. Language & Coding Standards | **Canonical Source**: `.agents/rules/PowerShellRules.md`
@@ -1180,8 +1194,9 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 8.8.0
+Version: 8.9.0
 Changelog:
+- 2026-10-12: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
 - 2026-10-03: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
 - 2026-09-27: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
 - 2026-09-26: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
@@ -1198,6 +1213,7 @@ POWERSHELL-RULES
 - utf8-without-bom: scripts must be UTF-8 without BOM
 - newline-crlf: scripts must end with CRLF
 - no-backticks: forbidden
+- no-posix-backslash-escapes: backslash (\) is strictly a filesystem path separator, never an escape character; \$ and \" escaping are forbidden
 - no-interpolated-calls: forbid method calls inside interpolated strings
 - assign-$_-first: always assign $_ to a variable before use
 - no-non-ascii-identifiers: identifiers must be ASCII-only
@@ -1630,13 +1646,36 @@ MACRO: log
 
 MACRO: BCR
 - description: launch Beyond Compare 5 visual review for an exact CRP/BUG, repository, or declared cohort
-- syntax: bcr <CRP-ID|BUG-ID|repo|cohort> [commit] | BCR <CRP-ID|BUG-ID|repo|cohort> [commit]
+- syntax: bcr [CRP-ID|BUG-ID|repo|cohort] [commit] | BCR [CRP-ID|BUG-ID|repo|cohort] [commit]
 - aliases: bcr, BCR, @bcr
 - rules:
-  - exact CRP/BUG, repository, and declared cohort forms are valid; the dispatcher must record the resolved scope and fail closed only when it remains ambiguous.
-  - the dispatcher resolves the requested scope and executes `Invoke-BeyondCompareReview.ps1` against its declared baseline.
+  - exact CRP/BUG, repository, and declared cohort forms are valid. Declared cohorts use `COH-<prime CRP/BUG number>` and contain their prime member.
+  - when scope is omitted, the dispatcher resolves exactly one declared open cohort. If none exists, it constructs a bounded proposed cohort from open `in_progress`, `verified`, and `in_review` proposals.
+  - the dispatcher records a cohort-resolution receipt before launch. `in_progress` members are reported as pending verification, `verified` members are review-ready, and `in_review` members refresh rather than duplicate a review session.
+  - omitted or broadened scope requires an interactive confirmation. A scope that exceeds configured proposal or repository limits, has incompatible baselines, or has unresolved overlap/conflict evidence requires explicit operator selection; non-interactive or cancelled resolution fails closed.
+  - only review-ready `verified` members may transition to `in_review`, and only after their review handoff succeeds.
+  - the dispatcher executes `Invoke-BeyondCompareReview.ps1` against the resolved baseline and preserves the configured coarse or tight review granularity.
   - an optional baseline commit is accepted only when it matches the resolved review scope.
   - generated artifacts, scratch, data, logs, and routine test output require no review, but `BCR` may peek at them unfiltered and report non-blocking advice.
+
+MACRO: cohort
+- description: create and manage the one declared review cohort
+- syntax: cohort <create|add|remove|hold|reopen|close> [CRP-ID|BUG-ID|list] | COHORT <create|add|remove|hold|reopen|close> [CRP-ID|BUG-ID|list]
+- aliases: cohort, COHORT
+- rules:
+  - at most one declared cohort may be open. It is named `COH-<prime CRP/BUG number>` and must contain its prime member.
+  - `hold` pauses the declared cohort without changing its members' lifecycle states; `reopen` restores one held cohort only when no cohort is open.
+  - `create` uses the first selected proposal as the prime member; `add` and `remove` update the open cohort; `close` ends it without altering member lifecycle state.
+  - a prime member cannot be removed; close the cohort instead. Cross-repository creation or membership changes require explicit confirmation and produce per-repository BCR baselines.
+
+MACRO: ReOpen
+- description: restore a held CRP, BUG, or declared cohort
+- syntax: reopen <CRP-ID|BUG-ID> | ReOpen <CRP-ID|BUG-ID> | cohort reopen [COH-nnn]
+- aliases: reopen, ReOpen, CONTINUE
+- rules:
+  - a held CRP or BUG restores its recorded `resume_state`; it re-enters OPEN only when that restored state is active.
+  - `cohort reopen` restores a held declared cohort only when no cohort is open; it does not change any member lifecycle state.
+  - `CONTINUE` remains a backward-compatible alias for `ReOpen`.
 
 MACRO: COMPLETE
 - description: submit a completed review result for an exact CRP/BUG, repository, declared cohort, or all eligible cohorts, then commit locally
@@ -1644,6 +1683,9 @@ MACRO: COMPLETE
 - aliases: complete, COMPLETE, completed
 - rules:
   - completion supports exact CRP/BUG, repository, declared cohort, and `all` forms. `complete all` processes eligible cohorts stepwise and reports every cohort outcome; unresolved or ambiguous scope is invalid.
+  - `complete COH-<nnn>` reads the matching BCR staging receipt, validates that every member is `in_review`, and commits once per affected repository. It then advances that repository's reviewed members together.
+  - before staging, completion displays unreviewed live paths from the repository staging manifest and requires explicit operator inclusion; cancellation leaves every member in `in_review`.
+  - cohort-resolution receipts remain under `LCM_Inventory\scratch\BC_Review\COH-<nnn>` until review completion; permanent commit receipts remain governed CM evidence.
   - automatically closes matching Beyond Compare review window
   - never invokes a remote push
 
@@ -1700,7 +1742,7 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 | Rule File | Rule Identifiers | Domain | Scope | Core Invariant |
 |:---|:---|:---|:---|:---|
 | **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `024` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), and Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`). |
-| **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `021` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, and Mandatory Pre-Handoff AST Syntax Gate & Zero-Assumption Testing Invariant (`RULE-PS-021`). |
+| **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `022` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), and Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`). |
 | **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `010` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, and Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`). |
 | **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `008`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing. |
 | **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `006` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, and automated privilege-aware execution/elevation interception. |

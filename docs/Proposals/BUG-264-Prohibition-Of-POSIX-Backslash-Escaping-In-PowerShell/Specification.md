@@ -3,7 +3,7 @@
 ## Metadata
 * **Bug-ID**: BUG-264
 * **Scope**: LCM Governance & PowerShell Standards (`LCM_AI`)
-* **Version**: v8.9.0
+* **Version**: 10.0.0
 * **Affected-Repos**: `LCM_AI`, `LCM_Inventory`
 * **Severity**: High
 * **Status**: In-Progress

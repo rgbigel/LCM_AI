@@ -2,8 +2,8 @@
 title: "OneDrive Sync Engine Diagnostic and Ghost Repair Runbook"
 description: "Authoritative technical reference and runbook for diagnosing stuck OneDrive sync loops (0.0 KB remaining 100%), SQLite database inspection, AuthorizeMasterUser ACL remediation, and ghost queue purge."
 author: "Rolf, LCM_AI Governance"
-version: "2.1.0"
-date: "2026-08-24"
+version: "10.0.0"
+date: "2026-10-13"
 status: "Authoritative Runbook"
 ---
 
@@ -12,8 +12,8 @@ status: "Authoritative Runbook"
 Module: OneDrive-Sync-Diagnostic-and-Repair-Guide  
 Path: `LCM_AI/docs/OneDrive-Sync-Diagnostic-and-Repair-Guide.md`  
 Authors: Rolf, LCM_AI Governance  
-Date: 2026-08-24  
-Version: 8.1.0  
+Date: 2026-10-13
+Version: 10.0.0
 
 ---
 
@@ -44,7 +44,7 @@ The repair engine strictly conforms to the workspace's authoritative **`Authoriz
 
 ## 3. Tool Suite & Usage
 
-### `Diagnose-OneDriveSync.ps1` (v2.1.0)
+### `Diagnose-OneDriveSync.ps1` (10.0.0)
 Located at:
 - `D:\OneDrive\cmd\@Repair\Diagnose-OneDriveSync.ps1`
 - `D:\Git_Repositories\LCM_Tools\Diagnose-OneDriveSync.ps1`

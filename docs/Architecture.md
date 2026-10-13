@@ -4,9 +4,9 @@ Module: docs/Architecture.md
 Purpose: Authoritative architectural specification for the Lifecycle Model (LCM) multi-repository governance framework.  
 Path: D:/Git_Repositories/LCM_AI/docs/Architecture.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 8.5.0  
+Version: 10.0.0
 Status: Authoritative Architecture  
-Date: 2026-09-19  
+Date: 2026-10-13
 
 ---
 
@@ -185,7 +185,7 @@ evidence. `Review Decision` is the operator-facing checkpoint for the `Review`
 state. `Publish` is the visible action, while `PUSH` remains a compatible
 command alias.
 
-### 3.4.1 Review Snapshot Chain
+### 10.0.0 Review Snapshot Chain
 
 An accepted BCompare review captures an immutable snapshot of the reviewed
 right-hand state in the CRP-specific review store. This capture creates only a
@@ -228,6 +228,31 @@ flowchart TB
 not separate lifecycle statuses. `Open Review` is an inspection tool, not a
 state transition. Fast completion is an exceptional, receipted action within
 `Active`, not an additional visible status.
+
+### 10.0.0 Cohort Coordination and Exact Review Scope (CRP-259)
+
+The lifecycle model distinguishes an individual **CRP/BUG** from a coordinating
+**COH**. Every control action resolves an explicit Item target of one of those
+kinds; it never guesses from the active row, repository, prior selection, or
+the existence of an open cohort. A COH has the identity `COH-<prime>`, whose
+prime is the cohort's single head CRP/BUG. A valid cohort has that one head as
+a member and may have additional members, including none.
+
+At most one cohort is open at any time. An inactive/closed cohort is durable
+historical evidence, while a new inactive cohort may be prepared while another
+is open. Opening a selected inactive cohort is an atomic close-current/open-
+selected transition and cannot create a second open cohort. An unqualified
+add-member command uses the sole open COH only when exactly one exists. Every
+other ambiguous request fails closed.
+
+Before Gate 2, the system synchronizes every declared member to the same
+required gate and checks the evidence that makes that gate equivalent. One
+failed member stops the whole operation before BCR and produces no partial
+advance. When alignment succeeds, exactly one BCR is launched for the exact
+cohort and records a disposition for each member. Gate 1 remains CRP
+planning/activation; Gate 2 is the BCR decision. `DOIT` can carry work to Gate
+2, never through it. Result and audit views disclose the resolved Item,
+membership/head, alignment result, BCR result, and member dispositions.
 
 The execution ledger records the following phases and artifacts without placing
 them on the visible rail: scope selection, baseline checkpoint, change manifest,
@@ -294,7 +319,7 @@ Every governed repository conforms to the standard LCM directory layout:
 ├── .agents/
 │   └── rules                 # [NTFS Directory Junction] -> D:\Git_Repositories\.agents\rules
 ├── LCM_Inventory/
-│   ├── config.json           # Target metadata, absorbed version (v5.0.1), execution context
+│   ├── config.json           # Target metadata, absorbed version (10.0.0), execution context
 │   └── overrides.json        # Documented rule deviations & custom hooks
 ├── .vscode/                  # Workspace IDE settings (CRLF, UTF-8, strict Pester)
 ├── docs/
@@ -416,9 +441,9 @@ graph TD
 
 ---
 
-## 9. Automated Regression CRP Lifecycle & Cycle Governance ([CRP-135](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-135-LCM-v7.5.0-Determining-And-Enforcing-Regression-CRPs.md))
+## 9. Automated Regression CRP Lifecycle & Cycle Governance ([CRP-135](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-135-LCM-10.0.0-Determining-And-Enforcing-Regression-CRPs.md))
 
-To manage cross-repository ripple effects deterministically, LCM implements automated regression proposal derivation and Directed Acyclic Graph (DAG) cycle governance established by [CRP-135](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-135-LCM-v7.5.0-Determining-And-Enforcing-Regression-CRPs.md):
+To manage cross-repository ripple effects deterministically, LCM implements automated regression proposal derivation and Directed Acyclic Graph (DAG) cycle governance established by [CRP-135](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-135-LCM-10.0.0-Determining-And-Enforcing-Regression-CRPs.md):
 
 ```mermaid
 graph TD
@@ -456,7 +481,7 @@ graph TD
 
 ---
 
-## 10. App-Centric Architectural Decomposition, Active Context Engine & Cross-App Problem Governance ([CRP-048](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-048-LCM-v7.5.0-App-Centric-Architecture-Engine.md))
+## 10. App-Centric Architectural Decomposition, Active Context Engine & Cross-App Problem Governance ([CRP-048](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-048-LCM-10.0.0-App-Centric-Architecture-Engine.md))
 
 As governed repositories scale from single-purpose scripts into multifaceted systems, monolithic tripartite documentation creates cognitive friction, documentation sprawl, and excessive LLM context consumption during automated code generation. 
 
@@ -694,7 +719,7 @@ graph TB
 - **True Isolation & Non-Breaking Maintenance**: Updating an underlying atom or assembly automatically enhances all consuming Apps while contract boundaries prevent cross-domain breakage.
 
 <!-- FixDocumentation: CRP-196 Architecture -->
-### 3.4.2 Documentation Reconciliation Flow
+### 10.0.0 Documentation Reconciliation Flow
 
 `FixDocumentation <CRP/BUG scope>` reconciles explicit, repository-qualified
 documentation payloads from selected proposal bundles. It produces a manifest
@@ -767,4 +792,3 @@ Operating variables are synchronized to `active_session.json` and exposed direct
 | `LCM_SettledFacts` | Array[ID] | e.g. `["F-001", "F-002"]` | Settled facts to avoid redundant rediscovery. |
 | `LCM_OpenHypotheses` | Array[ID] | e.g. `["HYP-001", "HYP-002"]` | Contested hypotheses under active audit. |
 | `LCM_CircuitBreaker` | Boolean | `true`, `false` | Tripped when feasibility checks fail; alerts user with resumption block. |
-

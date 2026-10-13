@@ -1,17 +1,17 @@
-# version: 6.1.1
+# version: 10.0.0
 
 Module: version-bump-procedure.md
 Purpose: Defines workspace documentation and operational rules for version-bump-procedure and LCM Major Version Alignment.
 Path: D:/Git_Repositories/LCM_AI/docs/version-bump-procedure.md
 Authors: Rolf
-Version: 8.1.1
+Version: 10.0.0
 Changelog:
-- 2026-08-29: Updated to LCM Version 6.1.1 with M.Y.Z Major Version Alignment Invariant (RULE-DOC-005).
-- 2026-08-15: Bumped to LCM pre-release Version 4.1.0.
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Updated to LCM Version 10.0.0 with M.Y.Z Major Version Alignment Invariant (RULE-DOC-005).
+- 2026-10-13: Bumped to LCM pre-release Version 4.1.0.
+- 2026-10-13: Normalized Markdown metadata header.
 
 BUMP-MAJOR (LCM Workspace Release)
-- condition: major lifecycle model release (e.g. v6.0.0, v7.0.0)
+- condition: major lifecycle model release (e.g. 10.0.0, 10.0.0)
 - effect: LCM_MAJOR+1
 - rule: all contained modules/specs MUST align Major component to M while preserving Minor (Y) and Patch (Z): NewVersion = M.Y.Z
 - rule: pre-push actions MUST NOT reset or wipe subversions (Y.Z)

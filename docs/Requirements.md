@@ -2,15 +2,15 @@
 
 ModulePath: docs/Requirements.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Requirements  
-Date: 2026-09-19  
+Date: 2026-10-13
 
 ---
 
 ## 1. Scope & Governance Authority
 
-This document specifies the normative requirements for the **LCM_AI Lifecycle Model (LCM) Version 7.0.0**, governing `LCM_AI`, `LCM_Inventory`, and all component repositories within the multi-root solution workspace (`D:\Git_Repositories\`).
+This document specifies the normative requirements for the **LCM_AI Lifecycle Model (LCM) Version 10.0.0**, governing `LCM_AI`, `LCM_Inventory`, and all component repositories within the multi-root solution workspace (`D:\Git_Repositories\`).
 
 An operation or repository is LCM-conformant only when:
 - All applicable `MUST` and `MUST NOT` normative constraints are satisfied.
@@ -53,7 +53,7 @@ When rule sources overlap, the following strict authority order `MUST` govern:
 5. Operational instructions and documentation.
 
 ### LCM-REQ-003 - Stable Identity Standard
-All active governance tools, logs, and templates `MUST` identify the baseline system as `LCM_AI` (LCM v7.0.0). Legacy recovery prefixes (`Workspace_AC`, `Workspace_GC`) `MUST NOT` appear in active governance ledgers or filenames.
+All active governance tools, logs, and templates `MUST` identify the baseline system as `LCM_AI` (LCM 10.0.0). Legacy recovery prefixes (`Workspace_AC`, `Workspace_GC`) `MUST NOT` appear in active governance ledgers or filenames.
 
 ### LCM-REQ-004 - Repository-Local Overrides Standard
 A repository `MAY` override standard baseline settings only via `LCM_Inventory/overrides.json`. Overrides `MUST` document the overridden rule, reason, scope, owner, and date.
@@ -201,6 +201,32 @@ expected artifacts, provider selection, fallback reason, provenance, and result
 contract. Eligible discovery `MUST` prefer `es.exe`; it `MUST` fall back to
 `rg` when indexed content, query semantics, or availability is insufficient.
 Direct NTFS records `MUST` remain authoritative.
+
+### LCM-REQ-046 - Cohort Identity, Atomicity, and Gate 2 Contract (CRP-259)
+1. A lifecycle action MUST resolve one explicit Item target: a CRP/BUG or a
+   COH. It MUST NOT infer target scope from UI selection, repository, action
+   history, or an active cohort when explicit selection is required.
+2. A cohort MUST be `COH-<prime>` and MUST have exactly one head identified by
+   that prime. The head MUST exist and be a cohort member; additional members
+   are optional. A cohort with no, missing, or multiple heads is invalid.
+3. There MUST be at most one active/open cohort. The system MAY create a
+   closed/inactive cohort while one is open. Opening an inactive cohort MUST
+   atomically close the current open cohort then open the selected one, and
+   MUST fail rather than leave two open cohorts. Unqualified member addition is
+   permitted only when exactly one cohort is open.
+4. Membership, lifecycle, and open/close actions MUST validate the entire
+   prospective state and commit atomically. Any invalid member, duplicate,
+   invalid head, unresolved target, write failure, or gate failure MUST leave
+   no partial state.
+5. Before Gate 2, a cohort MUST automatically synchronize all declared members
+   to the required gate state and validate gate-state equivalence with required
+   evidence. Synchronization MUST fail closed: a member failure prevents BCR
+   and all advancement. After alignment, exactly one BCR MUST be associated
+   with the exact COH and MUST record every member disposition.
+6. Gate 1 is the CRP planning/activation decision; Gate 2 is the aligned BCR
+   review decision. `DOIT` MAY remove Gate 1 flow pauses but MUST NOT bypass
+   Gate 2. Row actions and result/audit UI MUST show the resolved Item,
+   synchronization result, BCR result, member dispositions, and refusal reason.
 
 <!-- FixDocumentation: CRP-196 Requirements -->
 ### REQ-LCM-196: Scoped Documentation Reconciliation

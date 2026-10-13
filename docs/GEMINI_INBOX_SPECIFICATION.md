@@ -2,8 +2,8 @@
 # Purpose: Authoritative specification for Google Gemini Cloud & Gem inbox message formatting and intake security.
 # Path: LCM_AI/docs/GEMINI_INBOX_SPECIFICATION.md
 # Authors: Rolf, LCM_AI Engine
-Version: 8.0.0
-# Date: 2026-08-30
+Version: 10.0.0
+# Date: 2026-10-13
 
 # Gemini Cloud to LCM Inbox Specification
 

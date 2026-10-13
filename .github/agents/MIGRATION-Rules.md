@@ -4,9 +4,9 @@ Module: MIGRATION-Rules.md
 Purpose: Defines workspace documentation and operational rules for MIGRATION-Rules.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/MIGRATION-Rules.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Normalized Markdown metadata header.
 
 ## 1. Purpose
 Define unified rules for cleaning, normalizing, and migrating repositories. Combine invariant rules, module rules, LCM_Shared rules, atom rules, ACTIONS.md rules, and inventory rules.
@@ -51,7 +51,7 @@ Module: <filename.ext>
 Purpose: <one sentence>
 Path: <relative path>
 Authors: <list>
-Version: 8.0.0 version>
+Version: 10.0.0 version>
 Changelog:
   - <entry>
 #>
@@ -157,5 +157,5 @@ Guarantees:
 no premature migration, LCM_Shared grows only when needed, atoms discovered systematically, inventory consistent, migration reversible, migration traceable.
 
 ## 13. Versioning
-Semantic versioning. Current version: 1.0.0
+Semantic versioning. Current version: 10.0.0
 

@@ -4,20 +4,20 @@ Module: real-repo-dry-run.md
 Purpose: Describes inspectable LCM_AI real-repository dry-run cases, flows, gates, and non-goals.
 Path: D:/Git_Repositories/LCM_AI/docs/real-repo-dry-run.md
 Authors: LCM_AI Engine
-Version: 8.2.0
+Version: 10.0.0
 Changelog:
-- 2026-08-02: Added read-only target-local proposal cleanup scanner.
-- 2026-08-02: Added target-local method instance bootstrap command and policy.
-- 2026-08-02: Added cleanup methodology for accepted and implemented target-local proposal files.
-- 2026-08-02: Clarified target-local method instance ownership for repo dry-runs, logs, results, and proposals.
-- 2026-08-02: Added target-local Markdown proposal authority for external intake and repo changes.
-- 2026-08-02: Added repository lifecycle boundary cases and explicit cost-tiered integrity preflight policy.
-- 2026-08-02: Clarified LCM_AI-only incubation, candidate selection, override, rollback, and Accept-gate policy.
-- 2026-08-01: Added bottom-up concrete change-request flow.
-- 2026-08-01: Added realistic phased dry-run sequence with documentation-first discrepancy handling.
-- 2026-08-01: Added adapter content-state comparison preview details.
-- 2026-08-01: Added intended-action preview flow for near-end real-repository testing.
-- 2026-08-01: Added first inspectable real-repository dry-run case documentation.
+- 2026-10-13: Added read-only target-local proposal cleanup scanner.
+- 2026-10-13: Added target-local method instance bootstrap command and policy.
+- 2026-10-13: Added cleanup methodology for accepted and implemented target-local proposal files.
+- 2026-10-13: Clarified target-local method instance ownership for repo dry-runs, logs, results, and proposals.
+- 2026-10-13: Added target-local Markdown proposal authority for external intake and repo changes.
+- 2026-10-13: Added repository lifecycle boundary cases and explicit cost-tiered integrity preflight policy.
+- 2026-10-13: Clarified LCM_AI-only incubation, candidate selection, override, rollback, and Accept-gate policy.
+- 2026-10-13: Added bottom-up concrete change-request flow.
+- 2026-10-13: Added realistic phased dry-run sequence with documentation-first discrepancy handling.
+- 2026-10-13: Added adapter content-state comparison preview details.
+- 2026-10-13: Added intended-action preview flow for near-end real-repository testing.
+- 2026-10-13: Added first inspectable real-repository dry-run case documentation.
 
 This document describes the current read-only dry-run model for applying LCM_AI governance against a future real repository. It is intentionally not a write workflow. It documents the cases that are currently implemented and validated by the native readiness command.
 

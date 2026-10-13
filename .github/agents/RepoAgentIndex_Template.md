@@ -4,9 +4,9 @@ Module: RepoAgentIndex_Template.md
 Purpose: Defines workspace documentation and operational rules for RepoAgentIndex_Template.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/RepoAgentIndex_Template.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Normalized Markdown metadata header.
 
 =====================================================================
 1. Purpose
@@ -42,7 +42,7 @@ Each RepoAgentIndex.md must contain:
 Fields:
 - RepositoryName: <REPO-NAME>
 - RepositoryPath: <ABSOLUTE-PATH>
-- RepositoryVersion: 1.0.0
+- RepositoryVersion: 10.0.0
 
 Rules:
 - must use absolute path
@@ -76,7 +76,7 @@ AgentType values:
 Constraints:
 - must not invent agent types
 - must not omit required fields
-- AgentVersion must be 1.0.0 until workspace stabilization
+- AgentVersion must be 10.0.0 until workspace stabilization
 
 =====================================================================
 6. Section: AgentResponsibilities
@@ -148,7 +148,7 @@ Fields:
 - PATCH
 
 Rules:
-- Version must be 1.0.0 until workspace stabilization
+- Version must be 10.0.0 until workspace stabilization
 - MAJOR: reserved
 - MINOR: reserved
 - PATCH: reserved

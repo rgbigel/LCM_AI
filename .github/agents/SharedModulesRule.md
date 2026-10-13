@@ -4,9 +4,9 @@ Module: LCM_SharedRule.md
 Purpose: Defines workspace documentation and operational rules for LCM_SharedRule.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/LCM_SharedRule.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Normalized Markdown metadata header.
 
 ## 1. Purpose
 Define deterministic rules for identifying, reusing, promoting, and maintaining LCM_Shared across repositories.

@@ -1,6 +1,6 @@
-﻿# Lifecycle Model (LCM) Authoritative Governance Framework
+# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-10-12 18:49:28 | Host: D5P0-SSD980-Z | Version: 1.2.0*
+> *Exported on: 2026-10-13 18:49:28 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -44,9 +44,9 @@ Module: RuleAuthority
 Purpose: Defines canonical rule authority, governance hierarchy, and mandatory cross-reference synchronization across the workspace.  
 Path: .agents/rules/RuleAuthority.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -82,9 +82,9 @@ Module: InvariantRules
 Purpose: Authoritative invariant rules for workspace behavior, encoding, determinism, and generation.  
 Path: .agents/rules/InvariantRules.md  
 Authors: Rolf  
-Version: 8.2.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-03  
+Date: 2026-10-13
 
 ---
 
@@ -136,9 +136,9 @@ Module: ElevationPolicy
 Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
 Path: .agents/rules/ElevationPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -221,9 +221,9 @@ Module: LanguagePolicy
 Purpose: Authoritative rule enforcing English language usage across all workspace documentation, file names, and code.
 Path: .agents/rules/LanguagePolicy.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-08-15: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
+- 2026-10-13: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
 
 LANGUAGE-POLICY-RULES
 - english-always: Use English language always for all documentation, file names, code, comments, change proposals, and commit messages.
@@ -244,9 +244,9 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -273,7 +273,7 @@ The agent `MUST NOT` run multi-step recursive discovery scans (`list_dir`, broad
 
 ### `RULE-CTX-004` (Methodology Awareness)
 The agent `MUST` remain aware of the global LCM triad at all times:
-* **`LCM_AI`**: Governs release baselines (v4.3.0), templates, and quality gates.
+* **`LCM_AI`**: Governs release baselines (10.0.0), templates, and quality gates.
 * **`LCM_Inventory`**: Configuration Management engine, audit ledger, and cross-repo CR indexing.
 * **`LCM_Shared`**: Reusable functional PowerShell atom library (`Logging`, `VolumeAtoms`, `BcdAtoms`).
 
@@ -301,9 +301,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 9.2.0
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-10-03
+Date: 2026-10-13
 
 ---
 
@@ -506,7 +506,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 2. **Mandatory Frontmatter Metadata**: Every Bug Report `MUST` include explicit frontmatter fields:
    - `Bug-ID`: Sequential unique identifier sharing the sequence counter with CRPs (e.g. `BUG-024`, `BUG-092`).
    - `Scope`: Affected repository or subsystem boundary.
-   - `Version`: Target release baseline (e.g. `v7.1.0`).
+   - `Version`: Target release baseline (e.g. `10.0.0`).
    - `Affected-Repos`: Array of modified repositories.
    - `Severity`: Impact assessment (`Low`, `Medium`, `High`, `Critical`).
    - `Status`: Lifecycle status (`Open`, `In-Progress`, `Completed`).
@@ -674,9 +674,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-10-03  
+Date: 2026-10-13
 
 ---
 
@@ -732,16 +732,16 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 
 ### RULE-REV-007: Mandatory Automatic Semantic Version Increment per Change Invariant
 1. **Universal Version Increment Invariant**: Every change, proposal, or bug fix committed to any LCM-governed repository `MUST` increment that repository's semantic version before or during review commit:
-   - **Patch Increment (`+0.0.1`)**: Standard default for all bug fixes, refinements, single-purpose enhancements, and incremental proposal completions.
-   - **Minor Increment (`+0.1.0`)**: For substantive new feature sets, new tools, new sub-frameworks, or major multi-component proposals.
-   - **Major Increment (`+1.0.0`)**: For global platform architectural transitions, governed by `RULE-DOC-005`.
+   - **Patch Increment (`+10.0.0`)**: Standard default for all bug fixes, refinements, single-purpose enhancements, and incremental proposal completions.
+   - **Minor Increment (`+10.0.0`)**: For substantive new feature sets, new tools, new sub-frameworks, or major multi-component proposals.
+   - **Major Increment (`+10.0.0`)**: For global platform architectural transitions, governed by `RULE-DOC-005`.
 2. **Synchronized Artifact Updates**:
    - The incremented version `MUST` be updated in:
      - DOX metadata headers of modified scripts and modules (`Version: M.Y.Z`).
      - Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`).
      - Top-level `README.md` and repository manifests.
      - `LCM_Inventory/data/inventory.json` repository record.
-   - Commit messages and review receipts `MUST` record the resulting semantic version (e.g. `feat(cm): ... [v7.1.1]`).
+   - Commit messages and review receipts `MUST` record the resulting semantic version (e.g. `feat(cm): ... [10.0.0]`).
 3. **LCM_Inventory Operational Data Exemption**:
    - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
    - Semantic version increments for `LCM_Inventory` apply strictly when source code (`tools/*.ps1`, `modules/*.psm1`), specifications (`docs/*.md`), or governance policies are modified.
@@ -783,9 +783,9 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -879,9 +879,9 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.8.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-10-12  
+Date: 2026-10-13
 
 ---
 
@@ -1194,13 +1194,13 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 8.9.0
+Version: 10.0.0
 Changelog:
-- 2026-10-12: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
-- 2026-10-03: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
-- 2026-09-27: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
-- 2026-09-26: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
-- 2026-07-27: Split unified rule file; clarified ASCII constraints; stabilized PS rules.
+- 2026-10-13: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
+- 2026-10-13: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
+- 2026-10-13: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
+- 2026-10-13: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
+- 2026-10-13: Split unified rule file; clarified ASCII constraints; stabilized PS rules.
 
 POWERSHELL-RULES
 - ps7-exclusive: pwsh (PS7) is mandatory workspace-wide; legacy powershell.exe (5.1) is forbidden
@@ -1236,9 +1236,9 @@ Module: PythonRules
 Purpose: Authoritative rule definitions for Python code quality, import ordering, string formatting, and linter compliance.  
 Path: .agents/rules/PythonRules.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 8.1.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1276,9 +1276,9 @@ Module: CMDRules
 Purpose: Authoritative rules for CMD batch generation, echo control, error levels, and normalization.  
 Path: .agents/rules/CMDRules.md  
 Authors: Rolf  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1304,9 +1304,9 @@ Module: JsonRules
 Purpose: Authoritative rules for JSON normalization, schema referencing, encoding, and indentation.  
 Path: .agents/rules/JsonRules.md  
 Authors: Rolf  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1332,9 +1332,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1370,9 +1370,9 @@ Every LCM-governed repository `MUST` maintain three distinct core specifications
    Purpose: <1-2 Sentence Summary of Purpose>  
    Path: <Canonical Path>  
    Authors: <Author Name / Engine>  
-   Version: <MAJOR.MINOR.PATCH>  
+   Version: <MAJOR.MINOR.PATCH>
    Status: <Authoritative Standard | Reference | Policy>  
-   Date: <YYYY-MM-DD>  
+   Date: <YYYY-MM-DD>
    ```
 2. **Governance Rule Documents (`.agents/rules/`)**: Governance rule files `MUST` utilize a hybrid structure to ensure compatibility with modern AI agent rule discovery engines and IDEs:
    - **Lines 1–5**: Mandatory YAML Frontmatter declaring rule metadata:
@@ -1407,18 +1407,18 @@ Every LCM-governed repository that deploys or installs operational payloads `MUS
 ---
 
 ### RULE-DOC-005: LCM Major Version Alignment Invariant (`M.Y.Z`)
-Whenever a new major LCM version $M$ (e.g. `v6.0.0`, `v7.0.0`) is established and pushed:
+Whenever a new major LCM version $M$ (e.g. `10.0.0`, `10.0.0`) is established and pushed:
 1. **Major Parity**: All contained modules, specification documents, scripts, and configuration manifests `MUST` have their version updated such that their **Major** version component matches $M$.
 2. **Subversion Preservation**: Subversions (**Minor** $Y$ and **Patch** $Z$) `MUST NOT` be reset or wiped by pre-push major version actions; their relative evolution history and component-level differentiation are strictly preserved.
 3. **Transformation Formula**: If a module or spec has version $X.Y.Z$ and the new LCM major version is $M$, the new version becomes:
    $$\text{NewVersion} = M.Y.Z$$
-   *(Example: A module at version `2.3.1` when major version 7 is established becomes `7.3.1`).*
+   *(Example: A module at version `10.0.0` when major version 7 is established becomes `10.0.0`).*
 4. **Baseline Synchronization**: All explicit global baseline references in configuration files (`LCM_Inventory/config.json`, `.vscode/settings.json`, `.github/agents/Config.json`), agent profiles, and DOX headers `MUST` reference the current active LCM baseline.
 
 ---
 
 ### RULE-DOC-006: Major Release Retention Horizon Policy & Evolution History Taxonomy
-At the time of a major release push $M$ (e.g. `v6.0.0`, `v7.0.0`):
+At the time of a major release push $M$ (e.g. `10.0.0`, `10.0.0`):
 1. **2-Major-Release Retention Horizon ($M - 2$)**:
    - All transient operational logs (`tools/logs/*.log`, `LCM_Inventory/logs/*.log`), temporary scratch dumps (`scratch/`), and legacy deletion trees (`Deletions/`) from major releases older than 2 major versions ($\le M - 2$) `MUST` be completely flushed.
    - For major release $M=6$, all artifacts and deletion trees from major releases $\le 4$ are purged.
@@ -1475,9 +1475,9 @@ Module: SubsystemGovernancePolicy
 Purpose: Governs disjunct Subsystem repositories (e.g. Home Assistant OS), dedicated subsystem inventories, JIT ephemeral write authentication, host hardware interlocks, and log segregation.  
 Path: .agents/rules/SubsystemGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1547,8 +1547,8 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 > **Category**: 4. Documentation & Subsystem Architecture | **Canonical Source**: `.agents/rules/macro-definitions.md`
 
 # macro-definitions.md
-# version: 5.1.0
-# date: 2026-09-27
+# version: 10.0.0
+# date: 2026-10-13
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory

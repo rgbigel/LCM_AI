@@ -4,9 +4,9 @@ Module: CopilotRules.md
 Purpose: Defines workspace documentation and operational rules for CopilotRules.
 Path: D:/Git_Repositories/LCM_AI/.copilot/CopilotRules.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Normalized Markdown metadata header.
 
 =====================================================================
 1. Purpose
@@ -79,7 +79,7 @@ Rules:
 =====================================================================
 7. Versioning
 =====================================================================
-Version: 8.0.0
+Version: 10.0.0
 - MAJOR: introduction of Copilot invocation rules
 - MINOR: non-breaking rule additions
 - PATCH: revision cycle

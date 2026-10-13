@@ -9,9 +9,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -47,9 +47,9 @@ Every LCM-governed repository `MUST` maintain three distinct core specifications
    Purpose: <1-2 Sentence Summary of Purpose>  
    Path: <Canonical Path>  
    Authors: <Author Name / Engine>  
-   Version: <MAJOR.MINOR.PATCH>  
+   Version: <MAJOR.MINOR.PATCH>
    Status: <Authoritative Standard | Reference | Policy>  
-   Date: <YYYY-MM-DD>  
+   Date: <YYYY-MM-DD>
    ```
 2. **Governance Rule Documents (`.agents/rules/`)**: Governance rule files `MUST` utilize a hybrid structure to ensure compatibility with modern AI agent rule discovery engines and IDEs:
    - **Lines 1–5**: Mandatory YAML Frontmatter declaring rule metadata:
@@ -84,18 +84,18 @@ Every LCM-governed repository that deploys or installs operational payloads `MUS
 ---
 
 ### RULE-DOC-005: LCM Major Version Alignment Invariant (`M.Y.Z`)
-Whenever a new major LCM version $M$ (e.g. `v6.0.0`, `v7.0.0`) is established and pushed:
+Whenever a new major LCM version $M$ (e.g. `10.0.0`, `10.0.0`) is established and pushed:
 1. **Major Parity**: All contained modules, specification documents, scripts, and configuration manifests `MUST` have their version updated such that their **Major** version component matches $M$.
 2. **Subversion Preservation**: Subversions (**Minor** $Y$ and **Patch** $Z$) `MUST NOT` be reset or wiped by pre-push major version actions; their relative evolution history and component-level differentiation are strictly preserved.
 3. **Transformation Formula**: If a module or spec has version $X.Y.Z$ and the new LCM major version is $M$, the new version becomes:
    $$\text{NewVersion} = M.Y.Z$$
-   *(Example: A module at version `2.3.1` when major version 7 is established becomes `7.3.1`).*
+   *(Example: A module at version `10.0.0` when major version 7 is established becomes `10.0.0`).*
 4. **Baseline Synchronization**: All explicit global baseline references in configuration files (`LCM_Inventory/config.json`, `.vscode/settings.json`, `.github/agents/Config.json`), agent profiles, and DOX headers `MUST` reference the current active LCM baseline.
 
 ---
 
 ### RULE-DOC-006: Major Release Retention Horizon Policy & Evolution History Taxonomy
-At the time of a major release push $M$ (e.g. `v6.0.0`, `v7.0.0`):
+At the time of a major release push $M$ (e.g. `10.0.0`, `10.0.0`):
 1. **2-Major-Release Retention Horizon ($M - 2$)**:
    - All transient operational logs (`tools/logs/*.log`, `LCM_Inventory/logs/*.log`), temporary scratch dumps (`scratch/`), and legacy deletion trees (`Deletions/`) from major releases older than 2 major versions ($\le M - 2$) `MUST` be completely flushed.
    - For major release $M=6$, all artifacts and deletion trees from major releases $\le 4$ are purged.

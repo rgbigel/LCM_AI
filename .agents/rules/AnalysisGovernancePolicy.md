@@ -9,9 +9,9 @@ Module: AnalysisGovernancePolicy
 Purpose: Defines modal separation between Read-Only Analysis and Governed Implementation, intent wake words, provenance tagging, search fencing, circuit breaker protocol, and Control Hub runtime state transparency.  
 Path: .agents/rules/AnalysisGovernancePolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 9.0.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-05  
+Date: 2026-10-13
 
 ---
 

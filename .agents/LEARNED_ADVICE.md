@@ -12,24 +12,24 @@ How it works:
 ## Accepted
 
 ### Working agreement
-- For a large or complex query or repair, describe the intended approach and ask the operator first; the operator often knows a faster trick. (2026-10-09, operator)
-- Do not take a one-word command (such as ToolExplorer) as licence for restructuring; do only what the command names. (2026-10-09, Copilot)
-- Never recreate `.lcm`; its content lives in the new structure (map: `LCM_AI\docs\Proposals\CRP-246-*\reference\lcm-to-new-paths.json`). Run `Test-Guardrail.ps1 -Scan` before and after structural work. (2026-10-09, Copilot)
-- Gitignored folders are real content; a migration that skips them loses data. (2026-10-09, Copilot)
-- Good Night ends at Committed; publishing needs an explicit `-Push` from the operator. (2026-10-09, Copilot)
+- For a large or complex query or repair, describe the intended approach and ask the operator first; the operator often knows a faster trick. (2026-10-13, operator)
+- Do not take a one-word command (such as ToolExplorer) as licence for restructuring; do only what the command names. (2026-10-13, Copilot)
+- Never recreate `.lcm`; its content lives in the new structure (map: `LCM_AI\docs\Proposals\CRP-246-*\reference\lcm-to-new-paths.json`). Run `Test-Guardrail.ps1 -Scan` before and after structural work. (2026-10-13, Copilot)
+- Gitignored folders are real content; a migration that skips them loses data. (2026-10-13, Copilot)
+- Good Night ends at Committed; publishing needs an explicit `-Push` from the operator. (2026-10-13, Copilot)
 
 ### Everything / es.exe
-- `ext:md` is faster than `.md`. (2026-10-09, operator)
-- Pass one argument per token: `es -n 5 D:\Git_Repositories ext:json content:Shell`. A single combined string or embedded double quotes finds nothing. (2026-10-09, Copilot)
-- Multi-word content terms: `content:<two words>`. (2026-10-09, Copilot)
-- A backslash escapes special characters in a query. (2026-10-09, operator)
-- `,` works as a list separator in es.exe; `;` should but probably does not (mixed-language settings). (2026-10-09, operator)
-- Content changes reach the index with a delay, usually under 1 second. (2026-10-09, operator)
+- `ext:md` is faster than `.md`. (2026-10-13, operator)
+- Pass one argument per token: `es -n 5 D:\Git_Repositories ext:json content:Shell`. A single combined string or embedded double quotes finds nothing. (2026-10-13, Copilot)
+- Multi-word content terms: `content:<two words>`. (2026-10-13, Copilot)
+- A backslash escapes special characters in a query. (2026-10-13, operator)
+- `,` works as a list separator in es.exe; `;` should but probably does not (mixed-language settings). (2026-10-13, operator)
+- Content changes reach the index with a delay, usually under 1 second. (2026-10-13, operator)
 
 ### Files
-- Write byte-sensitive files with latin1 or the edit tool and keep CRLF/BOM; a UTF-8 round-trip corrupted a script once. (2026-10-09, Copilot)
+- Write byte-sensitive files with latin1 or the edit tool and keep CRLF/BOM; a UTF-8 round-trip corrupted a script once. (2026-10-13, Copilot)
 
 ### Versioning
-- A reset to 10.0.0 is a major release and WILL set all constituent versions (every LCM component) to 10.0.0 at once. During a major release run the normal versioning rules (parity, version lead by LCM_AI, no hand edits) stay in place; they are not suspended by the reset. (2026-10-09, operator)
+- A reset to 10.0.0 is a major release and WILL set all constituent versions (every LCM component) to 10.0.0 at once. During a major release run the normal versioning rules (parity, version lead by LCM_AI, no hand edits) stay in place; they are not suspended by the reset. (2026-10-13, operator)
 
 ## Candidates (pending review)

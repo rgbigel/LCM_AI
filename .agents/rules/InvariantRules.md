@@ -9,9 +9,9 @@ Module: InvariantRules
 Purpose: Authoritative invariant rules for workspace behavior, encoding, determinism, and generation.  
 Path: .agents/rules/InvariantRules.md  
 Authors: Rolf  
-Version: 8.2.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-03  
+Date: 2026-10-13
 
 ---
 

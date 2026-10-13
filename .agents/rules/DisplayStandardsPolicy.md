@@ -9,9 +9,9 @@ Module: DisplayStandardsPolicy
 Purpose: Governs presentation standards, CSS design system tokens, application topbars, control toolbars, status rails, Lucide iconography, WPF/WinForms desktop GUIs, print-to-PDF paged media, theme persistence, and interactive desktop dispatching across all LCM-generated UI presentations and dashboards.  
 Path: .agents/rules/DisplayStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 9.3.0
+Version: 10.0.0
 Status: Authoritative Policy
-Date: 2026-10-02
+Date: 2026-10-13
 
 ---
 
@@ -147,19 +147,19 @@ The architectural pattern established in `LCM_Inventory/assets/CM_CONTROL_HUB_IM
 ### RULE-DSP-016: Dynamic Tool Version & Runtime Provenance Display Invariant
 1. **Dual Significance Version Parity (Constructing Script + Presentation Template)**:
    - Every compiled display, web dashboard, sidecar, or viewer constructed from a presentation template `MUST` prominently display the **dual significance provenance**:
-     1. The version of the **constructing script** (author of the ledger artifact at compile time, e.g. `LCM-Show: v1.8.0`).
-     2. The version of the **presentation template** asset (e.g. `Template: v1.2.0`).
+     1. The version of the **constructing script** (author of the ledger artifact at compile time, e.g. `LCM-Show: 10.0.0`).
+     2. The version of the **presentation template** asset (e.g. `Template: 10.0.0`).
    - Standard format across badges, titles, and provenance headers: `(LCM-Show: vX.Y.Z Template: vA.B.C)`.
    - Displayed versions `SHALL NOT` omit either axis; both the compiling engine and the presentation template must be identifiable to guarantee full transparency across iterations.
 2. **Standardized Version Formatting & Double-'v' Artifact Prohibition**:
    - All version representations in UI headers, titles, topbar pills, badges, and subtitles `MUST` follow normalized semantic formatting `v<Major>.<Minor>.<Patch>`.
-   - Duplicate prefix artifacts (such as `vv1.7.0` or `vvX.Y.Z`) are strictly prohibited across all displays.
+   - Duplicate prefix artifacts (such as `10.0.0` or `vvX.Y.Z`) are strictly prohibited across all displays.
    - Template placeholder tokens (e.g. `{{HUB_VERSION}}`, `{{TOOL_VERSION}}`, `{{SHOW_VERSION}}`, `{{TEMPLATE_VERSION}}`) `MUST` be standardized: constructing tools `MUST` inject normalized strings, and HTML/presentation templates `SHALL NOT` prepend a redundant literal `v` before a version token.
    - Launchers and compilers `MUST` defensively sanitize template replacements (e.g. normalizing any `v{{...}}` or replacing `vv` occurrences) to guarantee zero artifact defects reach the operator display.
 3. **Prohibition of Stale Static Version Information**:
    - Presentation templates `SHALL NOT` embed hardcoded, static version numbers, dates, or metadata that can drift out of date when the constructing tool is modified or updated.
    - Any version pill, topbar badge, header label, or footer text that indicates tool version `MUST` be dynamically populated via the active runtime data contract (`.json`) or injected by the launcher script.
 4. **Traceability & Environment Context**:
-   - Where applicable, displays `SHOULD` complement the dynamic tool version with the constructing tool name, active repository commit SHA, or runtime mode (e.g., `Tool: Show-LcmControl v1.8.0 | Template: v1.2.0 | Baseline: 43a2b1c`) to ensure unambiguous provenance and traceability during operator inspection and review audits.
+   - Where applicable, displays `SHOULD` complement the dynamic tool version with the constructing tool name, active repository commit SHA, or runtime mode (e.g., `Tool: Show-LcmControl 10.0.0 | Template: 10.0.0 | Baseline: 43a2b1c`) to ensure unambiguous provenance and traceability during operator inspection and review audits.
 
 

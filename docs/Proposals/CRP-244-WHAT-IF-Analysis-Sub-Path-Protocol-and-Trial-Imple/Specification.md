@@ -4,9 +4,9 @@
 CRP-ID: CRP-244
 Title: WHAT-IF Analysis Sub-Path Protocol and Trial Implementation Branching
 Scope: LCM_AI, LCM_Inventory, Workspace Governance
-Baseline-Version: v8.6.0
+Baseline-Version: 10.0.0
 Author: rgbig
-Date: 2026-10-04
+Date: 2026-10-13
 Status: Suggested
 Plan-State: suggested
 Progress-State: undecided

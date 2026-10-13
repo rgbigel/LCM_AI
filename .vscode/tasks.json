@@ -1,9 +1,9 @@
 {
   "meta": {
-    "config_version": "2026-08-01",
+    "config_version": "2026-10-13",
     "config_path": "D:\\Git_Repositories\\LCM_AI\\.vscode\\tasks.json"
   },
-  "version": "2.0.0",
+  "version": "10.0.0",
   "tasks": [
     {
       "label": "Flush VSCode Buffers",

@@ -13,9 +13,9 @@ Module: LanguagePolicy
 Purpose: Authoritative rule enforcing English language usage across all workspace documentation, file names, and code.
 Path: .agents/rules/LanguagePolicy.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-08-15: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
+- 2026-10-13: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
 
 LANGUAGE-POLICY-RULES
 - english-always: Use English language always for all documentation, file names, code, comments, change proposals, and commit messages.

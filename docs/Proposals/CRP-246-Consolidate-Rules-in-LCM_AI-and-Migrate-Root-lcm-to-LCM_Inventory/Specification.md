@@ -4,9 +4,9 @@
 CRP-ID: CRP-246
 Title: Consolidate Canonical Rules in LCM_AI and Migrate Root .lcm Subsystem to LCM_Inventory
 Scope: LCM_AI, LCM_Inventory, Git_Repositories, LCM_Shared, Workspace Repositories
-Baseline-Version: v8.6.0
+Baseline-Version: 10.0.0
 Author: rgbig
-Date: 2026-10-04
+Date: 2026-10-13
 Status: Suggested
 Plan-State: suggested
 Progress-State: undecided

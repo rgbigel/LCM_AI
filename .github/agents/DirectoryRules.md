@@ -4,10 +4,10 @@ Module: DirectoryRules.md
 Purpose: Defines workspace directory structure rules and LCM governance alignment.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/DirectoryRules.md
 Authors: Rolf
-Version: 8.2.0
+Version: 10.0.0
 Changelog:
-- 2026-08-16: Reconciled with LCM v4.2.0; authorized .github/agents/ for agent discovery, root AGENTS.md/GEMINI.md hardlinks, LCM_Inventory/ configuration, and governance rule junctions.
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Reconciled with LCM 10.0.0; authorized .github/agents/ for agent discovery, root AGENTS.md/GEMINI.md hardlinks, LCM_Inventory/ configuration, and governance rule junctions.
+- 2026-10-13: Normalized Markdown metadata header.
 
 =====================================================================
 1. Purpose
@@ -15,7 +15,7 @@ Changelog:
 Define deterministic directory structure rules for all repositories
 and auxiliary containers under D:\Git_Repositories. Ensure alignment
 with Workspace-Rules.md, InvariantRules.md, WORKFLOW.md, ElevationPolicy.md,
-and LCM v4.2.0 placement standards.
+and LCM 10.0.0 placement standards.
 
 =====================================================================
 2. Scope

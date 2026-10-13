@@ -9,8 +9,8 @@ globs: "*"
 <!-- Activation: Workspace Automatic                                       -->
 <!-- ===================================================================== -->
 # macro-definitions.md
-# version: 5.1.0
-# date: 2026-09-27
+# version: 10.0.0
+# date: 2026-10-13
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory

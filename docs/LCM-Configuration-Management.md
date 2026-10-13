@@ -2,8 +2,8 @@
 
 Module: docs/LCM-Configuration-Management.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 8.3.1  
-Date: 2026-08-17  
+Version: 10.0.0
+Date: 2026-10-13
 Status: Authoritative Methodology Specification  
 
 ---
@@ -23,7 +23,7 @@ graph TB
         COMP["Component Repositories<br/>(VolumeInventory, BootEntryManager, etc.)"]
     end
 
-    WAI -->|"Releases LCM Baselines (v4.1.0)"| WI
+    WAI -->|"Releases LCM Baselines (10.0.0)"| WI
     WAI -->|"Live Governance Junctions (.agents/rules/core)"| WI
     WAI -->|"Live Governance Junctions (.agents/rules/core)"| COMP
     WI -->|"Audits States & Detects Drift"| SolutionWorkspace
@@ -99,7 +99,7 @@ Automated tools must never mutate target repositories without prior proposal and
    * Validates junction link health.
 
 2. **Baseline Snapshots (`New-WorkspaceBaseline`)**:
-   * Captures machine-readable JSON snapshots of the entire workspace state under `data/baselines/` (e.g., `BASELINE-v4.1.0-20260815.json`).
+   * Captures machine-readable JSON snapshots of the entire workspace state under `data/baselines/` (e.g., `BASELINE-10.0.0-20260815.json`).
    * Records every repository's exact commit SHA, branch, and LCM version for release certification.
 
 ---

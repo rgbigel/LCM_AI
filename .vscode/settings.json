@@ -2,17 +2,17 @@
   "meta": {
     "module": "settings.json",
     "path": ".vscode/settings.json",
-    "version": "1.0.3",
+    "version": "10.0.0",
     "config_type": "vscode-repository-settings",
     "description": "Local VS Code settings for LCM_AI.",
     "authors": [
       "LCM_AI Engine"
     ],
     "changelog": [
-      "1.0.0 - Added Continue rule discovery settings",
-      "1.0.1 - Added RuleAuthority and Continue bridge discovery",
-      "1.0.2 - Updated ignored repositories to list non-git directories",
-      "1.0.3 - Decoupled sibling git.ignoredRepositories to root container and LCM_Inventory"
+      "10.0.0 - Added Continue rule discovery settings",
+      "10.0.0 - Added RuleAuthority and Continue bridge discovery",
+      "10.0.0 - Updated ignored repositories to list non-git directories",
+      "10.0.0 - Decoupled sibling git.ignoredRepositories to root container and LCM_Inventory"
     ]
   },
   "antigravity.toolExecutionPolicy": "always-proceed",

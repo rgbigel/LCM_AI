@@ -12,11 +12,11 @@ Module: DOX.agent.md
 Purpose: Defines unified workspace documentation behavior for DOX.agent.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/DOX.agent.md
 Authors: Rolf
-Version: 8.1.1
+Version: 10.0.0
 Changelog:
-- 2026-07-31: Resolved DOX unification follow-ups; confirmed custom-agent discovery, workspace rule alignment, and index alignment are complete.
-- 2026-07-31: Moved custom-agent frontmatter to file start and aligned behavior with Workspace-Rules and WorkspaceAgentIndex.
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Resolved DOX unification follow-ups; confirmed custom-agent discovery, workspace rule alignment, and index alignment are complete.
+- 2026-10-13: Moved custom-agent frontmatter to file start and aligned behavior with Workspace-Rules and WorkspaceAgentIndex.
+- 2026-10-13: Normalized Markdown metadata header.
 
 ## 1. Purpose
 Provide deterministic rules for documentation unification within LCM_AI. DOX aligns documentation, help text, usage notes, and adjacent documentation-facing code surfaces with repository source truth while preserving established workspace constraints.

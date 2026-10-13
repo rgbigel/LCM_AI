@@ -9,9 +9,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-10-03  
+Date: 2026-10-13
 
 ---
 
@@ -67,16 +67,16 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 
 ### RULE-REV-007: Mandatory Automatic Semantic Version Increment per Change Invariant
 1. **Universal Version Increment Invariant**: Every change, proposal, or bug fix committed to any LCM-governed repository `MUST` increment that repository's semantic version before or during review commit:
-   - **Patch Increment (`+0.0.1`)**: Standard default for all bug fixes, refinements, single-purpose enhancements, and incremental proposal completions.
-   - **Minor Increment (`+0.1.0`)**: For substantive new feature sets, new tools, new sub-frameworks, or major multi-component proposals.
-   - **Major Increment (`+1.0.0`)**: For global platform architectural transitions, governed by `RULE-DOC-005`.
+   - **Patch Increment (`+10.0.0`)**: Standard default for all bug fixes, refinements, single-purpose enhancements, and incremental proposal completions.
+   - **Minor Increment (`+10.0.0`)**: For substantive new feature sets, new tools, new sub-frameworks, or major multi-component proposals.
+   - **Major Increment (`+10.0.0`)**: For global platform architectural transitions, governed by `RULE-DOC-005`.
 2. **Synchronized Artifact Updates**:
    - The incremented version `MUST` be updated in:
      - DOX metadata headers of modified scripts and modules (`Version: M.Y.Z`).
      - Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`).
      - Top-level `README.md` and repository manifests.
      - `LCM_Inventory/data/inventory.json` repository record.
-   - Commit messages and review receipts `MUST` record the resulting semantic version (e.g. `feat(cm): ... [v7.1.1]`).
+   - Commit messages and review receipts `MUST` record the resulting semantic version (e.g. `feat(cm): ... [10.0.0]`).
 3. **LCM_Inventory Operational Data Exemption**:
    - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
    - Semantic version increments for `LCM_Inventory` apply strictly when source code (`tools/*.ps1`, `modules/*.psm1`), specifications (`docs/*.md`), or governance policies are modified.

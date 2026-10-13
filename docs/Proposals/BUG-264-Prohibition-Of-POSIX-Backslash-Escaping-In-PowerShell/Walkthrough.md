@@ -4,11 +4,11 @@
 
 ### 1. Root Cause Resolution & Rule Codification
 * **[`PowerShellRules.md`](file:///d:/Git_Repositories/LCM_AI/.agents/rules/PowerShellRules.md)**:
-  - Version incremented to `8.9.0`.
+  - Version incremented to `10.0.0`.
   - Added rule `no-posix-backslash-escapes: backslash (\) is strictly a filesystem path separator, never an escape character; \$ and \" escaping are forbidden`.
-  - Documented in changelog under `2026-10-12`.
+  - Documented in changelog under `2026-10-13`.
 * **[`PowerShellStandardsPolicy.md`](file:///d:/Git_Repositories/LCM_AI/.agents/rules/PowerShellStandardsPolicy.md)**:
-  - Version incremented to `8.8.0`, Date updated to `2026-10-12`.
+  - Version incremented to `10.0.0`, Date updated to `2026-10-13`.
   - Codified canonical rule `### RULE-PS-022: Prohibition of POSIX/Bash Backslash Escaping in PowerShell`:
     1. Backslash is strictly a literal path separator.
     2. POSIX escaping (`\$`, `\"`, `\n`) in strings/commands is strictly prohibited.

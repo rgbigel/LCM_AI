@@ -4,9 +4,9 @@ Module: PC_Host_Subsystem_Architecture_Proposal.md
 Purpose: Authoritative architectural proposal and specification for modeling the physical Host PC as a dedicated Lifecycle Model (LCM) Subsystem.  
 Path: LCM_AI/docs/PC_Host_Subsystem_Architecture_Proposal.md  
 Authors: Rolf, LCM_AI Architecture Engine  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Architectural Proposal  
-Date: 2026-08-27  
+Date: 2026-10-13
 
 ---
 

@@ -4,9 +4,9 @@ Module: ATOM-Building.md
 Purpose: Defines workspace documentation and operational rules for ATOM-Building.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/ATOM-Building.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Normalized Markdown metadata header.
 
 ## 1. Purpose
 Functional atoms are the smallest stable units of behavior inside modules. They enable predictable module design, cross-repo reuse, independent versioning, deterministic testing, and clean separation of concerns. Atoms form the foundation of LCM_Shared.

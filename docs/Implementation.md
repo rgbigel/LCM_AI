@@ -2,36 +2,36 @@
 
 ModulePath: docs/Implementation.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Implementation  
-Date: 2026-09-19  
+Date: 2026-10-13
 
 ---
 
 ## 1. Directory Structure & Execution Topology
 
-Under LCM v7.0.0, the governance and execution tooling is organized into functional categories across [`LCM_AI`](file:///D:/Git_Repositories/LCM_AI) (Governance Authority & Baseline Source) and [`LCM_Inventory`](file:///D:/Git_Repositories/LCM_Inventory) (Configuration Management Engine).
+Under LCM 10.0.0, the governance and execution tooling is organized into functional categories across [`LCM_AI`](file:///D:/Git_Repositories/LCM_AI) (Governance Authority & Baseline Source) and [`LCM_Inventory`](file:///D:/Git_Repositories/LCM_Inventory) (Configuration Management Engine).
 
 ### A. PowerShell CLI Tools
 
 | Repository | Tool Path | Version | Purpose |
 | :--- | :--- | :---: | :--- |
-| **`LCM_AI`** | [`tools/Test-WorkspaceReadiness.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Test-WorkspaceReadiness.ps1) | `1.0.0` | Comprehensive readiness runner and quality gate validator for `LCM_AI`. |
-| **`LCM_AI`** | [`tools/Invoke-LCMOnboardRepo.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-LCMOnboardRepo.ps1) | `1.1.0` | 4-phase onboarding and update engine for onboarding target repositories into LCM. |
-| **`LCM_Inventory`** | [`tools/Invoke-BeyondCompareReview.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1) | `1.0.0` | Isolated visual comparison launcher comparing baseline commit snapshot against live repo. |
-| **`LCM_Inventory`** | [`tools/Submit-ReviewResult.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Submit-ReviewResult.ps1) | `1.0.0` | Interactive review outcome recorder (`Accepted`, `AcceptedWithEdits`, `Rejected`, `Deferred`). |
-| **`LCM_Inventory`** | [`tools/Invoke-WorkspaceAudit.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1) | `1.0.0` | Multi-repository CM audit scanner; generates inventory JSON and dashboard markdown. |
-| **`LCM_Inventory`** | [`tools/Invoke-LCMUpdate.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-LCMUpdate.ps1) | `1.0.0` | Governed LCM update tool; enforces proposal-first dry-run before live execution. |
-| **`LCM_Inventory`** | [`tools/Find-ChangeRequest.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Find-ChangeRequest.ps1) | `1.0.0` | Query tool for searching Change Requests by text, repo, bundle, or status. |
-| **`LCM_Inventory`** | [`tools/Create-WorkspaceBaseline.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Create-WorkspaceBaseline.ps1) | `1.1.0` | Snapshot tool capturing full workspace state into versioned JSON baselines. |
-| **`LCM_Inventory`** | [`tools/Test-WorkspaceDrift.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Test-WorkspaceDrift.ps1) | `1.0.0` | Drift detection tool evaluating dirty copies, unpushed commits, and outdated LCM versions. |
-| **`LCM_Inventory`** | [`tools/Clear-BCReviewTemp.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Clear-BCReviewTemp.ps1) | `1.5.0` | User command to inspect, list, and purge Beyond Compare temp review directories (`%TEMP%\BC_Review`). |
-| **`LCM_Inventory`** | [`tools/Sync-IgnoredRepositories.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Sync-IgnoredRepositories.ps1) | `1.0.0` | Reconciles `git.ignoredRepositories` in `.vscode/settings.json` against workspace non-git directories. |
-| **`LCM Hub (tools/)`** | [`tools/Create-LcmTool.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Create-LcmTool.ps1) | `2.1.0` | Scaffolding engine creating standard `.ps1` tools, short names, and `LCM_Inventory/Cmd/` trampolines. |
-| **`LCM Hub (tools/)`** | [`tools/LcmDesktopDaemon.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/LcmDesktopDaemon.ps1) | `2.1.0` | Lightweight high-performance Session 1 REST bridge daemon for cross-session GUI dispatch. |
-| **`LCM Hub (tools/)`** | [`tools/Show-LcmDaemon.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Show-LcmDaemon.ps1) | `1.1.0` | Real-time telemetry probe, live status monitor, read-only log viewer, and cleanup manager. |
-| **`LCM Hub (tools/)`** | [`tools/Show-Tools.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Show-Tools.ps1) | `3.1.0` | Interactive LCM Tool Explorer dashboard runner with ShortName default view. |
-| **`LCM Hub (tools/)`** | [`tools/Update-ToolCatalog.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Update-ToolCatalog.ps1) | `2.0.0` | Tool catalog sync engine parsing AST dependencies, taxonomy short names, and `LCM_Inventory/Cmd/` trampolines. |
+| **`LCM_AI`** | [`tools/Test-WorkspaceReadiness.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Test-WorkspaceReadiness.ps1) | `10.0.0` | Comprehensive readiness runner and quality gate validator for `LCM_AI`. |
+| **`LCM_AI`** | [`tools/Invoke-LCMOnboardRepo.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-LCMOnboardRepo.ps1) | `10.0.0` | 4-phase onboarding and update engine for onboarding target repositories into LCM. |
+| **`LCM_Inventory`** | [`tools/Invoke-BeyondCompareReview.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-BeyondCompareReview.ps1) | `10.0.0` | Isolated visual comparison launcher comparing baseline commit snapshot against live repo. |
+| **`LCM_Inventory`** | [`tools/Submit-ReviewResult.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Submit-ReviewResult.ps1) | `10.0.0` | Interactive review outcome recorder (`Accepted`, `AcceptedWithEdits`, `Rejected`, `Deferred`). |
+| **`LCM_Inventory`** | [`tools/Invoke-WorkspaceAudit.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-WorkspaceAudit.ps1) | `10.0.0` | Multi-repository CM audit scanner; generates inventory JSON and dashboard markdown. |
+| **`LCM_Inventory`** | [`tools/Invoke-LCMUpdate.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-LCMUpdate.ps1) | `10.0.0` | Governed LCM update tool; enforces proposal-first dry-run before live execution. |
+| **`LCM_Inventory`** | [`tools/Find-ChangeRequest.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Find-ChangeRequest.ps1) | `10.0.0` | Query tool for searching Change Requests by text, repo, bundle, or status. |
+| **`LCM_Inventory`** | [`tools/Create-WorkspaceBaseline.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Create-WorkspaceBaseline.ps1) | `10.0.0` | Snapshot tool capturing full workspace state into versioned JSON baselines. |
+| **`LCM_Inventory`** | [`tools/Test-WorkspaceDrift.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Test-WorkspaceDrift.ps1) | `10.0.0` | Drift detection tool evaluating dirty copies, unpushed commits, and outdated LCM versions. |
+| **`LCM_Inventory`** | [`tools/Clear-BCReviewTemp.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Clear-BCReviewTemp.ps1) | `10.0.0` | User command to inspect, list, and purge Beyond Compare temp review directories (`%TEMP%\BC_Review`). |
+| **`LCM_Inventory`** | [`tools/Sync-IgnoredRepositories.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Sync-IgnoredRepositories.ps1) | `10.0.0` | Reconciles `git.ignoredRepositories` in `.vscode/settings.json` against workspace non-git directories. |
+| **`LCM Hub (tools/)`** | [`tools/Create-LcmTool.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Create-LcmTool.ps1) | `10.0.0` | Scaffolding engine creating standard `.ps1` tools, short names, and `LCM_Inventory/Cmd/` trampolines. |
+| **`LCM Hub (tools/)`** | [`tools/LcmDesktopDaemon.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/LcmDesktopDaemon.ps1) | `10.0.0` | Lightweight high-performance Session 1 REST bridge daemon for cross-session GUI dispatch. |
+| **`LCM Hub (tools/)`** | [`tools/Show-LcmDaemon.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Show-LcmDaemon.ps1) | `10.0.0` | Real-time telemetry probe, live status monitor, read-only log viewer, and cleanup manager. |
+| **`LCM Hub (tools/)`** | [`tools/Show-Tools.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Show-Tools.ps1) | `10.0.0` | Interactive LCM Tool Explorer dashboard runner with ShortName default view. |
+| **`LCM Hub (tools/)`** | [`tools/Update-ToolCatalog.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Update-ToolCatalog.ps1) | `10.0.0` | Tool catalog sync engine parsing AST dependencies, taxonomy short names, and `LCM_Inventory/Cmd/` trampolines. |
 
 ---
 
@@ -68,18 +68,38 @@ knowledge is reconciled from proposal bundles and walkthroughs into the
 authoritative methodology. Historical-log retention and cleanup remain
 maintenance operations, not rewriting of operational evidence.
 
+### C.1 Cohort Control-Hub Realization Contract (CRP-259)
+
+The Control Hub/ledger integration must use a tagged Item target (`CRP` or
+`COH`) before dispatching any row action. A COH record must contain
+`coh_id: "COH-<prime>"`, one `head_id`, optional additional member identifiers,
+open/closed status, and append-only records of validation, synchronization,
+BCR, and per-member dispositions. Target resolution must reject ambiguity; it
+must not use a repository, cached selection, or active cohort as a general
+fallback. The only selector-free case is add-member to exactly one open COH.
+
+Mutation-capable implementations must stage a complete prospective change,
+validate identity/head/member integrity and the one-open limit, then persist
+the result atomically. The open operation stages close-current/open-selected
+together. Cohort Gate 2 dispatch first checks every member's required gate and
+evidence; any failure returns the member-specific result without BCR or state
+advance. Alignment results in one exact cohort BCR whose receipt includes all
+member dispositions. UI result/audit payloads must expose resolution,
+validation, synchronization/no-op, BCR, and refusal data. `DOIT` remains a
+flow switch bounded by Gate 2, not a review override.
+
 ---
 
 ### D. PowerShell Modules
 
 | Repository | Module Path | Version | Exported Functions & Scope |
 | :--- | :--- | :---: | :--- |
-| **`LCM_AI`** | [`tools/Onboarding/LCMOnboarding.psm1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Onboarding/LCMOnboarding.psm1) | `1.0.0` | `Test-LCMPreFlight`, `New-LCMGovernanceLinks`, `Expand-LCMTemplate`, `Test-LCMIntegrity`, `Invoke-LCMOnboardRepo` |
-| **`LCM_AI`** | [`tools/QualityGates/WorkspaceQualityGates.psm1`](file:///D:/Git_Repositories/LCM_Inventory/tools/QualityGates/WorkspaceQualityGates.psm1) | `1.0.0` | `Test-WorkspaceQualityGates`, `Test-GovernanceRules`, `Test-DryRunEngine` |
-| **`LCM_Inventory`** | [`modules/WorkspaceCM.psm1`](file:///D:/Git_Repositories/LCM_Inventory/modules/WorkspaceCM.psm1) | `1.1.0` | `Get-WorkspaceRoot`, `Get-WorkspaceAIState`, `Get-RepoCMState`, `Update-WorkspaceInventory`, `Test-WorkspaceDrift`, `Create-WorkspaceBaseline`, `Write-CMLog` |
-| **`LCM_Inventory`** | [`modules/ChangeRequestManager.psm1`](file:///D:/Git_Repositories/LCM_Inventory/modules/ChangeRequestManager.psm1) | `2.0.0` | `Sync-CRJunctions`, `Get-ChangeRequests`, `Find-ChangeRequest`, `New-ChangeRequest`, `Get-CRBundles`, `New-CRBundle`, `Add-CRToBundle`, `Export-ChangeRequestDashboard` |
-| **`LCM Hub (tools/)`** | [`tools/modules/LcmDaemonCore.psm1`](file:///D:/Git_Repositories/LCM_Inventory/tools/modules/LcmDaemonCore.psm1) | `2.1.0` | Strongly-typed OOP domain model: `DaemonEnvironment`, `DaemonActionController`, DTO classes, and `Send-DaemonJsonResponse`. |
-| **`LCM Hub (tools/)`** | [`tools/modules/LcmToolCatalog.psm1`](file:///D:/Git_Repositories/LCM_Inventory/tools/modules/LcmToolCatalog.psm1) | `2.0.0` | HTML compiler, catalog rendering engine, switched short-name table view, and 8-mode action dropdown router. |
+| **`LCM_AI`** | [`tools/Onboarding/LCMOnboarding.psm1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Onboarding/LCMOnboarding.psm1) | `10.0.0` | `Test-LCMPreFlight`, `New-LCMGovernanceLinks`, `Expand-LCMTemplate`, `Test-LCMIntegrity`, `Invoke-LCMOnboardRepo` |
+| **`LCM_AI`** | [`tools/QualityGates/WorkspaceQualityGates.psm1`](file:///D:/Git_Repositories/LCM_Inventory/tools/QualityGates/WorkspaceQualityGates.psm1) | `10.0.0` | `Test-WorkspaceQualityGates`, `Test-GovernanceRules`, `Test-DryRunEngine` |
+| **`LCM_Inventory`** | [`modules/WorkspaceCM.psm1`](file:///D:/Git_Repositories/LCM_Inventory/modules/WorkspaceCM.psm1) | `10.0.0` | `Get-WorkspaceRoot`, `Get-WorkspaceAIState`, `Get-RepoCMState`, `Update-WorkspaceInventory`, `Test-WorkspaceDrift`, `Create-WorkspaceBaseline`, `Write-CMLog` |
+| **`LCM_Inventory`** | [`modules/ChangeRequestManager.psm1`](file:///D:/Git_Repositories/LCM_Inventory/modules/ChangeRequestManager.psm1) | `10.0.0` | `Sync-CRJunctions`, `Get-ChangeRequests`, `Find-ChangeRequest`, `New-ChangeRequest`, `Get-CRBundles`, `New-CRBundle`, `Add-CRToBundle`, `Export-ChangeRequestDashboard` |
+| **`LCM Hub (tools/)`** | [`tools/modules/LcmDaemonCore.psm1`](file:///D:/Git_Repositories/LCM_Inventory/tools/modules/LcmDaemonCore.psm1) | `10.0.0` | Strongly-typed OOP domain model: `DaemonEnvironment`, `DaemonActionController`, DTO classes, and `Send-DaemonJsonResponse`. |
+| **`LCM Hub (tools/)`** | [`tools/modules/LcmToolCatalog.psm1`](file:///D:/Git_Repositories/LCM_Inventory/tools/modules/LcmToolCatalog.psm1) | `10.0.0` | HTML compiler, catalog rendering engine, switched short-name table view, and 8-mode action dropdown router. |
 
 ---
 
@@ -222,7 +242,7 @@ Instantiated in each governed repository during Phase 3 of onboarding:
 {
   "meta": {
     "module": "config.json",
-    "version": "1.0.0",
+    "version": "10.0.0",
     "config_type": "lcm-target-repository-config"
   },
   "repository": {
@@ -232,7 +252,7 @@ Instantiated in each governed repository during Phase 3 of onboarding:
     "onboarded_at": "2026-08-15T23:11:48+02:00"
   },
   "governance": {
-    "lcm_version": "4.1.0",
+    "lcm_version": "10.0.0",
     "workspace_authority": "D:\\Git_Repositories\\LCM_AI",
     "immutable_links": {
       "junctions": [
@@ -253,7 +273,7 @@ Instantiated in each governed repository during Phase 3 of onboarding:
 Generated automatically by `Update-WorkspaceInventory` during full scans.
 
 ### C. Change Request Test Bundles (`LCM_Inventory/data/bundles/`)
-Groups related CRs into single test sequence milestones (e.g., `BUNDLE-2026-01.json` for LCM v7.0.0 Baseline, `BUNDLE-2026-02.json` for CM Initialization).
+Groups related CRs into single test sequence milestones (e.g., `BUNDLE-2026-01.json` for LCM 10.0.0 Baseline, `BUNDLE-2026-02.json` for CM Initialization).
 
 ---
 
@@ -297,4 +317,3 @@ payloads, writes a dry-run manifest or an applied receipt under the
 repository-scoped temporary log root, and dispatches BCompare per changed
 repository. `LCM_Inventory/Cmd/FixDocumentation.cmd` exposes the bare-word command.
 <!-- /FixDocumentation -->
-

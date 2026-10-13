@@ -2,9 +2,9 @@
 
 **Document Path**: `LCM_AI/docs/LCM-Rules-Cross-Reference.md`
 **Governance Authority**: `LCM_AI`
-**LCM Governance Baseline**: `v8.0.0`
+**LCM Governance Baseline**: `10.0.0`
 **Author**: Rolf & Antigravity AI Assistant
-**Date**: 2026-10-03
+**Date**: 2026-10-13
 
 ---
 

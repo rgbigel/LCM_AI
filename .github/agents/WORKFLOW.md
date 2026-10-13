@@ -1,13 +1,13 @@
 # WORKFLOW
 
 Module: WORKFLOW.md
-Purpose: Defines workspace operational workflow and LCM v4.2.0 change governance.
+Purpose: Defines workspace operational workflow and LCM 10.0.0 change governance.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/WORKFLOW.md
 Authors: Rolf
-Version: 8.2.0
+Version: 10.0.0
 Changelog:
-- 2026-08-16: Reconciled with LCM v4.2.0; codified 1-File-Per-CR architecture (CR-yyyyMMdd_HHmmss.md), proposal-first dry-run simulation, quality gates, and automated elevated testing.
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Reconciled with LCM 10.0.0; codified 1-File-Per-CR architecture (CR-yyyyMMdd_HHmmss.md), proposal-first dry-run simulation, quality gates, and automated elevated testing.
+- 2026-10-13: Normalized Markdown metadata header.
 
 =====================================================================
 1. Purpose

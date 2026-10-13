@@ -1,5 +1,5 @@
 {
-  "version": "8.0.0",
+  "version": "10.0.0",
   "agent": {
     "name": "DefaultProfile365",
     "description": "Deterministic command-language profile for Copilot365",

@@ -4,10 +4,10 @@ Module: LCM-Repository-Inventory.md
 Purpose: Preserves a pre-migration repository inventory snapshot for historical reference; it is not a statement of the current physical LCM-root topology.
 Path: docs/LCM-Repository-Inventory.md
 Authors: Rolf, LCM_AI Engine
-Version: 8.1.1
+Version: 10.0.0
 Status: Historical Archive - Not Current Topology
 Classification: historical-archive
-Date: 2026-08-15
+Date: 2026-10-13
 
 ---
 
@@ -19,12 +19,12 @@ Date: 2026-08-15
 
 ## 1. Executive Summary & Version Baseline
 
-* **Current Global LCM Baseline**: **`LCM pre-release Version 4.1.0`**
-* **Active Upstream Design Workshop**: [`LCM_AI`](file:///d:/Git_Repositories/LCM_AI) (Clean, Governed, LCM v4.1.0)
+* **Current Global LCM Baseline**: **`LCM pre-release Version 10.0.0`**
+* **Active Upstream Design Workshop**: [`LCM_AI`](file:///d:/Git_Repositories/LCM_AI) (Clean, Governed, LCM 10.0.0)
 * **Total Discovered Child Directories**: 33 directories under `D:\Git_Repositories\`
 * **Governance Status Breakdown**:
-  * **Active Design Workshop (LCM Engine v4.1.0)**: 1 (`LCM_AI`)
-  * **Candidate Onboarded Target (LCM v4.0.0 Dry-Run Verified)**: 1 (`VolumeInventory`)
+  * **Active Design Workshop (LCM Engine 10.0.0)**: 1 (`LCM_AI`)
+  * **Candidate Onboarded Target (LCM 10.0.0 Dry-Run Verified)**: 1 (`VolumeInventory`)
   * **Standard Git Repositories (Un-onboarded / Not LCM)**: 14 repositories
   * **Retired Legacy Baselines**: 2 (`Workspace_AC`, `Workspace_GC`)
   * **Non-Git Child Directories (Not LCM)**: 10 directories
@@ -36,8 +36,8 @@ Date: 2026-08-15
 
 | Directory / Repository | Git Status | Branch | HEAD Commit | LCM Status / Version | Classification & Role |
 | :--- | :---: | :---: | :---: | :---: | :--- |
-| **`LCM_AI`** | Git | `main` | `caab019` | **v4.1.0** | **Active Design Workshop & LCM Release Baseline** |
-| **`VolumeInventory`** | Git | `main` | `e8b6aa8` | **v4.0.0** | **Candidate LCM Target (Verified dry-run, eligible for v4.1.0 update)** |
+| **`LCM_AI`** | Git | `main` | `caab019` | **10.0.0** | **Active Design Workshop & LCM Release Baseline** |
+| **`VolumeInventory`** | Git | `main` | `e8b6aa8` | **10.0.0** | **Candidate LCM Target (Verified dry-run, eligible for 10.0.0 update)** |
 | **`BackgroundModifier`** | Git | `HEAD` | - | Not LCM | Standard Git Repo (Un-onboarded) |
 | **`BackgroundModifier_AC`** | Git | `HEAD` | - | Not LCM | Standard Git Repo (Un-onboarded) |
 | **`BootEntryManager`** | Git | `HEAD` | - | Not LCM | Standard Git Repo (Un-onboarded) |
@@ -75,12 +75,12 @@ Date: 2026-08-15
 
 ### 1. Active Design Workshop (`LCM_AI`)
 * **Role**: The single source of truth for all LCM rules, methodologies, templates, quality gates, and onboarding tooling.
-* **Current Version**: `4.1.0`.
+* **Current Version**: `10.0.0`.
 * **State**: Unlocked during development; committed and tagged prior to global release.
 
 ### 2. Onboarded & Candidate Repositories (`VolumeInventory`)
-* **Current Version**: `4.0.0`.
-* **Transition Path**: Run `Invoke-LCMOnboardRepo.ps1 -TargetRepositoryPath "D:\Git_Repositories\VolumeInventory" -Update` to update junctions, hardlinks, and templates to `v4.1.0`.
+* **Current Version**: `10.0.0`.
+* **Transition Path**: Run `Invoke-LCMOnboardRepo.ps1 -TargetRepositoryPath "D:\Git_Repositories\VolumeInventory" -Update` to update junctions, hardlinks, and templates to `10.0.0`.
 
 ### 3. Standard Git Repositories (14 Repositories)
 * **Status**: Currently un-onboarded.

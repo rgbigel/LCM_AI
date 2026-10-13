@@ -4,9 +4,9 @@ Module: problems.md
 Purpose: Defines workspace documentation and operational rules for problems.
 Path: D:/Git_Repositories/LCM_AI/.copilot/problems.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Normalized Markdown metadata header.
 
 PROBLEMS-LIST
 - (empty)

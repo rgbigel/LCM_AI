@@ -2,7 +2,7 @@
 
 **Workspace**: $targetName  
 **Canonical Source Authority**: .agents/rules/  
-**Generated**: 2026-08-13 21:31:26  
+**Generated**: 2026-10-13 21:31:26  
 
 ---
 

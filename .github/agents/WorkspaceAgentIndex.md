@@ -4,13 +4,13 @@ Module: WorkspaceAgentIndex.md
 Purpose: Defines workspace documentation and operational rules for WorkspaceAgentIndex.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/WorkspaceAgentIndex.md
 Authors: Rolf
-Version: 8.3.0
+Version: 10.0.0
 Changelog:
-- 2026-08-16: Reconciled with LCM v4.2.0; registered ElevationPolicy.md (RULE-ELEV-001..004), codified 5 System Prerequisites, and registered Assert-RepoDocumentationFabric gate.
-- 2026-07-31: Consolidated Workspace-Rules authority, canonical LCM_AI paths, and WorkspaceLog agent registration.
-- 2026-07-31: Resolved DOX unification follow-ups; marked DOX role, constraints, and discovery requirements complete.
-- 2026-07-31: Aligned DOX Agent definition with unified documentation behavior.
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Reconciled with LCM 10.0.0; registered ElevationPolicy.md (RULE-ELEV-001..004), codified 5 System Prerequisites, and registered Assert-RepoDocumentationFabric gate.
+- 2026-10-13: Consolidated Workspace-Rules authority, canonical LCM_AI paths, and WorkspaceLog agent registration.
+- 2026-10-13: Resolved DOX unification follow-ups; marked DOX role, constraints, and discovery requirements complete.
+- 2026-10-13: Aligned DOX Agent definition with unified documentation behavior.
+- 2026-10-13: Normalized Markdown metadata header.
 
 =====================================================================
 1. Purpose
@@ -209,7 +209,7 @@ Audit logs must not modify documentation.
 =====================================================================
 14. Versioning
 =====================================================================
-Version: 8.3.0
+Version: 10.0.0
 - MAJOR: structural change to agent indexing
 - MINOR: non-breaking agent role clarification or addition
 - PATCH: revision cycle

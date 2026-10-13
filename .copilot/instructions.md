@@ -1,12 +1,12 @@
-# version: 3.0.0
+# version: 10.0.0
 
 Module: instructions.md
 Purpose: Defines workspace documentation and operational rules for instructions.
 Path: D:/Git_Repositories/LCM_AI/.copilot/instructions.md
 Authors: Rolf Bercht
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Normalized Markdown metadata header.
 
 # Default Profile — Command Language Specification
 # Author: Rolf Bercht

@@ -1,18 +1,18 @@
-# version: 5.1.0
+# version: 10.0.0
 
 Module: LCM_AI/Standards
 Purpose: Authoritative specification of repository structure, file roles, and standard practices.
 Path: docs/Standards.md
 Authors: Rolf, LCM_AI Engine
-Version: 8.1.1
-Date: 2026-08-23
+Version: 10.0.0
+Date: 2026-10-13
 Changelog:
-- 2026-08-23: Bumped to LCM Version 5.1.0 (Minor version release: Subsystem Governance & Acceptance).
-- 2026-08-21: Bumped to LCM Version 5.0.2 (+0.0.1 patch release).
-- 2026-08-20: Bumped to LCM Version 5.0.1 (Tripartite documentation standard release).
-- 2026-08-20: Bumped to LCM Version 5.0.0.
-- 2026-08-15: Added linking standards and designated Junction Link Magic tool.
-- 2026-07-27: Normalized Markdown metadata header.
+- 2026-10-13: Bumped to LCM Version 10.0.0 (Minor version release: Subsystem Governance & Acceptance).
+- 2026-10-13: Bumped to LCM Version 10.0.0 (+10.0.0 patch release).
+- 2026-10-13: Bumped to LCM Version 10.0.0 (Tripartite documentation standard release).
+- 2026-10-13: Bumped to LCM Version 5.0.0.
+- 2026-10-13: Added linking standards and designated Junction Link Magic tool.
+- 2026-10-13: Normalized Markdown metadata header.
 
 STANDARDS
 - naming: ascii-only, deterministic

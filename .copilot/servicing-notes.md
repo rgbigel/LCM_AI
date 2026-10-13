@@ -1,5 +1,5 @@
 # servicing-notes.md
-# version: 3.0.0
+# version: 10.0.0
 
 # SERVICING-NOTES-METADATA
 # scope: variable-memory

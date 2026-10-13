@@ -2,9 +2,9 @@
 
 - **Module**: `LCM_AI / LCM Governance`
 - **Authors**: Rolf, LCM_AI Engine
-- **Version**: 1.0.0
+- **Version**: 10.0.0
 - **Status**: Proposed / Design Specification
-- **Date**: 2026-09-01
+- **Date**: 2026-10-13
 - **Domain**: Governance, Security, and Deterministic Enforcement
 
 ---
@@ -83,7 +83,7 @@ Executes immediately following tool execution:
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "1.0.0",
+  "version": "10.0.0",
   "hooks": {
     "PreToolUse": [
       {

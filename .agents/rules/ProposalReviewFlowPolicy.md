@@ -79,9 +79,10 @@ synchronization outcome, BCR disposition, and refusal reason.
 | `in_progress` | `edit`, `verify`, `hold`, `reset`, `withdraw`, `supersede` | `verified`, `held`, `suggested`, `withdrawn`, `superseded` |
 | `verified` | `bcr`, `reopen`, `hold`, `supersede` | `in_review`, `in_progress`, `held`, `superseded` |
 | `in_review` | `complete`, `commit`, `reject`, `reopen`, `hold` | `completed`, `rejected`, `in_progress`, `held` |
-| `completed` | `push`, `hold` | `pushed`, `held` |
+| `completed` | `push`, `hold`, `reinstate` | `pushed`, `held`, revision route below |
 | `held` | `continue`, `edit`, `withdraw` | the recorded `resume_state`, `withdrawn` |
-| `pushed`, `withdrawn`, `rejected`, `superseded` | view-only actions defined by the lifecycle model | terminal except documented supersession |
+| `pushed` | `view`, `reinstate` | revision route below |
+| `withdrawn`, `rejected`, `superseded` | view-only actions defined by the lifecycle model | terminal except documented supersession |
 
 `state` and its companion `state_reason` form the single flat current lifecycle record:
 `state_reason` explains why the current state applies and is not a second state. `progress_state`
@@ -91,6 +92,26 @@ cohort, review, and test metadata. `BCR` enters the Review Gate for an exact CRP
 repository, or a declared cohort; Gate 2 begins only when the review launcher has succeeded and
 the resolved scope is in `in_review`. `COMPLETE` accepts the same resolved forms and can
 transition only `in_review` work to `completed`. Unresolved or ambiguous scope MUST fail closed.
+
+### Reinstating Delivered CRPs
+
+`reinstate <CRP-ID>` is the only route for reopening a `completed` or `pushed`
+CRP without erasing its accepted history. It MUST append a forward-only
+reinstatement revision event; prior completion, push, receipt, and commit
+evidence remain immutable.
+
+1. **No concrete correction requests:** when `reinstate` has no `-Changes`
+   value, the CRP MUST return to `suggested`. It remains at Gate 1 awaiting
+   revised intent, plan, and explicit authorization; it MUST NOT start
+   implementation or BCR.
+2. **Concrete correction requests:** when `reinstate` includes a non-empty
+   `-Changes` value, the CRP MUST return to `in_progress`. After the named
+   corrections and focused verification pass, it MUST advance to `verified`
+   and launch an exact-identity BCR for that same CRP. It MUST NOT fall back to
+   a repository, active session, latest proposal, or prior BCR identity.
+3. A stale BCR session for the formerly delivered CRP MUST NOT be completed.
+   Completion remains valid only when the current revision is `in_review` and
+   the review identity matches that CRP revision.
 
 Proposals transition through the defined lifecycle via deterministic operator commands:
 - **`Proceed` / `Proceed <ID>`**: **Single-step status increment**. Deterministically advances matching proposal(s) forward by exactly one discrete Sync Point along the flat lifecycle continuum (`Suggested` $\rightarrow$ `Scoped` $\rightarrow$ `Decided` $\rightarrow$ `In_Progress` $\rightarrow$ `Verified` $\rightarrow$ `Committed` $\rightarrow$ `Published`).

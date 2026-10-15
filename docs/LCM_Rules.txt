@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-10-12 18:49:28 | Host: D5P0-SSD980-Z | Version: 1.2.0*
+> *Exported on: 2026-10-15 22:39:27 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -44,9 +44,9 @@ Module: RuleAuthority
 Purpose: Defines canonical rule authority, governance hierarchy, and mandatory cross-reference synchronization across the workspace.  
 Path: .agents/rules/RuleAuthority.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -82,9 +82,9 @@ Module: InvariantRules
 Purpose: Authoritative invariant rules for workspace behavior, encoding, determinism, and generation.  
 Path: .agents/rules/InvariantRules.md  
 Authors: Rolf  
-Version: 8.2.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-03  
+Date: 2026-10-13
 
 ---
 
@@ -136,9 +136,9 @@ Module: ElevationPolicy
 Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
 Path: .agents/rules/ElevationPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -221,9 +221,9 @@ Module: LanguagePolicy
 Purpose: Authoritative rule enforcing English language usage across all workspace documentation, file names, and code.
 Path: .agents/rules/LanguagePolicy.md
 Authors: Rolf
-Version: 8.0.0
+Version: 10.0.0
 Changelog:
-- 2026-08-15: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
+- 2026-10-13: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
 
 LANGUAGE-POLICY-RULES
 - english-always: Use English language always for all documentation, file names, code, comments, change proposals, and commit messages.
@@ -244,9 +244,9 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -273,7 +273,7 @@ The agent `MUST NOT` run multi-step recursive discovery scans (`list_dir`, broad
 
 ### `RULE-CTX-004` (Methodology Awareness)
 The agent `MUST` remain aware of the global LCM triad at all times:
-* **`LCM_AI`**: Governs release baselines (v4.3.0), templates, and quality gates.
+* **`LCM_AI`**: Governs release baselines (10.0.0), templates, and quality gates.
 * **`LCM_Inventory`**: Configuration Management engine, audit ledger, and cross-repo CR indexing.
 * **`LCM_Shared`**: Reusable functional PowerShell atom library (`Logging`, `VolumeAtoms`, `BcdAtoms`).
 
@@ -301,9 +301,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 9.2.0
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-10-03
+Date: 2026-10-13
 
 ---
 
@@ -322,15 +322,59 @@ matrix is authoritative for all new or modified tooling. Legacy terms such as `S
 compatibility vocabulary only; they MUST NOT create a second lifecycle authority or determine
 available operator actions.
 
+#### Automatic BCR Gate Invariant
+At every CRP or COH review gate, the governing action surface and backend MUST automatically
+initiate BCR for the exact resolved target before permitting review-gate continuation. A CRP
+may not complete, commit, or otherwise pass the review gate until a matching BCR disposition
+is recorded; a COH may not continue until every member has one. The only exception is an
+explicit authorized BCR bypass recorded in the proposal ledger. `-Force` and `-Immediately`
+remain separate governed mechanisms and MUST NOT be treated as BCR bypasses.
+
+#### Canonical Cohort Gate Synchronization Invariant
+Before review-gate continuation, an active/open declared cohort MUST automatically synchronize
+all declared members to the shared required gate state. A member MAY be verified only when its
+existing validated evidence and required preconditions satisfy that state. If any member fails,
+the operation MUST stop with that member's specific error; it MUST NOT initiate BCR or partially
+advance any member through the gate. BCR MAY begin only after every member is verified, and its
+recorded disposition MUST resolve all cohort members together. If all members are already
+aligned, the operation is a no-op; the audit metadata MUST record the synchronization attempt,
+evidence/precondition checks, and no-op or resolved result.
+
+#### CRP-259 Cohort Identity, Target Resolution, and Atomicity
+An action MUST resolve one explicit **Item** target of kind `CRP` (including a
+BUG) or `COH`; these kinds are not interchangeable. Target resolution MUST
+fail closed and MUST NOT fall back to a repository, selected row, earlier
+selection, or active cohort where a selector is required. A cohort identity is
+`COH-<prime>` and is valid only with exactly one head member identified by that
+prime. Additional members are optional.
+
+There MUST be at most one active/open COH. An inactive/closed COH may be
+created while another is open. Opening an inactive COH MUST atomically close
+the current open COH and open the requested one; it MUST reject any result that
+would have two open COHs. The only selector-free convenience is add-member to
+the sole open COH. Membership, head integrity, lifecycle, and open/close
+validation MUST be all-or-nothing; a failure leaves no partial change.
+
+For a COH Gate 2 operation, automatic synchronization MUST validate every
+declared member's required gate and evidence before BCR. Gate equivalence means
+the same required gate with valid evidence, not a superficially similar state.
+Any failure stops all advancement and BCR launch. Once aligned, exactly one BCR
+MUST cover the resolved COH and record every member disposition. Gate 1 is the
+CRP plan/activation boundary; Gate 2 is the BCR decision. `DOIT` is a flow
+switch that may cross Gate 1 execution pauses but NEVER bypasses Gate 2.
+Action results and audit evidence MUST show the resolved Item, head/members,
+synchronization outcome, BCR disposition, and refusal reason.
+
 | Authoritative `state` | Valid actions | Valid next states |
 |:---|:---|:---|
 | `suggested` | `edit`, `do`, `hold`, `withdraw`, `supersede` | `in_progress`, `held`, `withdrawn`, `superseded` |
 | `in_progress` | `edit`, `verify`, `hold`, `reset`, `withdraw`, `supersede` | `verified`, `held`, `suggested`, `withdrawn`, `superseded` |
 | `verified` | `bcr`, `reopen`, `hold`, `supersede` | `in_review`, `in_progress`, `held`, `superseded` |
 | `in_review` | `complete`, `commit`, `reject`, `reopen`, `hold` | `completed`, `rejected`, `in_progress`, `held` |
-| `completed` | `push`, `hold` | `pushed`, `held` |
+| `completed` | `push`, `hold`, `reinstate` | `pushed`, `held`, revision route below |
 | `held` | `continue`, `edit`, `withdraw` | the recorded `resume_state`, `withdrawn` |
-| `pushed`, `withdrawn`, `rejected`, `superseded` | view-only actions defined by the lifecycle model | terminal except documented supersession |
+| `pushed` | `view`, `reinstate` | revision route below |
+| `withdrawn`, `rejected`, `superseded` | view-only actions defined by the lifecycle model | terminal except documented supersession |
 
 `state` and its companion `state_reason` form the single flat current lifecycle record:
 `state_reason` explains why the current state applies and is not a second state. `progress_state`
@@ -340,6 +384,26 @@ cohort, review, and test metadata. `BCR` enters the Review Gate for an exact CRP
 repository, or a declared cohort; Gate 2 begins only when the review launcher has succeeded and
 the resolved scope is in `in_review`. `COMPLETE` accepts the same resolved forms and can
 transition only `in_review` work to `completed`. Unresolved or ambiguous scope MUST fail closed.
+
+### Reinstating Delivered CRPs
+
+`reinstate <CRP-ID>` is the only route for reopening a `completed` or `pushed`
+CRP without erasing its accepted history. It MUST append a forward-only
+reinstatement revision event; prior completion, push, receipt, and commit
+evidence remain immutable.
+
+1. **No concrete correction requests:** when `reinstate` has no `-Changes`
+   value, the CRP MUST return to `suggested`. It remains at Gate 1 awaiting
+   revised intent, plan, and explicit authorization; it MUST NOT start
+   implementation or BCR.
+2. **Concrete correction requests:** when `reinstate` includes a non-empty
+   `-Changes` value, the CRP MUST return to `in_progress`. After the named
+   corrections and focused verification pass, it MUST advance to `verified`
+   and launch an exact-identity BCR for that same CRP. It MUST NOT fall back to
+   a repository, active session, latest proposal, or prior BCR identity.
+3. A stale BCR session for the formerly delivered CRP MUST NOT be completed.
+   Completion remains valid only when the current revision is `in_review` and
+   the review identity matches that CRP revision.
 
 Proposals transition through the defined lifecycle via deterministic operator commands:
 - **`Proceed` / `Proceed <ID>`**: **Single-step status increment**. Deterministically advances matching proposal(s) forward by exactly one discrete Sync Point along the flat lifecycle continuum (`Suggested` $\rightarrow$ `Scoped` $\rightarrow$ `Decided` $\rightarrow$ `In_Progress` $\rightarrow$ `Verified` $\rightarrow$ `Committed` $\rightarrow$ `Published`).
@@ -506,7 +570,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 2. **Mandatory Frontmatter Metadata**: Every Bug Report `MUST` include explicit frontmatter fields:
    - `Bug-ID`: Sequential unique identifier sharing the sequence counter with CRPs (e.g. `BUG-024`, `BUG-092`).
    - `Scope`: Affected repository or subsystem boundary.
-   - `Version`: Target release baseline (e.g. `v7.1.0`).
+   - `Version`: Target release baseline (e.g. `10.0.0`).
    - `Affected-Repos`: Array of modified repositories.
    - `Severity`: Impact assessment (`Low`, `Medium`, `High`, `Critical`).
    - `Status`: Lifecycle status (`Open`, `In-Progress`, `Completed`).
@@ -662,6 +726,13 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    state-appropriate accept/reject actions and repository, cohort, and complete forms. Managed
    lifecycle hooks remain retained for governed transitions.
 
+### RULE-LCM-026: Explicit Control-Hub Target and Cohort Action Invariant
+1. **Explicit Target Identity**: A Control Hub operation `MUST` identify exactly one target before it is previewed or executed. The target kind is `CRP`, `COH`, or `workspace`; the interface `MUST NOT` infer it from a visible row, previously inspected proposal, or an implicit multi-selection.
+2. **Target-Scoped Actions**: CRP actions operate on one CRP. Cohort actions operate on the declared cohort and its current members. Workspace maintenance actions are outside the current CRP/cohort target and `MUST` be visibly separated from lifecycle controls.
+3. **Atomic Cohort Lifecycle Actions**: A lifecycle action on a cohort `MUST` evaluate every current member before any mutation. If one member is ineligible, the request `MUST` fail with member-specific reasons and leave every member unchanged. A successful request applies the same permitted transition to all members and records the cohort identity in the audit trail.
+4. **Cohort Membership Proposals**: A declared `COH-<prime>` is anchored by its immutable head/prime CRP and may contain that sole head; no minimum number of CRPs applies. Adding or removing non-head members `MUST` preview the complete membership delta and pass all head/prime, open-cohort, identity, and cross-repository validations before mutation. At most one open cohort may exist; Add `MUST` resolve it automatically rather than offer a cohort choice. Creation remains available when an open cohort exists, but creates an inactive cohort; only opening or reopening an inactive cohort is rejected while another cohort is open. Adding when no open cohort exists is rejected. The backend `MUST` recheck this invariant immediately before persistence. Closed cohorts are irrelevant, and inactive does not mean closed. Partial membership changes are prohibited.
+5. **FIX Presentation Boundary**: A Control Hub `FIX` action group may provide a unified operator entry point for review-confirmation exceptions, emergency quality deferrals, retirement, and supersession. `-Force` and `-Immediately` retain their distinct eligibility, reason, exact-identity, review, and termination requirements; a common label `MUST NOT` broaden either mechanism.
+
 ---
 
 <a id="reviewcommitgovernancepolicymd"></a>
@@ -674,9 +745,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-10-03  
+Date: 2026-10-13
 
 ---
 
@@ -732,16 +803,16 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 
 ### RULE-REV-007: Mandatory Automatic Semantic Version Increment per Change Invariant
 1. **Universal Version Increment Invariant**: Every change, proposal, or bug fix committed to any LCM-governed repository `MUST` increment that repository's semantic version before or during review commit:
-   - **Patch Increment (`+0.0.1`)**: Standard default for all bug fixes, refinements, single-purpose enhancements, and incremental proposal completions.
-   - **Minor Increment (`+0.1.0`)**: For substantive new feature sets, new tools, new sub-frameworks, or major multi-component proposals.
-   - **Major Increment (`+1.0.0`)**: For global platform architectural transitions, governed by `RULE-DOC-005`.
+   - **Patch Increment (`+10.0.0`)**: Standard default for all bug fixes, refinements, single-purpose enhancements, and incremental proposal completions.
+   - **Minor Increment (`+10.0.0`)**: For substantive new feature sets, new tools, new sub-frameworks, or major multi-component proposals.
+   - **Major Increment (`+10.0.0`)**: For global platform architectural transitions, governed by `RULE-DOC-005`.
 2. **Synchronized Artifact Updates**:
    - The incremented version `MUST` be updated in:
      - DOX metadata headers of modified scripts and modules (`Version: M.Y.Z`).
      - Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`).
      - Top-level `README.md` and repository manifests.
      - `LCM_Inventory/data/inventory.json` repository record.
-   - Commit messages and review receipts `MUST` record the resulting semantic version (e.g. `feat(cm): ... [v7.1.1]`).
+   - Commit messages and review receipts `MUST` record the resulting semantic version (e.g. `feat(cm): ... [10.0.0]`).
 3. **LCM_Inventory Operational Data Exemption**:
    - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
    - Semantic version increments for `LCM_Inventory` apply strictly when source code (`tools/*.ps1`, `modules/*.psm1`), specifications (`docs/*.md`), or governance policies are modified.
@@ -783,9 +854,9 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -879,9 +950,9 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.8.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-10-12  
+Date: 2026-10-13
 
 ---
 
@@ -1194,13 +1265,13 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 8.9.0
+Version: 10.0.0
 Changelog:
-- 2026-10-12: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
-- 2026-10-03: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
-- 2026-09-27: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
-- 2026-09-26: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
-- 2026-07-27: Split unified rule file; clarified ASCII constraints; stabilized PS rules.
+- 2026-10-13: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
+- 2026-10-13: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
+- 2026-10-13: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
+- 2026-10-13: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
+- 2026-10-13: Split unified rule file; clarified ASCII constraints; stabilized PS rules.
 
 POWERSHELL-RULES
 - ps7-exclusive: pwsh (PS7) is mandatory workspace-wide; legacy powershell.exe (5.1) is forbidden
@@ -1236,9 +1307,9 @@ Module: PythonRules
 Purpose: Authoritative rule definitions for Python code quality, import ordering, string formatting, and linter compliance.  
 Path: .agents/rules/PythonRules.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 8.1.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1276,9 +1347,9 @@ Module: CMDRules
 Purpose: Authoritative rules for CMD batch generation, echo control, error levels, and normalization.  
 Path: .agents/rules/CMDRules.md  
 Authors: Rolf  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1304,9 +1375,9 @@ Module: JsonRules
 Purpose: Authoritative rules for JSON normalization, schema referencing, encoding, and indentation.  
 Path: .agents/rules/JsonRules.md  
 Authors: Rolf  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Invariant Rule  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1332,9 +1403,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.6.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1370,9 +1441,9 @@ Every LCM-governed repository `MUST` maintain three distinct core specifications
    Purpose: <1-2 Sentence Summary of Purpose>  
    Path: <Canonical Path>  
    Authors: <Author Name / Engine>  
-   Version: <MAJOR.MINOR.PATCH>  
+   Version: <MAJOR.MINOR.PATCH>
    Status: <Authoritative Standard | Reference | Policy>  
-   Date: <YYYY-MM-DD>  
+   Date: <YYYY-MM-DD>
    ```
 2. **Governance Rule Documents (`.agents/rules/`)**: Governance rule files `MUST` utilize a hybrid structure to ensure compatibility with modern AI agent rule discovery engines and IDEs:
    - **Lines 1–5**: Mandatory YAML Frontmatter declaring rule metadata:
@@ -1407,18 +1478,18 @@ Every LCM-governed repository that deploys or installs operational payloads `MUS
 ---
 
 ### RULE-DOC-005: LCM Major Version Alignment Invariant (`M.Y.Z`)
-Whenever a new major LCM version $M$ (e.g. `v6.0.0`, `v7.0.0`) is established and pushed:
+Whenever a new major LCM version $M$ (e.g. `10.0.0`, `10.0.0`) is established and pushed:
 1. **Major Parity**: All contained modules, specification documents, scripts, and configuration manifests `MUST` have their version updated such that their **Major** version component matches $M$.
 2. **Subversion Preservation**: Subversions (**Minor** $Y$ and **Patch** $Z$) `MUST NOT` be reset or wiped by pre-push major version actions; their relative evolution history and component-level differentiation are strictly preserved.
 3. **Transformation Formula**: If a module or spec has version $X.Y.Z$ and the new LCM major version is $M$, the new version becomes:
    $$\text{NewVersion} = M.Y.Z$$
-   *(Example: A module at version `2.3.1` when major version 7 is established becomes `7.3.1`).*
+   *(Example: A module at version `10.0.0` when major version 7 is established becomes `10.0.0`).*
 4. **Baseline Synchronization**: All explicit global baseline references in configuration files (`LCM_Inventory/config.json`, `.vscode/settings.json`, `.github/agents/Config.json`), agent profiles, and DOX headers `MUST` reference the current active LCM baseline.
 
 ---
 
 ### RULE-DOC-006: Major Release Retention Horizon Policy & Evolution History Taxonomy
-At the time of a major release push $M$ (e.g. `v6.0.0`, `v7.0.0`):
+At the time of a major release push $M$ (e.g. `10.0.0`, `10.0.0`):
 1. **2-Major-Release Retention Horizon ($M - 2$)**:
    - All transient operational logs (`tools/logs/*.log`, `LCM_Inventory/logs/*.log`), temporary scratch dumps (`scratch/`), and legacy deletion trees (`Deletions/`) from major releases older than 2 major versions ($\le M - 2$) `MUST` be completely flushed.
    - For major release $M=6$, all artifacts and deletion trees from major releases $\le 4$ are purged.
@@ -1475,9 +1546,9 @@ Module: SubsystemGovernancePolicy
 Purpose: Governs disjunct Subsystem repositories (e.g. Home Assistant OS), dedicated subsystem inventories, JIT ephemeral write authentication, host hardware interlocks, and log segregation.  
 Path: .agents/rules/SubsystemGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 8.0.0  
+Version: 10.0.0
 Status: Authoritative Policy  
-Date: 2026-09-26  
+Date: 2026-10-13
 
 ---
 
@@ -1547,8 +1618,8 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 > **Category**: 4. Documentation & Subsystem Architecture | **Canonical Source**: `.agents/rules/macro-definitions.md`
 
 # macro-definitions.md
-# version: 5.1.0
-# date: 2026-09-27
+# version: 10.0.0
+# date: 2026-10-13
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory

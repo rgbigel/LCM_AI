@@ -1,6 +1,6 @@
-# Lifecycle Model (LCM) Authoritative Governance Framework
+﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-10-13 18:49:28 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-10-15 22:39:27 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -322,15 +322,59 @@ matrix is authoritative for all new or modified tooling. Legacy terms such as `S
 compatibility vocabulary only; they MUST NOT create a second lifecycle authority or determine
 available operator actions.
 
+#### Automatic BCR Gate Invariant
+At every CRP or COH review gate, the governing action surface and backend MUST automatically
+initiate BCR for the exact resolved target before permitting review-gate continuation. A CRP
+may not complete, commit, or otherwise pass the review gate until a matching BCR disposition
+is recorded; a COH may not continue until every member has one. The only exception is an
+explicit authorized BCR bypass recorded in the proposal ledger. `-Force` and `-Immediately`
+remain separate governed mechanisms and MUST NOT be treated as BCR bypasses.
+
+#### Canonical Cohort Gate Synchronization Invariant
+Before review-gate continuation, an active/open declared cohort MUST automatically synchronize
+all declared members to the shared required gate state. A member MAY be verified only when its
+existing validated evidence and required preconditions satisfy that state. If any member fails,
+the operation MUST stop with that member's specific error; it MUST NOT initiate BCR or partially
+advance any member through the gate. BCR MAY begin only after every member is verified, and its
+recorded disposition MUST resolve all cohort members together. If all members are already
+aligned, the operation is a no-op; the audit metadata MUST record the synchronization attempt,
+evidence/precondition checks, and no-op or resolved result.
+
+#### CRP-259 Cohort Identity, Target Resolution, and Atomicity
+An action MUST resolve one explicit **Item** target of kind `CRP` (including a
+BUG) or `COH`; these kinds are not interchangeable. Target resolution MUST
+fail closed and MUST NOT fall back to a repository, selected row, earlier
+selection, or active cohort where a selector is required. A cohort identity is
+`COH-<prime>` and is valid only with exactly one head member identified by that
+prime. Additional members are optional.
+
+There MUST be at most one active/open COH. An inactive/closed COH may be
+created while another is open. Opening an inactive COH MUST atomically close
+the current open COH and open the requested one; it MUST reject any result that
+would have two open COHs. The only selector-free convenience is add-member to
+the sole open COH. Membership, head integrity, lifecycle, and open/close
+validation MUST be all-or-nothing; a failure leaves no partial change.
+
+For a COH Gate 2 operation, automatic synchronization MUST validate every
+declared member's required gate and evidence before BCR. Gate equivalence means
+the same required gate with valid evidence, not a superficially similar state.
+Any failure stops all advancement and BCR launch. Once aligned, exactly one BCR
+MUST cover the resolved COH and record every member disposition. Gate 1 is the
+CRP plan/activation boundary; Gate 2 is the BCR decision. `DOIT` is a flow
+switch that may cross Gate 1 execution pauses but NEVER bypasses Gate 2.
+Action results and audit evidence MUST show the resolved Item, head/members,
+synchronization outcome, BCR disposition, and refusal reason.
+
 | Authoritative `state` | Valid actions | Valid next states |
 |:---|:---|:---|
 | `suggested` | `edit`, `do`, `hold`, `withdraw`, `supersede` | `in_progress`, `held`, `withdrawn`, `superseded` |
 | `in_progress` | `edit`, `verify`, `hold`, `reset`, `withdraw`, `supersede` | `verified`, `held`, `suggested`, `withdrawn`, `superseded` |
 | `verified` | `bcr`, `reopen`, `hold`, `supersede` | `in_review`, `in_progress`, `held`, `superseded` |
 | `in_review` | `complete`, `commit`, `reject`, `reopen`, `hold` | `completed`, `rejected`, `in_progress`, `held` |
-| `completed` | `push`, `hold` | `pushed`, `held` |
+| `completed` | `push`, `hold`, `reinstate` | `pushed`, `held`, revision route below |
 | `held` | `continue`, `edit`, `withdraw` | the recorded `resume_state`, `withdrawn` |
-| `pushed`, `withdrawn`, `rejected`, `superseded` | view-only actions defined by the lifecycle model | terminal except documented supersession |
+| `pushed` | `view`, `reinstate` | revision route below |
+| `withdrawn`, `rejected`, `superseded` | view-only actions defined by the lifecycle model | terminal except documented supersession |
 
 `state` and its companion `state_reason` form the single flat current lifecycle record:
 `state_reason` explains why the current state applies and is not a second state. `progress_state`
@@ -340,6 +384,26 @@ cohort, review, and test metadata. `BCR` enters the Review Gate for an exact CRP
 repository, or a declared cohort; Gate 2 begins only when the review launcher has succeeded and
 the resolved scope is in `in_review`. `COMPLETE` accepts the same resolved forms and can
 transition only `in_review` work to `completed`. Unresolved or ambiguous scope MUST fail closed.
+
+### Reinstating Delivered CRPs
+
+`reinstate <CRP-ID>` is the only route for reopening a `completed` or `pushed`
+CRP without erasing its accepted history. It MUST append a forward-only
+reinstatement revision event; prior completion, push, receipt, and commit
+evidence remain immutable.
+
+1. **No concrete correction requests:** when `reinstate` has no `-Changes`
+   value, the CRP MUST return to `suggested`. It remains at Gate 1 awaiting
+   revised intent, plan, and explicit authorization; it MUST NOT start
+   implementation or BCR.
+2. **Concrete correction requests:** when `reinstate` includes a non-empty
+   `-Changes` value, the CRP MUST return to `in_progress`. After the named
+   corrections and focused verification pass, it MUST advance to `verified`
+   and launch an exact-identity BCR for that same CRP. It MUST NOT fall back to
+   a repository, active session, latest proposal, or prior BCR identity.
+3. A stale BCR session for the formerly delivered CRP MUST NOT be completed.
+   Completion remains valid only when the current revision is `in_review` and
+   the review identity matches that CRP revision.
 
 Proposals transition through the defined lifecycle via deterministic operator commands:
 - **`Proceed` / `Proceed <ID>`**: **Single-step status increment**. Deterministically advances matching proposal(s) forward by exactly one discrete Sync Point along the flat lifecycle continuum (`Suggested` $\rightarrow$ `Scoped` $\rightarrow$ `Decided` $\rightarrow$ `In_Progress` $\rightarrow$ `Verified` $\rightarrow$ `Committed` $\rightarrow$ `Published`).
@@ -661,6 +725,13 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 4. `ShowCM` is both the lifecycle overview and requested state-navigation surface. It MUST expose
    state-appropriate accept/reject actions and repository, cohort, and complete forms. Managed
    lifecycle hooks remain retained for governed transitions.
+
+### RULE-LCM-026: Explicit Control-Hub Target and Cohort Action Invariant
+1. **Explicit Target Identity**: A Control Hub operation `MUST` identify exactly one target before it is previewed or executed. The target kind is `CRP`, `COH`, or `workspace`; the interface `MUST NOT` infer it from a visible row, previously inspected proposal, or an implicit multi-selection.
+2. **Target-Scoped Actions**: CRP actions operate on one CRP. Cohort actions operate on the declared cohort and its current members. Workspace maintenance actions are outside the current CRP/cohort target and `MUST` be visibly separated from lifecycle controls.
+3. **Atomic Cohort Lifecycle Actions**: A lifecycle action on a cohort `MUST` evaluate every current member before any mutation. If one member is ineligible, the request `MUST` fail with member-specific reasons and leave every member unchanged. A successful request applies the same permitted transition to all members and records the cohort identity in the audit trail.
+4. **Cohort Membership Proposals**: A declared `COH-<prime>` is anchored by its immutable head/prime CRP and may contain that sole head; no minimum number of CRPs applies. Adding or removing non-head members `MUST` preview the complete membership delta and pass all head/prime, open-cohort, identity, and cross-repository validations before mutation. At most one open cohort may exist; Add `MUST` resolve it automatically rather than offer a cohort choice. Creation remains available when an open cohort exists, but creates an inactive cohort; only opening or reopening an inactive cohort is rejected while another cohort is open. Adding when no open cohort exists is rejected. The backend `MUST` recheck this invariant immediately before persistence. Closed cohorts are irrelevant, and inactive does not mean closed. Partial membership changes are prohibited.
+5. **FIX Presentation Boundary**: A Control Hub `FIX` action group may provide a unified operator entry point for review-confirmation exceptions, emergency quality deferrals, retirement, and supersession. `-Force` and `-Immediately` retain their distinct eligibility, reason, exact-identity, review, and termination requirements; a common label `MUST NOT` broaden either mechanism.
 
 ---
 

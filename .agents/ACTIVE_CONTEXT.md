@@ -52,7 +52,7 @@ graph TB
 * **Python Runtime:** Python 3.14 Base at `D:\Tools\Python314\python.exe` and Shared Virtualenv at `D:\Git_Repositories\.venv\Scripts\python.exe` (with `google-antigravity` SDK).
 * **PowerShell Runtime:** PowerShell 7 (`pwsh.exe` 7.0+) at `D:\Tools\PowerShell\7\pwsh.exe`.
 * **Visual Differential Review:** Beyond Compare 5 at `D:\Tools\Beyond Compare 5\BCompare.exe` via `Invoke-BeyondCompareReview.ps1` / `Submit-ReviewResult.ps1` (`RR.ps1`).
-* **Fast Search & Content Indexing:** `Everything.exe` and `es.exe` (v1.5.0.1418b (x64)+) at `D:\Tools\Everything 1.5a\` (Transitioning to `D:\Tools\Everything\`).
+* **Fast Search & Content Indexing:** `Everything.exe` and `es.exe` (v1.5.0.1418b (x64)+) at `D:\Tools\Everything 1.5a\`.
   * Index Database: `A:\EverythingIndex\Everything.db` (Indexed roots: `D:\Git_Repositories\**`, `D:\Tools\**`, `D:\OneDrive\Documents\**`).
   * IPC Communication: `\\.\pipe\Everything IPC`.
 * **Permanent Memory Architecture:** LCM durable memory is formally anchored across reboots in:
@@ -101,8 +101,8 @@ All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are au
 ### Stream A: Home Assistant / Tuya $\rightarrow$ IKEA Migration ([HaSSD06](file:///d:/Git_Repositories/HaSSD06/))
 * **Goal:** Migrate 11 Tuya WLAN smart plugs to IKEA Zigbee (INSPELNING / TRETAKT) on Zigbee2MQTT (Sonoff MG24 Dongle, Channel 25).
 * **Key Artifacts:**
-  * Mapping matrix: [tuya_ikea_mapping_matrix.csv](file:///d:/Git_Repositories/tuya_ikea_mapping_matrix.csv)
-  * Checklist: [HaSSD06/MIGRATION_CHECKLIST.md](file:///d:/Git_Repositories/HaSSD06/MIGRATION_CHECKLIST.md)
+  * Mapping matrix: [tuya_ikea_mapping_matrix.csv](file:///d:/Git_Repositories/HaSSD06/docs/Migration/tuya_ikea_mapping_matrix.csv)
+  * Checklist: [MIGRATION_CHECKLIST.md](file:///d:/Git_Repositories/HaSSD06/docs/Migration/MIGRATION_CHECKLIST.md)
   * MCP Server: `homeassistant-readonly` (`http://192.168.10.6:8123`)
 
 ### Stream B: Workspace AI & Antigravity Setup

@@ -9,7 +9,7 @@ Module: AnalysisGovernancePolicy
 Purpose: Defines modal separation between Read-Only Analysis and Governed Implementation, intent wake words, provenance tagging, search fencing, circuit breaker protocol, and Control Hub runtime state transparency.  
 Path: .agents/rules/AnalysisGovernancePolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 
@@ -20,6 +20,8 @@ Date: 2026-10-13
 In the Lifecycle Model (LCM), unconstrained speculative code modifications and premature implementations lead to architectural regressions and drift.
 
 To establish predictable, disciplined pair-programming collaboration, this policy institutes strict modal separation between **READ-ONLY ANALYSIS** and **GOVERNED IMPLEMENTATION**. This guarantees that complex investigations produce verified, model-first analytical foundations before any source code, configuration, or governance files are modified.
+
+Goal-First design is the required analytical starting point. Analysts establish the Gate 0 Contract defined by `RULE-GOAL-002`, then use discrepancies as inputs to a traceable design cycle rather than treating a symptom as an implementation assignment.
 
 ---
 
@@ -72,6 +74,7 @@ During active `READ_ONLY_ANALYSIS`, all generated responses must adhere to the 4
 1. **`IMPLEMENT` Transition Word**: The session transitions from `READ_ONLY_ANALYSIS` to **`GOVERNED_IMPLEMENTATION`** solely upon receipt of the explicit operator transition word **`IMPLEMENT`** (or approval commands such as `do <ID>`).
 2. **Path Binding**: Governed implementation `MUST` strictly follow and execute the consensus path, architecture decisions, and options settled during the prior `ANALYZE` phase.
 3. **Phase Exclusion Invariant**: During active `READ_ONLY_ANALYSIS`, the formulation, staging, or execution of Implementation CRPs or code modification directives is **STRICTLY FORBIDDEN**.
+4. **Goal-First Binding**: The implementation transition MUST bind to an accepted Gate 0 Contract and each candidate action MUST identify the target-state clause it serves.
 
 ---
 
@@ -101,6 +104,7 @@ Status: Implementation Halted | Reason: Ambiguity / Constraint Mismatch
 * Option C: <Abort change and restore prior baseline>.
 ```
 4. **Control Hub Flag**: The circuit breaker status is registered in the LCM Control Hub telemetry and halts execution runners until operator resolution.
+5. **Design Refinement**: The resumed analysis MUST identify the failed assumption as a discrepancy and propose the next Gate 0-traceable design cycle. A circuit breaker is not permission for a reactive local patch.
 
 ---
 

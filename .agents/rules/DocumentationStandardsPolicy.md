@@ -9,7 +9,7 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -61,6 +61,9 @@ Every LCM-governed repository `MUST` maintain three distinct core specifications
      ---
      ```
    - **Immediately below frontmatter**: The standardized DOX metadata header block per Section 1.
+
+### RULE-DOC-008: Goal-First Proposal Contract
+Every structural, cross-cutting, materially ambiguous, or scope-expanding CRP or BUG specification MUST retain a written Gate 0 Contract containing its target state, invariants and exit criteria, and explicit non-goals. Ordinary evidently scoped work may use its title or stated request as its target state and inherits the default Non-Goal: **Cause no havoc: ask rather than invent or infer, and avoid unnecessary complexity.** Its implementation plan MUST map each major component and verification activity to the applicable Gate 0 target state. This requirement complements, and does not replace, tripartite documentation or lifecycle review gates.
 
 ---
 
@@ -139,4 +142,3 @@ For governed repositories that scale beyond single-purpose scripts into multi-ca
 2. Content that is outdated is updated in place (names, paths, status), and a status line marks what no longer matches the live state. It is not deleted.
 3. A change that removes or shortens more than a few lines of a specification `MUST` be proposed first, naming the sections affected, and `MUST` be listed in the commit message.
 4. Superseding a document with a new one `MUST` keep the old content reachable (restored in place, or moved to a named retired location) in the same commit.
-

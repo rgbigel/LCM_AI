@@ -9,7 +9,7 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 
@@ -48,6 +48,7 @@ Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENT
 1. **DOIT Mode Execution**: When a proposal is in **`DOIT` Mode** (`always-proceed = $true`) — which occurs automatically upon `BUG` birth or when explicitly triggered on a `CRP` via the `do` command — AI pair-programming agents `SHALL` execute tool operations, script commands, and file edits directly under `always-proceed` and `allow` policies without introducing interactive chat planning pauses or per-tool confirmation prompts.
 2. **Universal Gate 2 Review Boundary**: Execution velocity under `DOIT` mode proceeds continuously until the downstream Gate 2 Review stage (`RR.ps1` / `Invoke-BeyondCompareReview.ps1`) is reached per `RULE-REV-001`. Even critical, urgent, or internally generated BUGs `MUST NOT` circumvent Gate 2 review.
 3. **Normal Cycle Alignment**: For CRPs progressing under the Normal Review Cycle via `Proceed`, agents implement approved changes with interactive checkpoints whenever open questions, architectural alternatives, or user choices are encountered.
+4. **Goal-First Efficiency**: Direct execution starts only after the active work has a Gate 0 Contract. This prevents repeated symptom-level loops; it does not add redundant tests or waive any existing gate.
 
 ### RULE-EFF-005 (Quality Gate Short-Circuiting & Negative-Outcome Prevention)
 1. **Short-Circuit on Upstream Failure**: Multi-phase quality gates (`Test-RepoReadiness.ps1`, `Test-WorkspaceReadiness.ps1`) `MUST` execute tiered validations in prerequisite order (`Structure` $\rightarrow$ `Formatting` $\rightarrow$ `GovernanceLinks` $\rightarrow$ `ElevationConsistency` $\rightarrow$ `DocumentationFabric` $\rightarrow$ `PesterSuite`). If any structural tier fails, execution `MUST` abort immediately with a diagnostic message without executing downstream test suites.
@@ -92,8 +93,6 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 - **Search Enforcement (RULE-EFF-007)**: All agents and tooling must use `es.exe` (directly or through `Search-Everything.ps1`) for file-system searches; `rg.exe` is the fallback content-search tool when the Everything content index is unavailable.
 - **Tool Discovery Enforcement (RULE-EFF-008)**: `tool_catalog.json` is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
 - **Path Safety Enforcement (RULE-ENV-003)**: All path constructions must be grounded via `$PSScriptRoot`, registered trampolines, or explicit pre-flight resolution; speculative traversal is prohibited.
-
-
 
 
 

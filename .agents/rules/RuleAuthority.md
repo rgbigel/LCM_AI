@@ -9,7 +9,7 @@ Module: RuleAuthority
 Purpose: Defines canonical rule authority, governance hierarchy, and mandatory cross-reference synchronization across the workspace.  
 Path: .agents/rules/RuleAuthority.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -30,8 +30,10 @@ Whenever an existing rule is updated, or a new rule/policy is created ("invented
 2. **Comprehensive Matrix**: Update [`LCM_AI/docs/LCM-Rules-Cross-Reference.md`](file:///d:/Git_Repositories/LCM_AI/docs/LCM-Rules-Cross-Reference.md) with the full metadata, enforcing scripts, and quality gate mappings.
 3. **Child Junction Verification**: Verify that the newly created rule is immediately visible across all child repository `.agents\rules` junctions.
 
+### `RULE-AUTH-003` (Goal-First Authority Alignment)
+The canonical `GoalFirstDesignPolicy.md` defines the Gate 0 Contract and traceability requirements. Other governance policies may apply those requirements but MUST NOT redefine a conflicting target-state or bypass rule.
+
 ---
 
 ## 2. Activation Commands
 - `@RULEAUTH`: Activates and validates the canonical source-of-truth and synchronization policy.
-

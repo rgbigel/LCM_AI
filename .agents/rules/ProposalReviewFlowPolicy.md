@@ -9,7 +9,7 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -21,6 +21,7 @@ Date: 2026-10-13
 When working in LCM mode (`active`), all user ideas, questions, and exploratory discussions `MUST` be treated as **Proposals only** (State = `suggested`).
 - The AI agent `MUST NOT` execute file modifications, code rewrites, or commits immediately upon receiving an initial idea or question.
 - When discussion yields a conclusive path of action, register the Change Request / Proposal with State `suggested` in `LCM_Inventory\data\proposals\proposals.json`.
+- Every structural proposal or BUG MUST include the Gate 0 Contract required by `RULE-GOAL-002` before it crosses the planning boundary. A reported symptom supplies intake evidence; it does not replace target-state definition.
 
 ### RULE-LCM-002: Batch Execution, Control Commands & Flow Switch Activation
 #### CRP-261 Transition Compatibility Rule
@@ -303,6 +304,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 4. **Strict Dual-Gate Lifecycle**:
    - **Gate 1 (Planning Gate)**: Propose solution / Register proposal bundle & plan $\rightarrow$ `STOP` and await explicit operator direction (`Proceed` or `do`). (BUGs bypass Gate 1 into `DOIT` mode).
    - **Review Decision Checkpoint (BC5 Review / Gate 2)**: Implement approved changes $\rightarrow$ Present visual diffs / walkthrough / BC5 review $\rightarrow$ `STOP` and await operator review disposition. Mandatory for all proposals, subject strictly to the two authorized exceptions in `RULE-REV-001`.
+5. **Specification Acceptance Authority**: At Gate 1, `Specification.md` is the authoritative proposal contract and the only bundle document requiring formal operator acceptance. `Implementation_Plan.md` and `Walkthrough.md` are supplementary design and evidence records; they neither withhold nor replace Specification acceptance. The ledger MUST retain the accepting operator, timestamp, accepted Specification path, and any stated acceptance scope.
 
 ### RULE-LCM-015: Strict Intake Classification Gate
 1. **Intake Signal Classification**:

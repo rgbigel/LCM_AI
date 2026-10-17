@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-10-15 22:39:27 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-10-17 23:26:43 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -44,7 +44,7 @@ Module: RuleAuthority
 Purpose: Defines canonical rule authority, governance hierarchy, and mandatory cross-reference synchronization across the workspace.  
 Path: .agents/rules/RuleAuthority.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -64,6 +64,9 @@ Whenever an existing rule is updated, or a new rule/policy is created ("invented
 1. **Root Quick-Reference Table**: Update [`AGENTS.md`](file:///d:/Git_Repositories/AGENTS.md) with the new rule name, rule codes (`RULE-*`), domain, scope, and key invariant.
 2. **Comprehensive Matrix**: Update [`LCM_AI/docs/LCM-Rules-Cross-Reference.md`](file:///d:/Git_Repositories/LCM_AI/docs/LCM-Rules-Cross-Reference.md) with the full metadata, enforcing scripts, and quality gate mappings.
 3. **Child Junction Verification**: Verify that the newly created rule is immediately visible across all child repository `.agents\rules` junctions.
+
+### `RULE-AUTH-003` (Goal-First Authority Alignment)
+The canonical `GoalFirstDesignPolicy.md` defines the Gate 0 Contract and traceability requirements. Other governance policies may apply those requirements but MUST NOT redefine a conflicting target-state or bypass rule.
 
 ---
 
@@ -301,7 +304,7 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -313,6 +316,7 @@ Date: 2026-10-13
 When working in LCM mode (`active`), all user ideas, questions, and exploratory discussions `MUST` be treated as **Proposals only** (State = `suggested`).
 - The AI agent `MUST NOT` execute file modifications, code rewrites, or commits immediately upon receiving an initial idea or question.
 - When discussion yields a conclusive path of action, register the Change Request / Proposal with State `suggested` in `LCM_Inventory\data\proposals\proposals.json`.
+- Every structural proposal or BUG MUST include the Gate 0 Contract required by `RULE-GOAL-002` before it crosses the planning boundary. A reported symptom supplies intake evidence; it does not replace target-state definition.
 
 ### RULE-LCM-002: Batch Execution, Control Commands & Flow Switch Activation
 #### CRP-261 Transition Compatibility Rule
@@ -595,6 +599,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 4. **Strict Dual-Gate Lifecycle**:
    - **Gate 1 (Planning Gate)**: Propose solution / Register proposal bundle & plan $\rightarrow$ `STOP` and await explicit operator direction (`Proceed` or `do`). (BUGs bypass Gate 1 into `DOIT` mode).
    - **Review Decision Checkpoint (BC5 Review / Gate 2)**: Implement approved changes $\rightarrow$ Present visual diffs / walkthrough / BC5 review $\rightarrow$ `STOP` and await operator review disposition. Mandatory for all proposals, subject strictly to the two authorized exceptions in `RULE-REV-001`.
+5. **Specification Acceptance Authority**: At Gate 1, `Specification.md` is the authoritative proposal contract and the only bundle document requiring formal operator acceptance. `Implementation_Plan.md` and `Walkthrough.md` are supplementary design and evidence records; they neither withhold nor replace Specification acceptance. The ledger MUST retain the accepting operator, timestamp, accepted Specification path, and any stated acceptance scope.
 
 ### RULE-LCM-015: Strict Intake Classification Gate
 1. **Intake Signal Classification**:
@@ -745,7 +750,7 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -789,6 +794,7 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 1. `LCM_Inventory/logs/cm_activity.log` (Append-only CM audit ledger).
 2. `LCM_Inventory/data/reviews/REVIEW-<Repo>-<Timestamp>.json` (Structured review evidence).
 3. The active Change Request (CR) record in `LCM_Inventory/data/change_requests.json` and mirrored proposal Markdown files when modifying governed baselines.
+4. The accepted Gate 0 Contract and the verification evidence for its exit criteria when the change is structural.
 
 ### RULE-REV-006: Mandatory Review Stop & Lifecycle Step Invariant
 1. **Mandatory Review Stop**: Whenever an agent carries out a CRP or code modification reaching the visual review stage (Gate 2), the agent `MUST` launch `Invoke-BeyondCompareReview.ps1` and **immediately terminate the current response turn without making additional tool calls**.
@@ -854,7 +860,7 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 
@@ -893,6 +899,7 @@ Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENT
 1. **DOIT Mode Execution**: When a proposal is in **`DOIT` Mode** (`always-proceed = $true`) — which occurs automatically upon `BUG` birth or when explicitly triggered on a `CRP` via the `do` command — AI pair-programming agents `SHALL` execute tool operations, script commands, and file edits directly under `always-proceed` and `allow` policies without introducing interactive chat planning pauses or per-tool confirmation prompts.
 2. **Universal Gate 2 Review Boundary**: Execution velocity under `DOIT` mode proceeds continuously until the downstream Gate 2 Review stage (`RR.ps1` / `Invoke-BeyondCompareReview.ps1`) is reached per `RULE-REV-001`. Even critical, urgent, or internally generated BUGs `MUST NOT` circumvent Gate 2 review.
 3. **Normal Cycle Alignment**: For CRPs progressing under the Normal Review Cycle via `Proceed`, agents implement approved changes with interactive checkpoints whenever open questions, architectural alternatives, or user choices are encountered.
+4. **Goal-First Efficiency**: Direct execution starts only after the active work has a Gate 0 Contract. This prevents repeated symptom-level loops; it does not add redundant tests or waive any existing gate.
 
 ### RULE-EFF-005 (Quality Gate Short-Circuiting & Negative-Outcome Prevention)
 1. **Short-Circuit on Upstream Failure**: Multi-phase quality gates (`Test-RepoReadiness.ps1`, `Test-WorkspaceReadiness.ps1`) `MUST` execute tiered validations in prerequisite order (`Structure` $\rightarrow$ `Formatting` $\rightarrow$ `GovernanceLinks` $\rightarrow$ `ElevationConsistency` $\rightarrow$ `DocumentationFabric` $\rightarrow$ `PesterSuite`). If any structural tier fails, execution `MUST` abort immediately with a diagnostic message without executing downstream test suites.
@@ -1403,7 +1410,7 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -1455,6 +1462,9 @@ Every LCM-governed repository `MUST` maintain three distinct core specifications
      ---
      ```
    - **Immediately below frontmatter**: The standardized DOX metadata header block per Section 1.
+
+### RULE-DOC-008: Goal-First Proposal Contract
+Every structural, cross-cutting, materially ambiguous, or scope-expanding CRP or BUG specification MUST retain a written Gate 0 Contract containing its target state, invariants and exit criteria, and explicit non-goals. Ordinary evidently scoped work may use its title or stated request as its target state and inherits the default Non-Goal: **Cause no havoc: ask rather than invent or infer, and avoid unnecessary complexity.** Its implementation plan MUST map each major component and verification activity to the applicable Gate 0 target state. This requirement complements, and does not replace, tripartite documentation or lifecycle review gates.
 
 ---
 
@@ -1812,7 +1822,7 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 
 | Rule File | Rule Identifiers | Domain | Scope | Core Invariant |
 |:---|:---|:---|:---|:---|
-| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `024` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), and Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`). |
+| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `024` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), and Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`). |
 | **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `022` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), and Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`). |
 | **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `010` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, and Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`). |
 | **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `008`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing. |
@@ -1829,6 +1839,7 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 | **[DisplayStandardsPolicy.md](file:///.agents/rules/DisplayStandardsPolicy.md)** | `RULE-DSP-001` - `016` | **UI & Display Standards** | All UI Displays, Dashboards & GUIs | Antigravity-IDE Light Mode default palette & typography (`IBM Plex Mono/Sans`, `CM_CONTROL_HUB_IMPLEMENTATION_0.html`), Topbar & Status Rail architecture, Lucide vector icons, WPF/WinForms desktop GUIs, print-to-PDF paged media, theme persistence, desktop dispatching, IDE Canvas forward-compatibility, test window hygiene, and dynamic tool versioning. |
 | **[SubsystemGovernancePolicy.md](file:///.agents/rules/SubsystemGovernancePolicy.md)** | `RULE-SUB-001` - `007` | **Subsystem Architecture** | Subsystem Repositories | Disjunct domains, dedicated subsystem inventories, JIT ephemeral tokens, host safety hardware interlocks, log segregation, Update-Gate & CRP bundling, central registry non-mutation invariant. |
 | **[AnalysisGovernancePolicy.md](file:///.agents/rules/AnalysisGovernancePolicy.md)** | `RULE-ANA-001` - `006` | **Analysis Governance** | Workspace & Gemini Sessions | Intent wake words (`ANALYZE` / `IMPLEMENT`), read-only tool lock, provenance tagging (`[VERIFIED]`, `[GAP]`), search radius fence ($\le 2$), Circuit Breaker protocol (`[ANALYSIS RESUMED]`), and runtime state transparency. |
+| **[GoalFirstDesignPolicy.md](file:///.agents/rules/GoalFirstDesignPolicy.md)** | `RULE-GOAL-001` - `005` | **Goal-First Design** | Workspace-wide | Gate 0 target-state contracts, implicit no-havoc non-goals for ordinary evident work, explicit contracts for structural scope, traceability, and safeguard preservation. |
 | **[RuleAuthority.md](file:///.agents/rules/RuleAuthority.md)** | `RULE-AUTHORITY` | **Governance Hierarchy** | Core Governance | Single source of truth, no rule forking, machine-readable canonical rules in `.agents/rules/`. |
 | **[macro-definitions.md](file:///.agents/rules/macro-definitions.md)** | `MACRO-DEFS` | **Operator Macros** | Interactive Shell | Antigravity IDE bare-word standard (`ToolExplorer`, `ShowTools`, `tools`, `ar`, `bcr`, `COMPLETE`, `PUSH`), `@tsr` superseded by persistent `TimestampHeaderRule`, `@RULEAUTH`, `@ml`. |
 

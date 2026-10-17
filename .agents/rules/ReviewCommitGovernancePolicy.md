@@ -9,7 +9,7 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -53,6 +53,7 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 1. `LCM_Inventory/logs/cm_activity.log` (Append-only CM audit ledger).
 2. `LCM_Inventory/data/reviews/REVIEW-<Repo>-<Timestamp>.json` (Structured review evidence).
 3. The active Change Request (CR) record in `LCM_Inventory/data/change_requests.json` and mirrored proposal Markdown files when modifying governed baselines.
+4. The accepted Gate 0 Contract and the verification evidence for its exit criteria when the change is structural.
 
 ### RULE-REV-006: Mandatory Review Stop & Lifecycle Step Invariant
 1. **Mandatory Review Stop**: Whenever an agent carries out a CRP or code modification reaching the visual review stage (Gate 2), the agent `MUST` launch `Invoke-BeyondCompareReview.ps1` and **immediately terminate the current response turn without making additional tool calls**.

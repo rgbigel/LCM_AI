@@ -159,7 +159,6 @@ Saved: 2026-10-17 23:30:19
 | HaSSD06_Inventory | NewStructure | b70af18 | published |
 | InstallFonts | main | 37a275a | committed, no upstream |
 | LCM_AI | main | 13c0c9e | committed, unpublished: 1 |
-| LCM_Backup | NewStructure | 79c912e | committed, no upstream |
 | LCM_Inventory | main | 24adeea | committed, unpublished: 6 |
 | LCM_Shared | NewStructure | 0707065 | published |
 | LCM_Supervision | NewStructure | 5ebecc4 | committed, unpublished: 1 |

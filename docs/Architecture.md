@@ -4,9 +4,9 @@ Module: docs/Architecture.md
 Purpose: Authoritative architectural specification for the Lifecycle Model (LCM) multi-repository governance framework.  
 Path: D:/Git_Repositories/LCM_AI/docs/Architecture.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Architecture  
-Date: 2026-10-13
+Date: 2026-10-18
 
 ---
 
@@ -32,9 +32,8 @@ graph TB
         end
 
         subgraph GovernedRepos["Current Physical LCM Roots"]
-            COMP1["LCM_Backup<br/>backup subsystem"]
-            COMP2["LCM_Supervision<br/>supervision subsystem"]
-            COMP3["LCM_Shared<br/>shared modules"]
+            COMP1["LCM_Supervision<br/>supervision subsystem"]
+            COMP2["LCM_Shared<br/>shared modules"]
         end
     end
 
@@ -43,7 +42,6 @@ graph TB
     CanonicalHub ==>|".agents/rules [NTFS Junction]"| SM
     CanonicalHub ==>|".agents/rules [NTFS Junction]"| COMP1
     CanonicalHub ==>|".agents/rules [NTFS Junction]"| COMP2
-    CanonicalHub ==>|".agents/rules [NTFS Junction]"| COMP3
     WAI -->|"Releases LCM Baselines"| WI
     WAI -->|"Releases LCM Baselines"| GovernedRepos
     WI -->|"Audits Drift & Manages Review Receipts"| RootContainer
@@ -63,8 +61,7 @@ graph TD
     
     Hub -->|NTFS Junction| J1["LCM_Inventory/.agents/rules"]
     Hub -->|NTFS Junction| J2["LCM_Shared/.agents/rules"]
-    Hub -->|NTFS Junction| J3["LCM_Backup/.agents/rules"]
-    Hub -->|NTFS Junction| J4["LCM_Supervision/.agents/rules"]
+    Hub -->|NTFS Junction| J3["LCM_Supervision/.agents/rules"]
 
 
 ```

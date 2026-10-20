@@ -6,15 +6,6 @@
 
 ---
 
-## GoodMorning Reminder: Incomplete GoodNIGHT Save
-
-The 2026-10-14 GoodNIGHT procedure did not run IDE **Save All**. Before
-resuming work, use **Save All** to flush any open editor buffers and confirm
-that permanent and accumulated session knowledge is persisted on disk. The
-durable GoodMorning/GoodNIGHT implementation is tracked by CRP-277.
-
-Going forward, GoodNIGHT must include **Save All** before it records completion.
-
 ---
 
 ## 1. Key Accomplishments This Session

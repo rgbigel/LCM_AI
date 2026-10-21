@@ -1,6 +1,6 @@
-# Change Request Proposal: CRP-270
+﻿# Change Request Proposal: CRP-270
 
-`yaml
+```yaml
 CRP-ID: CRP-270
 Title: LCM Beta 10.0.0 Pass 1 Publication - LCM_AI
 Scope: LCM_AI
@@ -12,7 +12,7 @@ Plan-State: suggested
 Progress-State: undecided
 Priority: High
 App-ID: None
-`
+```
 
 ---
 

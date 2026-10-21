@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-10-20 21:09:02 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-10-21 13:50:05 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -911,7 +911,7 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 ---
 
 ### RULE-EFF-007: Mandatory Search Dispatch Standard
-- File-name searches **must** use Everything's `es.exe` CLI, preferably through `Search-Everything.ps1` (`LCM_Inventory/tools/Search-Everything.ps1`). `es.exe` is resolved from PATH (the Everything directory is a Machine PATH entry set by `Set-GitRoot.ps1` from `docs/Requisites/external-tools.json`).
+- File-name searches **must** use Everything's `es.exe` CLI, preferably through `Search-Everything.ps1` (`LCM_Inventory/tools/Search-Everything.ps1`). `es.exe` is resolved from PATH (the Everything directory is a Machine PATH entry set by `Set-GitRoot.ps1` from `LCM_AI/docs/Requisites/external-tools.json`).
 - Direct `es.exe` execution is **allowed from interactive desktop sessions** (agents, operator shells). It remains **prohibited in Session 0 and scheduled-task contexts**, where Everything's IPC is not authorized; those contexts use the wrapper, which falls back automatically.
 - Transport order of `Search-Everything.ps1`: (1) `es.exe`, (2) the Everything HTTP REST API (port 8080, only if the operator enabled it), (3) a scoped `Get-ChildItem` scan. Failure of one transport never fails the operation.
 - Content searches use `es.exe` with the `content:` filter when the Everything content index is healthy, otherwise `rg.exe` (installed machine-wide, see the Requisites manifest). Index changes are visible after a delay of usually under one second.

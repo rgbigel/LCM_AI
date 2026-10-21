@@ -93,6 +93,8 @@ All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are au
    * `RULE-CTX-002`: Fast-tier ingestion (`LCM_Inventory/config.json`, `README.md`, proposals) with unonboarded candidate fallback.
    * `RULE-CTX-003`: Zero redundant scan invariant.
    * `RULE-CTX-004`: Continuous methodology triad awareness.
+   * `RULE-CTX-005`: Learned advice; read `ACTIVE_CONTEXT.md` and `LEARNED_ADVICE.md` at session start, accepted entries are binding, `/learn` adds candidates, review no later than push.
+   * `RULE-CTX-006`: GoodMorning session start; run `Invoke-WorkspaceGoodMorning.ps1 -Auto`, report attention items first, confirm the context files were read (read-only).
 
 ---
 
@@ -117,7 +119,7 @@ All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are au
   * `LCM_Shared`: Modernized assertions to Pester v5, pre-push hook active, reviewed & pushed (`06c4c86`).
   * `LCM_AI`: Quality gate `Assert-PesterV5Syntax` and pre-push scaffold deployed, reviewed & pushed (`40e345b`).
   * `LCM_Inventory`: `Invoke-BeyondCompareReview.ps1` fixed (`HEAD` default, absolute paths, interactive desktop launcher `/it`), reviewed & pushed (`391fa4f`).
-* **Session Snapshot:** Authoritative state saved in [**`LCM_Inventory/docs/ACTIVE_SESSION_CONTEXT.md`**](file:///d:/Git_Repositories/LCM_Inventory/docs/ACTIVE_SESSION_CONTEXT.md) and [**`LCM_Inventory/data/session_state/SESSION_SNAPSHOT_20260818.json`**](file:///d:/Git_Repositories/LCM_Inventory/data/session_state/SESSION_SNAPSHOT_20260818.json).
+* **Session Snapshot:** The current state is the auto-generated `Session Snapshot` block at the end of this file (written by `Save-AllSessionMemory.ps1`, read by GoodMorning). Earlier hand-kept snapshots (`LCM_Inventory/docs/ACTIVE_SESSION_CONTEXT.md`, `LCM_Inventory/data/session_state/SESSION_SNAPSHOT_20260818.json`) are historical (2026-08/10) and not authoritative.
 
 ---
 

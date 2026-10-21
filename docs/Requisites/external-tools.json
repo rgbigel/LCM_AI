@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "description": "External (non-LCM) tools the LCM workspace depends on. Consumed by Set-GitRoot.ps1 (adds addToPath directories to the Machine PATH) and Test-ExternalTools.ps1 (readiness check). Paths are absolute install locations; the workspace root itself is only ever read from the Machine registry value Git_Root.",
+  "tools": [
+    {
+      "name": "Everything",
+      "role": "Instant file-name and content search (es.exe CLI)",
+      "dir": "D:\\Tools\\Everything 1.5a",
+      "probe": "es.exe",
+      "addToPath": true,
+      "rule": "RULE-EFF-007"
+    },
+    {
+      "name": "BeyondCompare",
+      "role": "Review gate and Giant Review (BComp.com / BCompare.exe)",
+      "dir": "C:\\Program Files\\Beyond Compare 5",
+      "probe": "BComp.com",
+      "addToPath": true,
+      "rule": "RULE-REV-001"
+    },
+    {
+      "name": "ripgrep",
+      "role": "Mandatory content search",
+      "dir": "D:\\Tools\\rg\\ripgrep-15.2.0-x86_64-pc-windows-msvc",
+      "probe": "rg.exe",
+      "addToPath": true,
+      "rule": "RULE-EFF-007"
+    },
+    {
+      "name": "PowerShell7",
+      "role": "Script host",
+      "dir": "D:\\Tools\\PowerShell\\7",
+      "probe": "pwsh.exe",
+      "addToPath": false,
+      "rule": "PowerShellStandardsPolicy"
+    }
+  ],
+  "everythingIni": {
+    "file": "D:\\Tools\\Everything 1.5a\\Everything.ini",
+    "note": "Content search (content:) only works when content indexing is on and covers the workspace and the file types below. Changes show up in the index with a delay of usually under one second.",
+    "required": {
+      "content_indexing_enabled": "1"
+    },
+    "includeFolderMustCover": "D:\\Git_Repositories",
+    "includeFileTypesMustCover": ["*.md", "*.ps1", "*.psm1", "*.json"]
+  }
+}

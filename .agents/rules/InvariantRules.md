@@ -41,6 +41,7 @@ Date: 2026-10-13
   `YYYYMMDD_HHMM "<short-task-description>"`
   Permanent, automated mechanism inherited across all sessions (replaces manual `@tsr` / `@THR` / `@TRH` prompting).
 - **tool-and-log-timestamp-precision**: Tool execution timestamps, generated log file names, and internal log entries `MUST` include at least second-level precision (`ss`) (e.g. `yyyyMMdd_HHmmss` or `yyyy-MM-dd HH:mm:ss[.fff]`). The minute-level format (`YYYYMMDD_HHMM`) applies strictly and exclusively to the assistant chat response header, never to tools or logs.
+- **comment-preservation**: Comments and documentation are first-class assets equivalent to executable code across ALL file formats (`*.ps1`, `*.psm1`, `*.js`, `*.ts`, `*.py`, `*.json`, `*.md`, `*.html`, `*.css`, `*.cmd`, etc.). No redesign, refactoring, code formatting, auto-repair, or optimization may silently delete, strip, or truncate comments, docstrings, or explanatory remarks. Editing comments to update or correct them is permitted; wholesale stripping or deletion of comments is strictly prohibited. For JSON configurations, comment properties (e.g. `_comment`, `//`, `description`, `notes`) must be preserved across serialization and editing.
 - **no-backtick-line-continuations**: Script generation must not use backticks (`` ` ``) for line continuation; use splatting, pipeline wrapping, or parenthesized expressions instead.
 
 ---

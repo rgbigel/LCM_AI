@@ -142,3 +142,12 @@ For governed repositories that scale beyond single-purpose scripts into multi-ca
 2. Content that is outdated is updated in place (names, paths, status), and a status line marks what no longer matches the live state. It is not deleted.
 3. A change that removes or shortens more than a few lines of a specification `MUST` be proposed first, naming the sections affected, and `MUST` be listed in the commit message.
 4. Superseding a document with a new one `MUST` keep the old content reachable (restored in place, or moved to a named retired location) in the same commit.
+
+---
+
+### RULE-DOC-009: Comment & Documentation Preservation Invariant (Zero Comment Destruction)
+1. **First-Class Asset Equivalence**: Comments, docstrings, Comment-Based Help blocks, and explanatory notes are first-class intellectual property and architecture records equivalent to executable code across ALL sources and file types (`*.ps1`, `*.psm1`, `*.js`, `*.ts`, `*.py`, `*.json`, `*.md`, `*.html`, `*.css`, `*.cmd`, `*.bat`, `*.go`).
+2. **Prohibition of Wholesale Deletion / Stripping**: No redesign, code modification, refactoring, structural cleanup, automated linting, code formatting, auto-repair, or optimization may silently delete, strip, or truncate comments. Wholesale stripping or removal of explanatory comments is strictly forbidden.
+3. **In-Place Correction Permitted**: Editing comments to maintain factual accuracy, correcting outdated paths/versions/names, or expanding documentation is permitted and encouraged, but the explanatory context must be preserved, not removed.
+4. **JSON Comment Preservation Invariant**: In `.json` files, comment keys (including `_comment`, `//`, `description`, `notes`, or metadata header properties) are semantic assets. All JSON processors, serialization routines, parsers, formatters, and migration engines MUST preserve these comment fields intact; stripping comments during deserialization/reserialization is strictly prohibited.
+5. **Quality Gate Enforcement**: Universal and incremental governance gates (`Test-LCMIncrementalGovernance.ps1`, `LCM_QualityGates.psm1`, and `Test-ReviewCommitGate.ps1`) MUST audit change diffs for deleted comment lines without corresponding replacements and fail the gate whenever comment destruction is detected.

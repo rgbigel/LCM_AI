@@ -3,7 +3,7 @@
 Module: LCM_AI/docs/LCM_Subsystem_Architecture.md
 Purpose: Subsystem taxonomy, ownership boundaries, log routing and repository tracking for the current LCM workspace.
 Path: D:/Git_Repositories/LCM_AI/docs/LCM_Subsystem_Architecture.md
-Authors: Rolf, Workspace_AI Engine
+Authors: Rolf, LCM_AI Engine
 Version: 10.0.0
 Status: Authoritative Architecture
 Date: 2026-10-21

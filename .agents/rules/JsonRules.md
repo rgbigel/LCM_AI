@@ -24,5 +24,6 @@ Date: 2026-10-13
 - **schema-declaration**: JSON data files should include a `$schema` property referencing a valid draft schema when applicable.
 - **ascii-default**: ASCII recommended for keys and identifiers; UTF-8 strings permitted for localized values.
 - **deterministic-output**: Predictable, key-ordered serialization (`[ordered]@{ ... }`).
+- **comment-preservation**: JSON comments or documentation properties (such as `_comment`, `//`, `description`, `notes`) are semantic assets. Parsing, modifying, or serializing JSON files MUST preserve all existing comment properties and documentation notes intact; stripping them during formatting or transformations is strictly forbidden.
 
 

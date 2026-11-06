@@ -1,9 +1,16 @@
 # Parent Workspace: Solution.code-workspace
 
-**Mirrored From**: `D:\VSCode-Workspaces\Solution.code-workspace`
-**Mirrored At**: 2026-09-04
-**LCM Version**: V10.0.0
-**Purpose**: Authoritative mirror of the parent VS Code workspace configuration into LCM documentation hierarchy for governance transparency and session context recovery.
+Module: docs/Parent_Workspace_Solution.md  
+Purpose: Authoritative mirror of the parent VS Code workspace configuration into LCM documentation hierarchy.  
+Path: LCM_AI/docs/Parent_Workspace_Solution.md  
+Authors: Rolf, LCM_AI Engine  
+Version: 10.0.0  
+Status: Authoritative Standard  
+Date: 2026-11-06  
+
+**Mirrored From**: `D:\VSCode-Workspaces\Solution.code-workspace`  
+**Mirrored At**: 2026-09-04  
+**LCM Version**: V10.0.0  
 
 ---
 
@@ -65,7 +72,7 @@ The workspace registers the following root folders:
 - Header-level version metadata in `.ps1` files is left to quality-management (`QM`) tools and is **not** directly bumped during workspace-level version increments.
 
 ### 4.2 Pre-Push Enforcement
-- The pre-push pipeline via [`Workspace_Inventory/tools/Invoke-WorkspacePush.ps1`](file:///D:/Git_Repositories/Workspace_Inventory/tools/Invoke-WorkspacePush.ps1) enforces that all LCM subsystems are pushed **simultaneously** ([RULE-LCM-005](file:///D:/Git_Repositories/.agents/rules/ProposalReviewFlowPolicy.md)).
+- The pre-push pipeline via [`LCM_Inventory/tools/Invoke-LCM_Push.ps1`](file:///D:/Git_Repositories/LCM_Inventory/tools/Invoke-LCM_Push.ps1) enforces that all LCM subsystems are pushed **simultaneously** ([RULE-LCM-005](file:///D:/Git_Repositories/.agents/rules/ProposalReviewFlowPolicy.md)).
 - The `Update-Gemini` pipeline is triggered automatically as Step 0 before push ([RULE-LCM-013](file:///D:/Git_Repositories/.agents/rules/ProposalReviewFlowPolicy.md)).
 
 ### 4.3 Parent Workspace Metadata Alignment

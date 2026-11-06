@@ -1,4 +1,4 @@
-﻿# Lifecycle Model (LCM) Authoritative Governance Framework
+# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
 > *Exported on: 2026-11-06 10:22:20 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 

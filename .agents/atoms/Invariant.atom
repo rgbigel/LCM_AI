@@ -1,4 +1,4 @@
-﻿# Invariant Atom
+# Invariant Atom
 - All rules must be deterministic.
 - No hidden side effects.
 - No workspace‑external paths.

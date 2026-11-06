@@ -8,6 +8,7 @@
 # Logs & Temporary Files
 logs/
 scratch/
+data/readiness/
 *.log
 *.tmp
 *.bak

@@ -57,7 +57,7 @@ MACRO: profile status
 MACRO: GoodMorning
 - description: full read-only session-start check (RULE-CTX-006): time gap, work in between, versions, context staleness, pending learned advice
 - syntax: GoodMorning
-- primary target: LCM_Inventory/tools/Invoke-WorkspaceGoodMorning.ps1 -Force
+- primary target: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1 -Force
 - rules:
   - report every attention item to the operator before other work
   - confirm that ACTIVE_CONTEXT.md and LEARNED_ADVICE.md were read and can be followed
@@ -191,7 +191,7 @@ MACRO: PUBLISH
 - syntax: publish [repo] | PUBLISH [repo]
 - aliases: publish, PUBLISH, push, PUSH
 - rules:
-  - 'publish <repo>' or 'PUBLISH <repo>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-WorkspacePush.ps1 -Repositories <repo>'
+  - 'publish <repo>' or 'PUBLISH <repo>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-LCM_Push.ps1 -Repositories <repo>'
   - `push` and `PUSH` remain backward-compatible aliases.
   - requires every target proposal to be completed and LCM_Inventory to be ahead before any remote dispatch
 

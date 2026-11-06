@@ -312,5 +312,39 @@ Whenever a permanent repository script (`*.ps1`, `*.psm1`, `*.psd1`) or test fil
 4. **Pre-Flight Linter & AST Scan Pattern**:
    Any occurrence of `\$[a-zA-Z0-9_]` or `\$PSItem` or `\$_` in PowerShell scripts or command blocks represents a fatal syntax defect and fails workspace readiness gates.
 
+---
+
+### RULE-PS-023: Left-Side Null Equality Comparison Invariant
+In PowerShell equality comparisons (`-eq`, `-ne`), `$null` `MUST ALWAYS` be positioned on the **left side** of the operator.
+1. **Rationale & Array Filtering Behavior**:
+   In PowerShell, when the left operand of an equality operator is an array or collection, the operator acts as a filter returning elements that match, rather than evaluating to a scalar boolean. When `$null` is placed on the right (e.g. `$items -eq $null`), an array containing null elements yields an array of `$null`s (which evaluates to truthy), leading to subtle logical bugs. Placing `$null` on the left (`$null -eq $items`) guarantees an unambiguous scalar boolean comparison regardless of the right-hand operand type.
+2. **PSScriptAnalyzer Alignment**:
+   This invariant enforces complete compliance with PSScriptAnalyzer rule `PSPossibleIncorrectComparisonWithNull` (`$null should be on the left side of equality comparisons`).
+3. **Mandatory Syntax Standard**:
+   - **Correct**:
+     ```powershell
+     if ($null -ne $parent) { ... }
+     while ($null -eq $response) { ... }
+     ```
+   - **Forbidden**:
+     ```powershell
+     if ($parent -ne $null) { ... }   # Violates RULE-PS-023 / PSPossibleIncorrectComparisonWithNull
+     while ($response -eq $null) { ... }
+     ```
+
+---
+
+### RULE-PS-024: Prohibition of Implicit Confirmation & SupportsShouldProcess Over-Engineering
+1. **Bare CmdletBinding Standard**:
+   Custom workspace tools, cmdlets, and scripts `MUST NOT` declare `SupportsShouldProcess = $true` or specify `ConfirmImpact` attributes in their `[CmdletBinding()]` declarations. Scripts `MUST` use standard, bare `[CmdletBinding()]`.
+2. **Rationale**:
+   PowerShell's `SupportsShouldProcess` framework introduces implicit, out-of-band runtime confirmation prompts (especially when the host session's `$ConfirmPreference` is `High`). This causes unattended scripts and automated agent tools to stall waiting for interactive console input, obscures control flow, and creates contradictory execution behavior between interactive and non-interactive sessions.
+3. **Explicit In-Code Confirmation Invariant**:
+   If an operation genuinely requires operator confirmation (such as destructive disk operations, irreversible volume alterations, or data pruning), that confirmation `MUST` be implemented explicitly in the script's code flow (e.g., via `Read-Host`, explicit prompt logic, or dedicated `-Force` switch parameters), where all prompts, user choices, and outcomes are visibly logged and exceptions are caught via `try { ... } catch { ... }`.
+4. **Opportunistic Remediation on Acceptance**:
+   Whenever any existing script is edited, refactored, or reviewed under a proposal, any lingering `SupportsShouldProcess` or `ConfirmImpact` declarations `MUST` be removed as part of the standard pre-acceptance quality check.
+
+
+
 
 

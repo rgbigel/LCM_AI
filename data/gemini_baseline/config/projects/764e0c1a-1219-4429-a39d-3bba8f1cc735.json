@@ -1,0 +1,11 @@
+{
+  "id":  "764e0c1a-1219-4429-a39d-3bba8f1cc735",
+  "name":  "android-cli-plugin/compose-preview",
+  "projectResources":  {},
+  "permissionGrants":  {
+    "permissionGrants":  {}
+  },
+  "settings":  {
+    "artifactReviewMode":  "ARTIFACT_REVIEW_MODE_TURBO"
+  }
+}

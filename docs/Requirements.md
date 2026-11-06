@@ -2,21 +2,28 @@
 
 ModulePath: docs/Requirements.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Requirements  
-Date: 2026-10-13
+Date: 2026-10-21
 
 ---
 
 ## 1. Scope & Governance Authority
 
-This document specifies the normative requirements for the **LCM_AI Lifecycle Model (LCM) Version 10.0.0**, governing `LCM_AI`, `LCM_Inventory`, and all component repositories within the multi-root solution workspace (`D:\Git_Repositories\`).
+This document specifies the normative requirements for the **LCM_AI Lifecycle Model (LCM) Version 10.0.1**, governing `LCM_AI`, `LCM_Inventory`, and all component repositories within the multi-root solution workspace (`D:\Git_Repositories\`).
 
 An operation or repository is LCM-conformant only when:
 - All applicable `MUST` and `MUST NOT` normative constraints are satisfied.
 - Every approved exception is explicit, scoped, reasoned, and documented in `LCM_Inventory/overrides.json`.
 - System prerequisites are verified and active.
 - Required verification evidence is captured and preserved.
+
+At governed commit time, the LCM_AI package version MUST equal the maximum
+semantic version in its owned component metadata, including `.agents/rules`.
+README and the authoritative Architecture, Requirements, and Implementation
+headers MUST agree. Validation MUST inspect staged content, exclude historical
+and third-party evidence, and block mismatches before commit authorization.
+Component minor and patch versions MUST NOT be flattened to the package version.
 
 ---
 

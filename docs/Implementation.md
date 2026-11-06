@@ -2,15 +2,25 @@
 
 ModulePath: docs/Implementation.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Implementation  
-Date: 2026-10-13
+Date: 2026-10-21
 
 ---
 
 ## 1. Directory Structure & Execution Topology
 
-Under LCM 10.0.0, the governance and execution tooling is organized into functional categories across [`LCM_AI`](file:///D:/Git_Repositories/LCM_AI) (Governance Authority & Baseline Source) and [`LCM_Inventory`](file:///D:/Git_Repositories/LCM_Inventory) (Configuration Management Engine).
+Under LCM 10.0.1, the governance and execution tooling is organized into functional categories across [`LCM_AI`](file:///D:/Git_Repositories/LCM_AI) (Governance Authority & Baseline Source) and [`LCM_Inventory`](file:///D:/Git_Repositories/LCM_Inventory) (Configuration Management Engine).
+
+At governed commit time, `Submit-ReviewResult.ps1` and `Test-ReviewCommitGate.ps1`
+validate the Git index with `LcmPackageVersion.psm1`. The package version in
+README and the three authoritative specifications must equal the maximum
+semantic version in owned component metadata, including `.agents/rules`.
+The scan excludes historical logs, proposals, retained analysis, generated rule
+exports, data, and scaffold templates. Only metadata fields within the first
+30 lines participate; version mentions in prose are not release metadata.
+A mismatch blocks the commit and identifies the required version; metadata must
+be corrected before renewed review, never silently rewritten after acceptance.
 
 ### A. PowerShell CLI Tools
 

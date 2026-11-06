@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-10-21 13:50:05 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-06 10:21:29 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -1628,8 +1628,8 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 > **Category**: 4. Documentation & Subsystem Architecture | **Canonical Source**: `.agents/rules/macro-definitions.md`
 
 # macro-definitions.md
-# version: 10.0.0
-# date: 2026-10-13
+# version: 10.0.1
+# date: 2026-10-21
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory
@@ -1694,6 +1694,7 @@ MACRO: ToolExplorer
 - syntax: ToolExplorer [switches] | tools [switches] | ShowTools [switches]
 - aliases: tools, ToolsExplorer, ShowTools
 - primary target: LCM_Inventory/tools/Show-ToolsExplorer.ps1 (trampolines: LCM_Inventory/Cmd/ToolExplorer.cmd, ToolsExplorer.cmd)
+- delivery: publish and open only through http://127.0.0.1:9876; pages, assets, data, and refreshes must not use file URLs or offline local-file fallbacks
 - parameters:
   - -Audience <User|Dev|All>: pre-filter audience category (defaults to 'User')
   - -Group <Name>: pre-filter by group or subsystem (e.g. 'HaSSD06', 'LCM', 'SystemConfiguration')
@@ -1711,6 +1712,29 @@ MACRO: ToolExplorer
   - 'ToolExplorer -Audience Dev' -> launches Tool Explorer filtered to internal developer tools
   - 'ToolExplorer -HaSSD06' -> launches Tool Explorer filtered to HaSSD06 subsystem
   - 'ToolExplorer -NoBrowser' -> renders tool catalog directly in console
+
+MACRO: AnalyzeFailures
+- description: investigate session failures and execution-purpose evidence, retain Markdown/JSON, and open the readable failure-analysis snapshot
+- syntax: AnalyzeFailures -Number <item> | AnalyzeFailures -From <literal text>
+- primary target: LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1 (trampoline: LCM_Inventory/Cmd/AnalyzeFailures.cmd)
+- parameters:
+  - -TranscriptPath <path>: analyze only the supplied offline transcript
+  - -NoLaunch: retain reports and the viewer snapshot without opening a browser
+- rules:
+  - a missing requested anchor is an error; never silently substitute another session or selection
+  - the viewer uses the existing port-9876 daemon only; opening a retained snapshot does not rerun the analysis
+
+MACRO: ShowFailureAnalysis
+- description: open a readable retained failure-analysis report without executing its producer
+- syntax: ShowFailureAnalysis [-ReportPath <exact .md or .json path>] [-NoLaunch]
+- primary target: LCM_Inventory/tools/Show-FailureAnalysis.ps1 (trampoline: LCM_Inventory/Cmd/ShowFailureAnalysis.cmd)
+- parameters:
+  - -ReportPath <path>: select the exact retained report
+  - -SnapshotRoot <directory>: override the backend snapshot destination; a noncanonical destination requires -NoLaunch
+  - -NoLaunch: build the snapshot without opening a browser
+- rules:
+  - pages, scripts, styles, and report data are delivered only by http://127.0.0.1:9876
+  - retained source references and evidence limitations are preserved; context alone is not proof of authorization
 
 MACRO: set-tool-audience
 - description: configure whether a tool is User-exposed or Developer-only

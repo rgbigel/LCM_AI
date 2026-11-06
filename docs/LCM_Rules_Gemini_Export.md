@@ -1,6 +1,6 @@
-# Lifecycle Model (LCM) Authoritative Governance Framework
+﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-06 10:22:20 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-06 23:13:59 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -117,6 +117,7 @@ Date: 2026-10-13
   `YYYYMMDD_HHMM "<short-task-description>"`
   Permanent, automated mechanism inherited across all sessions (replaces manual `@tsr` / `@THR` / `@TRH` prompting).
 - **tool-and-log-timestamp-precision**: Tool execution timestamps, generated log file names, and internal log entries `MUST` include at least second-level precision (`ss`) (e.g. `yyyyMMdd_HHmmss` or `yyyy-MM-dd HH:mm:ss[.fff]`). The minute-level format (`YYYYMMDD_HHMM`) applies strictly and exclusively to the assistant chat response header, never to tools or logs.
+- **comment-preservation**: Comments and documentation are first-class assets equivalent to executable code across ALL file formats (`*.ps1`, `*.psm1`, `*.js`, `*.ts`, `*.py`, `*.json`, `*.md`, `*.html`, `*.css`, `*.cmd`, etc.). No redesign, refactoring, code formatting, auto-repair, or optimization may silently delete, strip, or truncate comments, docstrings, or explanatory remarks. Editing comments to update or correct them is permitted; wholesale stripping or deletion of comments is strictly prohibited. For JSON configurations, comment properties (e.g. `_comment`, `//`, `description`, `notes`) must be preserved across serialization and editing.
 - **no-backtick-line-continuations**: Script generation must not use backticks (`` ` ``) for line continuation; use splatting, pipeline wrapping, or parenthesized expressions instead.
 
 ---
@@ -283,11 +284,11 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 ### `RULE-CTX-005` (Learned Advice)
 1. At the start of a session the agent `MUST` read `.agents/ACTIVE_CONTEXT.md` and `.agents/LEARNED_ADVICE.md`. Entries under **Accepted** are binding; entries under **Candidates** are guidance only.
 2. When the operator writes `/learn <text>` the agent `MUST` add the text as a candidate (`Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI name>`), without changing anything else. An agent `MAY` also propose a candidate on its own when it learns something durable; it `MUST` tell the operator.
-3. Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-WorkspacePush.ps1` refuses to publish while candidates are pending.
+3. Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
 4. Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
 
 ### `RULE-CTX-006` (GoodMorning Session Start)
-1. At the start of every session the agent `MUST` run `Invoke-WorkspaceGoodMorning.ps1 -Auto`. It is silent (one line) when less than 7 hours have passed since the last activity; a longer gap implies a good morning and produces the full read-only report.
+1. At the start of every session the agent `MUST` run `Invoke-LCM_GoodMorning.ps1 -Auto`. It is silent (one line) when less than 7 hours have passed since the last activity; a longer gap implies a good morning and produces the full read-only report.
 2. When the report lists attention items (work in between, version disagreement, stale context, pending candidates, guardrail findings) the agent `MUST` tell the operator in its first reply, before any other work.
 3. The agent `MUST` also state that it has read `ACTIVE_CONTEXT.md` and `LEARNED_ADVICE.md`, can follow them, and name anything unclear, contradictory or stale. It `MUST NOT` rely on parts of `ACTIVE_CONTEXT.md` that the report marks as stale.
 4. GoodMorning is read-only; it `MUST NOT` be used to change, commit or publish anything.
@@ -451,7 +452,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - Syntax validation and fast unit checks still run, but deep testing is strictly deferred to the pre-push quality gate.
    - **Deferred Failure Protocol**: If deep testing encounters errors during pre-push validation, the push is immediately aborted and the failure automatically spawns a formal **`BUG`** proposal bundle in `DOIT` mode (`RULE-LCM-008`).
 3. **Push Auto-Reset Invariant (Self-Healing Governance)**:
-   - Neither `LCM OFF` nor `Testing OFF` may remain active after publication. Upon any push invocation (`PUSH`, `Invoke-WorkspacePush.ps1`), both **LCM Mode** and **Testing Mode** `MUST` unconditionally reset to `ON` (`active`).
+   - Neither `LCM OFF` nor `Testing OFF` may remain active after publication. Upon any push invocation (`PUSH`, `Invoke-LCM_Push.ps1`), both **LCM Mode** and **Testing Mode** `MUST` unconditionally reset to `ON` (`active`).
 
 ### RULE-LCM-007: Flat Lifecycle Continuum, Sync Points, Dispositions & CM Plan Archive Invariant
 1. **Single-Dimensional "Flat" Status Continuum**:
@@ -586,7 +587,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 2. **Prohibition of Orphan Feature Proposals**: Proposing or executing features or tool modifications without an authoritative, permanent proposal bundle in `LCM_Inventory/docs/Proposals/` is strictly prohibited. Every non-bug feature proposal in `proposals.json` `MUST` link to a valid `bundle_id` matching an existing CRP bundle.
 
 ### RULE-LCM-013: Mandatory Pre-Push Gemini AI & Knowledge Base Synchronization Invariant
-1. **Mandatory Automated Pre-Push Execution**: Every `PUSH` operation executed via `Invoke-WorkspacePush.ps1`, whether multi-repository or targeting a single repository (`-Repositories <repo>`), `MUST` automatically execute the `Update-Gemini.ps1` pipeline prior to pushing commits to remote Git repositories. Direct manual `git push` invocations that bypass `Invoke-WorkspacePush.ps1` are prohibited.
+1. **Mandatory Automated Pre-Push Execution**: Every `PUSH` operation executed via `Invoke-LCM_Push.ps1`, whether multi-repository or targeting a single repository (`-Repositories <repo>`), `MUST` automatically execute the `Update-Gemini.ps1` pipeline prior to pushing commits to remote Git repositories. Direct manual `git push` invocations that bypass `Invoke-LCM_Push.ps1` are prohibited.
 2. **Context & Rules Mirroring Parity**: This guarantees that all 17 canonical LCM rules (`LCM_AI/docs/LCM_Rules_Gemini_Export.md`), plain-text `.txt` mirrors, tool catalogs, and full workspace knowledge base exports (`D:\GDrive\LCM`) are 100% synchronized with the pushed Git baseline at the moment of remote dispatch.
 3. **Automated Export Commit**: If the `Update-Gemini` pipeline updates the consolidated rules export in `LCM_AI`, those changes `MUST` be staged and committed immediately before dispatching the push to `origin/main`.
 
@@ -667,7 +668,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 2. **Pre-Push Working Tree Lifecycle**:
    - During proposal authoring, implementation planning, active coding, and review gating, the proposal bundle directory lives in the local repository working tree and is directly queryable by developers, CLI tools, and the CM Control Hub.
 3. **Post-Push Working Tree Purge Invariant**:
-   - Upon `Invoke-WorkspacePush.ps1` (or push workflow execution):
+   - Upon `Invoke-LCM_Push.ps1` (or push workflow execution):
      - The target repository head commit SHA `MUST` be captured and recorded in `proposals.json` (`commit_sha: "<SHA>"`).
      - The remote GitHub tree link `MUST` be generated and recorded (`github_url: "<URL>"`).
      - The completed local proposal bundle directory `MUST` be purged from the working tree, ensuring 0 dead or redundant proposal directories remain in the working tree.
@@ -737,6 +738,16 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 3. **Atomic Cohort Lifecycle Actions**: A lifecycle action on a cohort `MUST` evaluate every current member before any mutation. If one member is ineligible, the request `MUST` fail with member-specific reasons and leave every member unchanged. A successful request applies the same permitted transition to all members and records the cohort identity in the audit trail.
 4. **Cohort Membership Proposals**: A declared `COH-<prime>` is anchored by its immutable head/prime CRP and may contain that sole head; no minimum number of CRPs applies. Adding or removing non-head members `MUST` preview the complete membership delta and pass all head/prime, open-cohort, identity, and cross-repository validations before mutation. At most one open cohort may exist; Add `MUST` resolve it automatically rather than offer a cohort choice. Creation remains available when an open cohort exists, but creates an inactive cohort; only opening or reopening an inactive cohort is rejected while another cohort is open. Adding when no open cohort exists is rejected. The backend `MUST` recheck this invariant immediately before persistence. Closed cohorts are irrelevant, and inactive does not mean closed. Partial membership changes are prohibited.
 5. **FIX Presentation Boundary**: A Control Hub `FIX` action group may provide a unified operator entry point for review-confirmation exceptions, emergency quality deferrals, retirement, and supersession. `-Force` and `-Immediately` retain their distinct eligibility, reason, exact-identity, review, and termination requirements; a common label `MUST NOT` broaden either mechanism.
+
+---
+
+### RULE-LCM-027: Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant
+1. **Strict Scope Fence**: When implementing, refining, or bug-fixing any proposal (BUG-#, CRP-#), the AI agent `MUST` strictly confine modifications to the explicit clauses declared in the accepted Gate 0 Contract (`Specification.md`).
+2. **Prohibition of Incidental Refactoring**: The AI agent `MUST NOT` refactor, replace, or "improve" adjacent, pre-existing mechanisms (such as process launchers, window dispatchers, GUI hooks, or external service bridges) that lie outside the accepted scope, even if the agent perceives them as sub-optimal.
+3. **Deficiency Isolation Protocol**: If an adjacent pre-existing subsystem is encountered that is deficient or unsuited for the task, the agent `MUST NOT` modify it in-flight under the active proposal. Instead, the agent `MUST` either:
+   - Use documented existing interfaces without altering their implementation, OR
+   - Formulate and present an independent, separate proposal (BUG/CRP) to address the adjacent defect after current work is completed or stopped.
+4. **Prohibition of Unwarranted Test Cascades**: The agent `MUST NOT` trigger repetitive, speculative test suites (e.g. executing heavy Pester integration runs repeatedly) while debugging minor local issues. Testing must remain targeted, minimal, and proportional to the changes made.
 
 ---
 
@@ -893,7 +904,7 @@ Changes strictly modifying tool-generated evidence, audit databases, dashboard s
 Modifications to the mechanical artifacts listed in `RULE-EFF-001` **MUST NEVER** trigger automated test runs, readiness test cascades, or validation cycles. These files are outputs/evidence of prior verification, not executable source code.
 
 ### RULE-EFF-003 (Machine-Only Mutation Authority)
-Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-WorkspaceAudit.ps1`, `New-WorkspaceBaseline.ps1`, `Invoke-LCMUpdate.ps1`).
+Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-LCM_Audit.ps1`, `Create-LCM_Baseline.ps1`, `Invoke-LCMUpdate.ps1`).
 
 ### RULE-EFF-004 (DOIT Mode & Autonomous Execution Velocity Standard)
 1. **DOIT Mode Execution**: When a proposal is in **`DOIT` Mode** (`always-proceed = $true`) — which occurs automatically upon `BUG` birth or when explicitly triggered on a `CRP` via the `do` command — AI pair-programming agents `SHALL` execute tool operations, script commands, and file edits directly under `always-proceed` and `allow` policies without introducing interactive chat planning pauses or per-tool confirmation prompts.
@@ -1262,6 +1273,38 @@ Whenever a permanent repository script (`*.ps1`, `*.psm1`, `*.psd1`) or test fil
 
 ---
 
+### RULE-PS-023: Left-Side Null Equality Comparison Invariant
+In PowerShell equality comparisons (`-eq`, `-ne`), `$null` `MUST ALWAYS` be positioned on the **left side** of the operator.
+1. **Rationale & Array Filtering Behavior**:
+   In PowerShell, when the left operand of an equality operator is an array or collection, the operator acts as a filter returning elements that match, rather than evaluating to a scalar boolean. When `$null` is placed on the right (e.g. `$items -eq $null`), an array containing null elements yields an array of `$null`s (which evaluates to truthy), leading to subtle logical bugs. Placing `$null` on the left (`$null -eq $items`) guarantees an unambiguous scalar boolean comparison regardless of the right-hand operand type.
+2. **PSScriptAnalyzer Alignment**:
+   This invariant enforces complete compliance with PSScriptAnalyzer rule `PSPossibleIncorrectComparisonWithNull` (`$null should be on the left side of equality comparisons`).
+3. **Mandatory Syntax Standard**:
+   - **Correct**:
+     ```powershell
+     if ($null -ne $parent) { ... }
+     while ($null -eq $response) { ... }
+     ```
+   - **Forbidden**:
+     ```powershell
+     if ($parent -ne $null) { ... }   # Violates RULE-PS-023 / PSPossibleIncorrectComparisonWithNull
+     while ($response -eq $null) { ... }
+     ```
+
+---
+
+### RULE-PS-024: Prohibition of Implicit Confirmation & SupportsShouldProcess Over-Engineering
+1. **Bare CmdletBinding Standard**:
+   Custom workspace tools, cmdlets, and scripts `MUST NOT` declare `SupportsShouldProcess = $true` or specify `ConfirmImpact` attributes in their `[CmdletBinding()]` declarations. Scripts `MUST` use standard, bare `[CmdletBinding()]`.
+2. **Rationale**:
+   PowerShell's `SupportsShouldProcess` framework introduces implicit, out-of-band runtime confirmation prompts (especially when the host session's `$ConfirmPreference` is `High`). This causes unattended scripts and automated agent tools to stall waiting for interactive console input, obscures control flow, and creates contradictory execution behavior between interactive and non-interactive sessions.
+3. **Explicit In-Code Confirmation Invariant**:
+   If an operation genuinely requires operator confirmation (such as destructive disk operations, irreversible volume alterations, or data pruning), that confirmation `MUST` be implemented explicitly in the script's code flow (e.g., via `Read-Host`, explicit prompt logic, or dedicated `-Force` switch parameters), where all prompts, user choices, and outcomes are visibly logged and exceptions are caught via `try { ... } catch { ... }`.
+4. **Opportunistic Remediation on Acceptance**:
+   Whenever any existing script is edited, refactored, or reviewed under a proposal, any lingering `SupportsShouldProcess` or `ConfirmImpact` declarations `MUST` be removed as part of the standard pre-acceptance quality check.
+
+---
+
 <a id="powershellrulesmd"></a>
 ## Rule #10: PowerShellRules.md
 > **Category**: 3. Language & Coding Standards | **Canonical Source**: `.agents/rules/PowerShellRules.md`
@@ -1272,8 +1315,10 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.0.1
 Changelog:
+- 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.
+- 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.
 - 2026-10-13: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
 - 2026-10-13: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
 - 2026-10-13: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
@@ -1292,6 +1337,8 @@ POWERSHELL-RULES
 - newline-crlf: scripts must end with CRLF
 - no-backticks: forbidden
 - no-posix-backslash-escapes: backslash (\) is strictly a filesystem path separator, never an escape character; \$ and \" escaping are forbidden
+- null-on-left-in-comparisons: $null MUST always be placed on the left side of equality comparisons ($null -eq $var, $null -ne $var); placing $null on the right ($var -eq $null) is forbidden per RULE-PS-023
+- no-implicit-confirmation: custom scripts and functions MUST NOT use SupportsShouldProcess = $true or ConfirmImpact; use bare [CmdletBinding()] and explicit in-code confirmations per RULE-PS-024
 - no-interpolated-calls: forbid method calls inside interpolated strings
 - assign-$_-first: always assign $_ to a variable before use
 - no-non-ascii-identifiers: identifiers must be ASCII-only
@@ -1397,6 +1444,7 @@ Date: 2026-10-13
 - **schema-declaration**: JSON data files should include a `$schema` property referencing a valid draft schema when applicable.
 - **ascii-default**: ASCII recommended for keys and identifiers; UTF-8 strings permitted for localized values.
 - **deterministic-output**: Predictable, key-ordered serialization (`[ordered]@{ ... }`).
+- **comment-preservation**: JSON comments or documentation properties (such as `_comment`, `//`, `description`, `notes`) are semantic assets. Parsing, modifying, or serializing JSON files MUST preserve all existing comment properties and documentation notes intact; stripping them during formatting or transformations is strictly forbidden.
 
 ---
 
@@ -1546,6 +1594,15 @@ For governed repositories that scale beyond single-purpose scripts into multi-ca
 
 ---
 
+### RULE-DOC-009: Comment & Documentation Preservation Invariant (Zero Comment Destruction)
+1. **First-Class Asset Equivalence**: Comments, docstrings, Comment-Based Help blocks, and explanatory notes are first-class intellectual property and architecture records equivalent to executable code across ALL sources and file types (`*.ps1`, `*.psm1`, `*.js`, `*.ts`, `*.py`, `*.json`, `*.md`, `*.html`, `*.css`, `*.cmd`, `*.bat`, `*.go`).
+2. **Prohibition of Wholesale Deletion / Stripping**: No redesign, code modification, refactoring, structural cleanup, automated linting, code formatting, auto-repair, or optimization may silently delete, strip, or truncate comments. Wholesale stripping or removal of explanatory comments is strictly forbidden.
+3. **In-Place Correction Permitted**: Editing comments to maintain factual accuracy, correcting outdated paths/versions/names, or expanding documentation is permitted and encouraged, but the explanatory context must be preserved, not removed.
+4. **JSON Comment Preservation Invariant**: In `.json` files, comment keys (including `_comment`, `//`, `description`, `notes`, or metadata header properties) are semantic assets. All JSON processors, serialization routines, parsers, formatters, and migration engines MUST preserve these comment fields intact; stripping comments during deserialization/reserialization is strictly prohibited.
+5. **Quality Gate Enforcement**: Universal and incremental governance gates (`Test-LCMIncrementalGovernance.ps1`, `LCM_QualityGates.psm1`, and `Test-ReviewCommitGate.ps1`) MUST audit change diffs for deleted comment lines without corresponding replacements and fail the gate whenever comment destruction is detected.
+
+---
+
 <a id="subsystemgovernancepolicymd"></a>
 ## Rule #15: SubsystemGovernancePolicy.md
 > **Category**: 4. Documentation & Subsystem Architecture | **Canonical Source**: `.agents/rules/SubsystemGovernancePolicy.md`
@@ -1676,7 +1733,7 @@ MACRO: profile status
 MACRO: GoodMorning
 - description: full read-only session-start check (RULE-CTX-006): time gap, work in between, versions, context staleness, pending learned advice
 - syntax: GoodMorning
-- primary target: LCM_Inventory/tools/Invoke-WorkspaceGoodMorning.ps1 -Force
+- primary target: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1 -Force
 - rules:
   - report every attention item to the operator before other work
   - confirm that ACTIVE_CONTEXT.md and LEARNED_ADVICE.md were read and can be followed
@@ -1810,7 +1867,7 @@ MACRO: PUBLISH
 - syntax: publish [repo] | PUBLISH [repo]
 - aliases: publish, PUBLISH, push, PUSH
 - rules:
-  - 'publish <repo>' or 'PUBLISH <repo>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-WorkspacePush.ps1 -Repositories <repo>'
+  - 'publish <repo>' or 'PUBLISH <repo>' -> executes 'pwsh -File LCM_Inventory/tools/Invoke-LCM_Push.ps1 -Repositories <repo>'
   - `push` and `PUSH` remain backward-compatible aliases.
   - requires every target proposal to be completed and LCM_Inventory to be ahead before any remote dispatch
 
@@ -1846,20 +1903,20 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 
 | Rule File | Rule Identifiers | Domain | Scope | Core Invariant |
 |:---|:---|:---|:---|:---|
-| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `024` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), and Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`). |
-| **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `022` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), and Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`). |
+| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `027` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), and Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`). |
+| **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `024` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`), Left-Side Null Equality Comparison Invariant (`RULE-PS-023`), and Prohibition of Implicit Confirmation & SupportsShouldProcess (`RULE-PS-024`). |
 | **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `010` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, and Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`). |
 | **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `008`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing. |
 | **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `006` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, and automated privilege-aware execution/elevation interception. |
 | **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |
 | **[RepositoryContextPolicy.md](file:///.agents/rules/RepositoryContextPolicy.md)** | `REPO-CONTEXT` | **Context Scoping** | Child Repositories | Strict repository boundary separation, deterministic relative path resolution, CM-only cross-repo writes. |
-| **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, and mandatory pre-handoff syntax/AST validation. |
+| **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, and Comment & Documentation Preservation Invariant. |
 | **[PowerShellRules.md](file:///.agents/rules/PowerShellRules.md)** | `POWERSHELL-RULES` | **Scripting Standards** | PowerShell code | StrictMode Latest, `$ErrorActionPreference = 'Stop'`, explicit CmdletBinding. |
 | **[CMDRules.md](file:///.agents/rules/CMDRules.md)** | `CMD-RULES` | **Windows Batch** | `*.cmd`, `*.bat` | Explicit echo control (`@echo off`), errorlevel verification, ASCII character sets. |
-| **[JsonRules.md](file:///.agents/rules/JsonRules.md)** | `JSON-RULES` | **Data Serialization** | `*.json` | UTF-8 without BOM, 2-space indentation, `$schema` references. |
+| **[JsonRules.md](file:///.agents/rules/JsonRules.md)** | `JSON-RULES` | **Data Serialization** | `*.json` | UTF-8 without BOM, 2-space indentation, `$schema` references, and comment preservation invariant. |
 | **[PythonRules.md](file:///.agents/rules/PythonRules.md)** | `RULE-PY-001` - `008` | **Python Standards** | All `*.py` | No redundant f-strings (`F541`), strict import ordering, zero unused imports/variables (`F401`/`F841`), Windows UTF-8 stdout reconfiguration, template/JS interpolation safety. |
 | **[GoRules.md](file:///.agents/rules/GoRules.md)** | `LCM-RULE-GO-001` | **Go Standards** | All `*.go` | Mandatory file header block, explicit error handling and control flow, resource discipline, memory/slice/type rules, Windows platform rules. |
-| **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `007` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, and App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance. |
+| **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `009` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance, and Comment & Documentation Preservation Invariant (`RULE-DOC-009`). |
 | **[DisplayStandardsPolicy.md](file:///.agents/rules/DisplayStandardsPolicy.md)** | `RULE-DSP-001` - `016` | **UI & Display Standards** | All UI Displays, Dashboards & GUIs | Antigravity-IDE Light Mode default palette & typography (`IBM Plex Mono/Sans`, `CM_CONTROL_HUB_IMPLEMENTATION_0.html`), Topbar & Status Rail architecture, Lucide vector icons, WPF/WinForms desktop GUIs, print-to-PDF paged media, theme persistence, desktop dispatching, IDE Canvas forward-compatibility, test window hygiene, and dynamic tool versioning. |
 | **[SubsystemGovernancePolicy.md](file:///.agents/rules/SubsystemGovernancePolicy.md)** | `RULE-SUB-001` - `007` | **Subsystem Architecture** | Subsystem Repositories | Disjunct domains, dedicated subsystem inventories, JIT ephemeral tokens, host safety hardware interlocks, log segregation, Update-Gate & CRP bundling, central registry non-mutation invariant. |
 | **[AnalysisGovernancePolicy.md](file:///.agents/rules/AnalysisGovernancePolicy.md)** | `RULE-ANA-001` - `006` | **Analysis Governance** | Workspace & Gemini Sessions | Intent wake words (`ANALYZE` / `IMPLEMENT`), read-only tool lock, provenance tagging (`[VERIFIED]`, `[GAP]`), search radius fence ($\le 2$), Circuit Breaker protocol (`[ANALYSIS RESUMED]`), and runtime state transparency. |

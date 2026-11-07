@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-06 23:13:59 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-07 16:57:04 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -94,6 +94,8 @@ Date: 2026-10-13
 ## 1. Core Invariant Rules
 
 ### INVARIANT-RULES
+- **question-response-invariant**: When the operator poses a question, it MUST NOT cause the AI to do anything except answer. An inquiry—whether exploratory, critical, explanatory (e.g. "X does not justify Y"), or rhetorical—is an inquiry for explanation or alignment, NOT a directive to modify files, rollback, revert, or execute mutations. State mutations, code modifications, or git actions MUST ONLY be executed when accompanied by an explicit, affirmative instruction (e.g. "Are you kidding? Fix/correct this like that...!").
+- **boundary-ambiguity-alternatives-invariant**: Wherever the boundary is not explicit or given by the goal, present alternatives and WAIT FOR CONFIRMATION. The AI assistant MUST NOT guess, speculate, or unilaterally execute an ambiguous scope; it must formulate concrete alternatives and halt execution completely until the operator confirms the chosen path.
 - **determinism**: Identical input $\rightarrow$ identical output.
 - **reproducibility**: No randomness or speculative inferences.
 - **ascii-default**: ASCII required unless explicit exceptions apply:
@@ -748,6 +750,20 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - Use documented existing interfaces without altering their implementation, OR
    - Formulate and present an independent, separate proposal (BUG/CRP) to address the adjacent defect after current work is completed or stopped.
 4. **Prohibition of Unwarranted Test Cascades**: The agent `MUST NOT` trigger repetitive, speculative test suites (e.g. executing heavy Pester integration runs repeatedly) while debugging minor local issues. Testing must remain targeted, minimal, and proportional to the changes made.
+
+---
+
+### RULE-LCM-028: Question Response & Anti-Overreaction Invariant
+1. **Inquiry vs. Instruction Distinction**: When the operator poses a question, it `MUST NOT` cause the AI to do anything except answer.
+2. **Prohibition of Implicit Action on Query**: An inquiry—whether exploratory, technical, critical, explanatory (e.g. *"X does not justify Y"*), or rhetorical—is an inquiry for explanation, alignment, or clarification. It `MUST NEVER` be treated as an implicit command to alter code, revert changes, delete files, abandon ongoing tasks, or execute workspace mutations.
+3. **Requirement for Explicit Direction**: State mutations, code modifications, rollbacks, and file reversions `MUST ONLY` be executed when accompanied by an explicit, affirmative instruction (e.g. *"Are you kidding? Fix/correct this like that...!"*).
+
+---
+
+### RULE-LCM-029: Boundary Ambiguity & Alternatives Invariant
+1. **Mandatory Pause on Ambiguous Boundaries**: Wherever the operational boundary, scope, or resolution path is not explicit or given by the goal contract, the AI agent `MUST` halt autonomous execution immediately.
+2. **Presentation of Alternatives**: The AI agent `MUST` present clear, concrete alternatives (with their respective trade-offs) and **WAIT FOR CONFIRMATION** before modifying any workspace files or advancing lifecycle state.
+3. **Prohibition of Speculative Extrapolation**: The AI agent `MUST NOT` guess, speculate, or unilaterally assume a boundary (whether leaning toward sweeping maximalist execution or complete abandonment). The operational boundary remains frozen until explicitly confirmed by the operator.
 
 ---
 
@@ -1903,14 +1919,14 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 
 | Rule File | Rule Identifiers | Domain | Scope | Core Invariant |
 |:---|:---|:---|:---|:---|
-| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `027` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), and Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`). |
+| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `029` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`), Question Response & Anti-Overreaction Invariant (`RULE-LCM-028`), and Boundary Ambiguity & Alternatives Invariant (`RULE-LCM-029`). |
 | **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `024` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`), Left-Side Null Equality Comparison Invariant (`RULE-PS-023`), and Prohibition of Implicit Confirmation & SupportsShouldProcess (`RULE-PS-024`). |
 | **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `010` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, and Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`). |
 | **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `008`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing. |
 | **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `006` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, and automated privilege-aware execution/elevation interception. |
 | **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |
 | **[RepositoryContextPolicy.md](file:///.agents/rules/RepositoryContextPolicy.md)** | `REPO-CONTEXT` | **Context Scoping** | Child Repositories | Strict repository boundary separation, deterministic relative path resolution, CM-only cross-repo writes. |
-| **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, and Comment & Documentation Preservation Invariant. |
+| **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Question Response Invariant, Boundary Ambiguity & Alternatives Invariant, determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, and Comment & Documentation Preservation Invariant. |
 | **[PowerShellRules.md](file:///.agents/rules/PowerShellRules.md)** | `POWERSHELL-RULES` | **Scripting Standards** | PowerShell code | StrictMode Latest, `$ErrorActionPreference = 'Stop'`, explicit CmdletBinding. |
 | **[CMDRules.md](file:///.agents/rules/CMDRules.md)** | `CMD-RULES` | **Windows Batch** | `*.cmd`, `*.bat` | Explicit echo control (`@echo off`), errorlevel verification, ASCII character sets. |
 | **[JsonRules.md](file:///.agents/rules/JsonRules.md)** | `JSON-RULES` | **Data Serialization** | `*.json` | UTF-8 without BOM, 2-space indentation, `$schema` references, and comment preservation invariant. |

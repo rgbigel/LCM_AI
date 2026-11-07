@@ -1,3 +1,8 @@
+---
+name: LearnedAdvice
+description: Knowledge gained in sessions, kept for subsequent AI sessions, governed by RULE-CTX-005.
+globs: "*"
+---
 # Learned Advice
 
 Knowledge gained in sessions, by the operator or by any AI, kept so the next session starts with it. Part of the hand-over set with [ACTIVE_CONTEXT.md](./ACTIVE_CONTEXT.md) (workspace state). Governed by RULE-CTX-005.
@@ -12,6 +17,8 @@ How it works:
 ## Accepted
 
 ### Working agreement
+- When the operator poses a Question, it must not cause the AI to do anything except answer. An inquiry, critical query, or explanation (e.g. "X does not justify Y") is NOT a directive to modify files, rollback, revert, or execute mutations; state changes require explicit instruction. (2026-11-07, operator)
+- Wherever the boundary is not explicit or given by the goal, present alternatives and WAIT FOR CONFIRMATION before executing. (2026-11-07, operator)
 - For a large or complex query or repair, describe the intended approach and ask the operator first; the operator often knows a faster trick. (2026-10-13, operator)
 - Do not take a one-word command (such as ToolExplorer) as licence for restructuring; do only what the command names. (2026-10-13, Copilot)
 - Never recreate `.lcm`; its content lives in the new structure (map: `LCM_AI\docs\Proposals\CRP-246-*\reference\lcm-to-new-paths.json`). Run `Test-Guardrail.ps1 -Scan` before and after structural work. (2026-10-13, Copilot)

@@ -452,3 +452,17 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - Use documented existing interfaces without altering their implementation, OR
    - Formulate and present an independent, separate proposal (BUG/CRP) to address the adjacent defect after current work is completed or stopped.
 4. **Prohibition of Unwarranted Test Cascades**: The agent `MUST NOT` trigger repetitive, speculative test suites (e.g. executing heavy Pester integration runs repeatedly) while debugging minor local issues. Testing must remain targeted, minimal, and proportional to the changes made.
+
+---
+
+### RULE-LCM-028: Question Response & Anti-Overreaction Invariant
+1. **Inquiry vs. Instruction Distinction**: When the operator poses a question, it `MUST NOT` cause the AI to do anything except answer.
+2. **Prohibition of Implicit Action on Query**: An inquiry—whether exploratory, technical, critical, explanatory (e.g. *"X does not justify Y"*), or rhetorical—is an inquiry for explanation, alignment, or clarification. It `MUST NEVER` be treated as an implicit command to alter code, revert changes, delete files, abandon ongoing tasks, or execute workspace mutations.
+3. **Requirement for Explicit Direction**: State mutations, code modifications, rollbacks, and file reversions `MUST ONLY` be executed when accompanied by an explicit, affirmative instruction (e.g. *"Are you kidding? Fix/correct this like that...!"*).
+
+---
+
+### RULE-LCM-029: Boundary Ambiguity & Alternatives Invariant
+1. **Mandatory Pause on Ambiguous Boundaries**: Wherever the operational boundary, scope, or resolution path is not explicit or given by the goal contract, the AI agent `MUST` halt autonomous execution immediately.
+2. **Presentation of Alternatives**: The AI agent `MUST` present clear, concrete alternatives (with their respective trade-offs) and **WAIT FOR CONFIRMATION** before modifying any workspace files or advancing lifecycle state.
+3. **Prohibition of Speculative Extrapolation**: The AI agent `MUST NOT` guess, speculate, or unilaterally assume a boundary (whether leaning toward sweeping maximalist execution or complete abandonment). The operational boundary remains frozen until explicitly confirmed by the operator.

@@ -18,6 +18,8 @@ Date: 2026-10-13
 ## 1. Core Invariant Rules
 
 ### INVARIANT-RULES
+- **question-response-invariant**: When the operator poses a question, it MUST NOT cause the AI to do anything except answer. An inquiry—whether exploratory, critical, explanatory (e.g. "X does not justify Y"), or rhetorical—is an inquiry for explanation or alignment, NOT a directive to modify files, rollback, revert, or execute mutations. State mutations, code modifications, or git actions MUST ONLY be executed when accompanied by an explicit, affirmative instruction (e.g. "Are you kidding? Fix/correct this like that...!").
+- **boundary-ambiguity-alternatives-invariant**: Wherever the boundary is not explicit or given by the goal, present alternatives and WAIT FOR CONFIRMATION. The AI assistant MUST NOT guess, speculate, or unilaterally execute an ambiguous scope; it must formulate concrete alternatives and halt execution completely until the operator confirms the chosen path.
 - **determinism**: Identical input $\rightarrow$ identical output.
 - **reproducibility**: No randomness or speculative inferences.
 - **ascii-default**: ASCII required unless explicit exceptions apply:

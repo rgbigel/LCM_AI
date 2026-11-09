@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-07 16:57:04 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-09 20:09:57 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -85,9 +85,9 @@ Module: InvariantRules
 Purpose: Authoritative invariant rules for workspace behavior, encoding, determinism, and generation.  
 Path: .agents/rules/InvariantRules.md  
 Authors: Rolf  
-Version: 10.0.0
+Version: 10.0.1
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-08 12:22:00
 
 ---
 
@@ -121,6 +121,8 @@ Date: 2026-10-13
 - **tool-and-log-timestamp-precision**: Tool execution timestamps, generated log file names, and internal log entries `MUST` include at least second-level precision (`ss`) (e.g. `yyyyMMdd_HHmmss` or `yyyy-MM-dd HH:mm:ss[.fff]`). The minute-level format (`YYYYMMDD_HHMM`) applies strictly and exclusively to the assistant chat response header, never to tools or logs.
 - **comment-preservation**: Comments and documentation are first-class assets equivalent to executable code across ALL file formats (`*.ps1`, `*.psm1`, `*.js`, `*.ts`, `*.py`, `*.json`, `*.md`, `*.html`, `*.css`, `*.cmd`, etc.). No redesign, refactoring, code formatting, auto-repair, or optimization may silently delete, strip, or truncate comments, docstrings, or explanatory remarks. Editing comments to update or correct them is permitted; wholesale stripping or deletion of comments is strictly prohibited. For JSON configurations, comment properties (e.g. `_comment`, `//`, `description`, `notes`) must be preserved across serialization and editing.
 - **no-backtick-line-continuations**: Script generation must not use backticks (`` ` ``) for line continuation; use splatting, pipeline wrapping, or parenthesized expressions instead.
+- **universal-header-modification-timestamp-invariant**: Under all circumstances, whenever ANY governed file—whether source code (`*.ps1`, `*.psm1`, `*.py`, `*.go`, `*.js`, `*.cmd`, `*.bat`), configuration (`*.json`, `*.yaml`), or documentation (`*.md`, `*.html`)—is created, revised, or modified, any header date/timestamp metadata field (`Date:`, `LastModified:`, `meta.date`, etc.) `MUST` be updated to the exact current timestamp (`YYYY-MM-DD HH:mm:ss` or `YYYY-MM-DD`). Leaving stale timestamps upon modifying any asset is strictly prohibited across the entire workspace.
+- **single-commit-version-increment-invariant**: Whenever a component (script, module, document, or configuration file) is modified under a CRP, BUG, or FIX, its version number `MUST` only be incremented **ONCE** across the entire editing cycle leading up to its associated `git commit` (strictly bound to commit, not `push`). Intermediate edits, turns, or iterations prior to committing `MUST NOT` repeatedly increment the version number. A component's version number is incremented again `ONLY IF` that component is modified again in a subsequent, separate commit cycle after a commit has taken place (which must also correspond to an incremented CRP/proposal version).
 
 ---
 
@@ -142,9 +144,9 @@ Module: ElevationPolicy
 Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
 Path: .agents/rules/ElevationPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.1.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-09
 
 ---
 
@@ -217,6 +219,14 @@ Before executing any tool, script, or shorthand command, the AI agent or CLI lau
 
 ---
 
+### `RULE-ELEV-007` (Caller Admin Dependency Disclosure & Anti-Staleness Invariant)
+Whenever a tool, orchestrator, or workflow script (caller) invokes, relies upon, or delegates execution to an administrative tool (`"Admin": true`):
+1. **Explicit Help Screen Disclosure**: The caller `MUST` declare this administrative dependency within its interactive `-h` / `-Help` usage reference screen (under a dedicated `PREREQUISITES:` or `ADMIN DEPENDENCIES:` section), notifying operators and agents that elevated execution or privileged worker delegation will be initiated.
+2. **Header Documentation Alignment**: The caller `MUST` document the dependent admin tool in its script header block (`.DEPENDENCIES` in PowerShell, or header metadata in batch/Python scripts).
+3. **Anti-Staleness Invariant (Vice Versa)**: When a caller is refactored, decoupled, or redesigned such that it no longer invokes or depends upon the administrative tool, the caller's `-h` / `-Help` output, `.DEPENDENCIES` comment block, and related documentation `MUST` immediately remove that administrative dependency reference to prevent false privilege assumptions and keep automation contracts accurate.
+
+---
+
 <a id="languagepolicymd"></a>
 ## Rule #4: LanguagePolicy.md
 > **Category**: 1. Core Governance, Invariants & Security | **Canonical Source**: `.agents/rules/LanguagePolicy.md`
@@ -284,10 +294,13 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 * **`LCM_Shared`**: Reusable functional PowerShell atom library (`Logging`, `VolumeAtoms`, `BcdAtoms`).
 
 ### `RULE-CTX-005` (Learned Advice)
-1. At the start of a session the agent `MUST` read `.agents/ACTIVE_CONTEXT.md` and `.agents/LEARNED_ADVICE.md`. Entries under **Accepted** are binding; entries under **Candidates** are guidance only.
-2. When the operator writes `/learn <text>` the agent `MUST` add the text as a candidate (`Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI name>`), without changing anything else. An agent `MAY` also propose a candidate on its own when it learns something durable; it `MUST` tell the operator.
-3. Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
-4. Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
+1. **Binding Status**: At the start of a session the agent `MUST` read `.agents/ACTIVE_CONTEXT.md` and `.agents/LEARNED_ADVICE.md`. Entries under **Accepted** are binding; entries under **Candidates** are guidance only.
+2. **Top-Insertion Ordering**: New learned advice entries and candidates `MUST` always be added at the top of the relevant section (newest first).
+3. **Non-Removal Invariant**: Unless an advice entry was actively corrected via a formal proposal (`requires crp-nnn`) and properly set into function as an enforceable rule, quality gate, or reliable contract, it `MUST NOT` be removed. Removal can happen in the middle of a section only when accompanied by explicit CRP citation.
+4. **AI Observance & Non-Ignorance Invariant**: The insights in `LEARNED_ADVICE.md` `MUST` be actively taken up and followed by the AI. If an entry is ever ignored for a specific action, the AI `MUST` provide an explicit comment stating that it is being ignored and explaining why.
+5. **Intake Flow**: When the operator writes `/learn <text>` the agent `MUST` add the text as a candidate (`Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI name>`), without changing anything else. An agent `MAY` also propose a candidate on its own when it learns something durable; it `MUST` tell the operator.
+6. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
+7. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
 
 ### `RULE-CTX-006` (GoodMorning Session Start)
 1. At the start of every session the agent `MUST` run `Invoke-LCM_GoodMorning.ps1 -Auto`. It is silent (one line) when less than 7 hours have passed since the last activity; a longer gap implies a good morning and produces the full read-only report.
@@ -637,8 +650,10 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - **No Architectural Redesign**: The fix requires no architectural redesign, schema changes, or breaking API alterations.
    - **Net Positive Impact**: The fix will not create cascading side-effects or regressions exceeding the problem being solved.
 2. **Mandatory 2-Attempt Loop Breaker**:
-   - If two (2) consecutive attempts to fix the runtime defect fail to resolve the issue, the autonomous `PROCEED` exception is **immediately and irrevocably revoked**.
-   - The agent `MUST HALT` all modification attempts, mark the BUG item as `blocked`/`open` in the ledger, document the failure telemetry, and yield full control back to the operator.
+   - If two (2) consecutive attempts to fix a runtime defect or launch an operational action fail, the autonomous `PROCEED` exception is **immediately and irrevocably revoked**.
+   - When an operational command, tool dispatch, or GUI launch fails on Attempt 1, at most ONE direct alternative may be attempted (Attempt 2). If Attempt 2 also fails, the agent `MUST HALT` immediately, report the exact raw diagnostic evidence to the operator, and await explicit instructions.
+   - Cascading through speculative launch mechanisms (such as background tasks, CIM process creation, cmd start wrappers, or ad-hoc scheduled tasks) is strictly prohibited.
+   - The agent `MUST` mark the blocked item in the ledger, document the failure telemetry, and yield full control back to the operator.
 
 ### RULE-LCM-018: Credit Exhaustion & Batch Execution Granularity Guard
 1. **Batch Size Safety**: Multi-item batches `MUST` be segmented into manageable, verifiable increments to prevent credit, context, and token exhaustion.
@@ -877,6 +892,13 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 
 ---
 
+### RULE-REV-012: Review Tool Window Non-Interference, Title Neutrality & Baseline Currency Invariant
+1. **Window Non-Interference**: Beyond Compare review launchers (`Invoke-MacriumDailyBcrBaseline.ps1`, `BCR.cmd`) `MUST NOT` enforce arbitrary single-window constraints (e.g. `Count -ne 1`), kill existing operator instances, or terminate processes with `MainWindowHandle: 0` while they are initializing. Operators own their desktop windows and sessions.
+2. **Title Neutrality**: The launcher may append the review scope (`[CRP-xxx]`) to an opened window, but `MUST NOT` poll window titles in intrusive loops or kill instances whose titles deviate from automation expectations.
+3. **Baseline Currency Invariant**: Baseline preparation tools `MUST NEVER` silently reuse an older mounted image when a newer completed backup exists for the current day on `B:\Backups\`. Before reusing any mounted partition, the tool `MUST` verify whether today has a newer completed `.mrimgx`. If a newer image exists, the tool `MUST` unmount the stale partition and mount today's fresh image. If an older image is intentionally reused, the tool `MUST` explicitly notify the operator of the image date, file name, and mounted drive letter before review dispatch.
+
+---
+
 <a id="methodefficiencypolicymd"></a>
 ## Rule #8: MethodEfficiencyPolicy.md
 > **Category**: 2. Proposal, Review & Commit Lifecycle | **Canonical Source**: `.agents/rules/MethodEfficiencyPolicy.md`
@@ -951,6 +973,14 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 
 ---
 
+### RULE-EFF-009: Anti-Code-Reading & Direct Goal Execution Invariant
+- **Atomic Goal Precondition**: Agents must possess an explicit, atomic goal prior to invoking any tool. Every tool call must directly serve that discrete goal without wandering into exploratory parameter discovery.
+- **Direct Intent Dispatch**: Command invocations must resolve directly via structured mappings (`LCM_Inventory/config/tool_intents.json`, the tool catalog, or the authoritative database).
+- **Prohibition of Pre-Execution Code Reading**: Reading tool source code (`read_file`), executing `Get-Content` on tool scripts, or dumping script bodies into the conversation context to "discover" how to run a tool or its parameters is **strictly prohibited**.
+- **Log Hygiene**: Execution logs and conversation traces must record only the tool name, arguments, and execution outcome—never the full source code of the executed tool.
+
+---
+
 ### RULE-ENV-003: Zero Speculative Relative Pathing
 - Speculative dot-traversal paths (such as `.\..lcm`, `..\..\`, or any path containing `..` without explicit validation) are **prohibited** in tool invocations and script references.
 - Tool and script invocations **must** anchor strictly to one of:
@@ -984,9 +1014,9 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.2
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-09 20:05:00
 
 ---
 
@@ -1077,8 +1107,9 @@ All PowerShell scripts (`*.ps1`, `*.psm1`, `*.psd1`) `MUST` contain a standardiz
 - `Version`: Semantic version or date-based version (`YYYY-MM-DD` or `MAJOR.MINOR.PATCH`).
 - `Date`: Modification date (`YYYY-MM-DD`).
 
-**Date Update Invariant**:
-Whenever an existing script is modified, the `Date:` field (and changelog/version if applicable) `MUST` be updated to the current date. AI agents `MUST NOT` leave stale dates upon modifying script files.
+**Date & Version Update Invariants**:
+- **Date Invariant**: Whenever an existing script is modified, the `Date:` field `MUST` be updated to the current date/timestamp (`YYYY-MM-DD` or `YYYY-MM-DD HH:mm:ss`). AI agents `MUST NOT` leave stale dates upon modifying script files.
+- **Single-Commit Version Increment Invariant**: Whenever a script or module is modified under a CRP, BUG, or FIX, its version number `MUST` only be incremented **ONCE** across the editing cycle leading up to its associated `git commit` (strictly bound to commit, not `push`). Intermediate edits, turns, or iterations prior to committing `MUST NOT` repeatedly increment the version. The version is incremented again `ONLY IF` that script or module is modified again in a subsequent commit cycle after a commit has taken place.
 
 **Canonical Header Format**:
 ```powershell
@@ -1088,10 +1119,13 @@ Whenever an existing script is modified, the `Date:` field (and changelog/versio
 .DESCRIPTION
     Module: <ScriptOrModuleName>
     Purpose: <Description>
+    Implementation Choices (<CRP-ID>): <Architectural decisions, trade-offs, and rationale>
     Path: <Path>
     Authors: <Author>
     Version: <Version>
     Date: <YYYY-MM-DD>
+.NOTES
+    Caveats: <Runtime constraints, elevation boundaries, timeout behaviors, and failure modes>
 #>
 ```
 
@@ -1115,6 +1149,7 @@ All PowerShell automation tools performing system mutations, diagnostics, remedi
 All standalone PowerShell scripts, diagnostic tools, and CLI automation utilities `MUST`:
 1. **Explicit Help Parameter**: Declare `[Alias('h', '?')][switch]$Help` in the `param(...)` block.
 2. **Help Intercept & Exit**: When `-h`, `-Help`, or `-?` is passed, the tool `MUST` display a comprehensive, clean usage help screen (detailing synopsis, parameter reference table, and copy-paste examples) and exit cleanly without executing any mutation actions or throwing `ParameterBindingException`.
+3. **Caller Admin Dependency Disclosure & Anti-Staleness**: In conformance with `RULE-ELEV-007`, if a script delegates to, orchestrates, or depends upon any tool requiring administrative privileges (`Admin = $true`), its help screen and `.DEPENDENCIES` header block `MUST` explicitly declare that administrative dependency. Conversely, when the dependency is removed or decoupled, the help documentation `MUST` be updated immediately to purge the stale administrative reference.
 
 ---
 
@@ -1474,9 +1509,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.1
+Version: 10.0.2
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-08 12:46:00
 
 ---
 
@@ -1616,6 +1651,22 @@ For governed repositories that scale beyond single-purpose scripts into multi-ca
 3. **In-Place Correction Permitted**: Editing comments to maintain factual accuracy, correcting outdated paths/versions/names, or expanding documentation is permitted and encouraged, but the explanatory context must be preserved, not removed.
 4. **JSON Comment Preservation Invariant**: In `.json` files, comment keys (including `_comment`, `//`, `description`, `notes`, or metadata header properties) are semantic assets. All JSON processors, serialization routines, parsers, formatters, and migration engines MUST preserve these comment fields intact; stripping comments during deserialization/reserialization is strictly prohibited.
 5. **Quality Gate Enforcement**: Universal and incremental governance gates (`Test-LCMIncrementalGovernance.ps1`, `LCM_QualityGates.psm1`, and `Test-ReviewCommitGate.ps1`) MUST audit change diffs for deleted comment lines without corresponding replacements and fail the gate whenever comment destruction is detected.
+
+---
+
+### RULE-DOC-010: Mandatory Modification Timestamp Update Invariant (Frozen Invariant)
+1. **Universal Scope**: Under all circumstances, whenever any governed specification, proposal, plan, architectural document, or documentation asset (`*.md`, `*.json`) is created, revised, or modified, its header `Date:` / timestamp `MUST` be updated to the exact current timestamp (`YYYY-MM-DD HH:mm:ss`).
+2. **Prohibition of Stale Modification Timestamps**: Modifying document body content while leaving a historical or registration-time timestamp unchanged is strictly prohibited.
+3. **Diff Distinction Guarantee**: Every substantive change to a working document must produce an unambiguous timestamp advance in the header metadata, guaranteeing that live working tree copies can never be visually or programmatically conflated with earlier committed baselines or historical revisions.
+4. **Single-Commit Version Increment Invariant**: Whenever a documentation asset, specification, or plan is modified under a CRP, BUG, or FIX, its version number `MUST` only be incremented **ONCE** across the cycle leading up to its associated `git commit` (bound to commit, not `push`). It is incremented again `ONLY IF` modified again in a subsequent commit cycle after a commit occurs.
+
+---
+
+### RULE-DOC-011: Mandatory Implementation Choices, Rationale & Caveats Synchronization Invariant
+1. **Implementation Choices & Rationale Synthesis**: Whenever a component (script, module, UI asset, or data schema) is created or modified under a CRP, BUG, or FIX, its DOX header block (`.DESCRIPTION` or YAML frontmatter) `MUST` include an `Implementation Choices (<CRP-ID>):` or `Rationale:` entry capturing the foundational architectural decisions, alternatives rejected, and "why" underlying the implementation, directly synthesized from the proposal's `Specification.md`.
+2. **Operational Caveats & Boundaries (`.NOTES`)**: Scripts and modules executing system operations, elevation, hardware interlocks, or inter-process communication `MUST` document known runtime caveats, platform constraints, timeout behaviors, and failure modes in a dedicated `.NOTES` (PowerShell) or `Caveats:` section.
+3. **Stale Comment & Description Scrubbing**: Modifying parameter signatures, defaults, validation attributes, or internal logic `MUST` be accompanied by a synchronized update to all related Comment-Based Help summaries, `.PARAMETER` documentation, and inline remarks. Leaving obsolete parameters, outdated ranges (e.g. claiming a hardcoded drive range when dynamic lists are used), or stale operational descriptions in comments is strictly prohibited.
+4. **Tripartite Architecture Synchronization**: All architectural choices and normative rules defined in `Specification.md` `MUST` be absorbed into the governing repository's tripartite specifications (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`) prior to CRP closure (`COMPLETE`).
 
 ---
 
@@ -1920,19 +1971,19 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 | Rule File | Rule Identifiers | Domain | Scope | Core Invariant |
 |:---|:---|:---|:---|:---|
 | **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `029` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`), Question Response & Anti-Overreaction Invariant (`RULE-LCM-028`), and Boundary Ambiguity & Alternatives Invariant (`RULE-LCM-029`). |
-| **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `024` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`), Left-Side Null Equality Comparison Invariant (`RULE-PS-023`), and Prohibition of Implicit Confirmation & SupportsShouldProcess (`RULE-PS-024`). |
-| **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `010` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, and Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`). |
-| **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `008`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing. |
-| **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `006` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, and automated privilege-aware execution/elevation interception. |
+| **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `025` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`), Left-Side Null Equality Comparison Invariant (`RULE-PS-023`), Prohibition of Implicit Confirmation & SupportsShouldProcess (`RULE-PS-024`), and Model-Atom-Controller (MAC) Modular Implementation Invariant (`RULE-PS-025`). |
+| **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `012` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`), ADMINMODE rule change authorization (`RULE-REV-011`), and Review Tool Window Non-Interference, Title Neutrality & Baseline Currency Invariant (`RULE-REV-012`). |
+| **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `009`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing, and Anti-Code-Reading & Direct Goal Execution Invariant (`RULE-EFF-009`). |
+| **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `007` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, automated privilege-aware execution/elevation interception, and caller admin dependency disclosure & anti-staleness invariant. |
 | **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |
 | **[RepositoryContextPolicy.md](file:///.agents/rules/RepositoryContextPolicy.md)** | `REPO-CONTEXT` | **Context Scoping** | Child Repositories | Strict repository boundary separation, deterministic relative path resolution, CM-only cross-repo writes. |
-| **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Question Response Invariant, Boundary Ambiguity & Alternatives Invariant, determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, and Comment & Documentation Preservation Invariant. |
+| **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Question Response Invariant, Boundary Ambiguity & Alternatives Invariant, determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, Comment & Documentation Preservation Invariant, Universal Header Modification Timestamp Invariant, and Single-Commit Version Increment Invariant. |
 | **[PowerShellRules.md](file:///.agents/rules/PowerShellRules.md)** | `POWERSHELL-RULES` | **Scripting Standards** | PowerShell code | StrictMode Latest, `$ErrorActionPreference = 'Stop'`, explicit CmdletBinding. |
 | **[CMDRules.md](file:///.agents/rules/CMDRules.md)** | `CMD-RULES` | **Windows Batch** | `*.cmd`, `*.bat` | Explicit echo control (`@echo off`), errorlevel verification, ASCII character sets. |
 | **[JsonRules.md](file:///.agents/rules/JsonRules.md)** | `JSON-RULES` | **Data Serialization** | `*.json` | UTF-8 without BOM, 2-space indentation, `$schema` references, and comment preservation invariant. |
 | **[PythonRules.md](file:///.agents/rules/PythonRules.md)** | `RULE-PY-001` - `008` | **Python Standards** | All `*.py` | No redundant f-strings (`F541`), strict import ordering, zero unused imports/variables (`F401`/`F841`), Windows UTF-8 stdout reconfiguration, template/JS interpolation safety. |
 | **[GoRules.md](file:///.agents/rules/GoRules.md)** | `LCM-RULE-GO-001` | **Go Standards** | All `*.go` | Mandatory file header block, explicit error handling and control flow, resource discipline, memory/slice/type rules, Windows platform rules. |
-| **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `009` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance, and Comment & Documentation Preservation Invariant (`RULE-DOC-009`). |
+| **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `012` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance, Comment & Documentation Preservation Invariant (`RULE-DOC-009`), Mandatory Modification Timestamp Update Invariant (`RULE-DOC-010`), Implementation Choices, Rationale & Caveats Synchronization Invariant (`RULE-DOC-011`), and Model-Atom-Controller (MAC) Modular Architecture Standard (`RULE-DOC-012`). |
 | **[DisplayStandardsPolicy.md](file:///.agents/rules/DisplayStandardsPolicy.md)** | `RULE-DSP-001` - `016` | **UI & Display Standards** | All UI Displays, Dashboards & GUIs | Antigravity-IDE Light Mode default palette & typography (`IBM Plex Mono/Sans`, `CM_CONTROL_HUB_IMPLEMENTATION_0.html`), Topbar & Status Rail architecture, Lucide vector icons, WPF/WinForms desktop GUIs, print-to-PDF paged media, theme persistence, desktop dispatching, IDE Canvas forward-compatibility, test window hygiene, and dynamic tool versioning. |
 | **[SubsystemGovernancePolicy.md](file:///.agents/rules/SubsystemGovernancePolicy.md)** | `RULE-SUB-001` - `007` | **Subsystem Architecture** | Subsystem Repositories | Disjunct domains, dedicated subsystem inventories, JIT ephemeral tokens, host safety hardware interlocks, log segregation, Update-Gate & CRP bundling, central registry non-mutation invariant. |
 | **[AnalysisGovernancePolicy.md](file:///.agents/rules/AnalysisGovernancePolicy.md)** | `RULE-ANA-001` - `006` | **Analysis Governance** | Workspace & Gemini Sessions | Intent wake words (`ANALYZE` / `IMPLEMENT`), read-only tool lock, provenance tagging (`[VERIFIED]`, `[GAP]`), search radius fence ($\le 2$), Circuit Breaker protocol (`[ANALYSIS RESUMED]`), and runtime state transparency. |

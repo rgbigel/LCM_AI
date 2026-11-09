@@ -106,3 +106,10 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 2. **Hidden Operational State**: ADMINMODE state is not displayed by standard dashboards. It initializes on workspace open to `true` for an eligible user and `false` otherwise. `Make-Admin -Mode On|Off` may change it only for an eligible user.
 3. **Non-Admin Denial**: A non-admin request to enable ADMINMODE leaves state unchanged and records an audit denial without interactive output.
 4. **Commit Gate and Audit**: Before a CRP containing staged rule paths is committed, the review submission tool MUST enforce ADMINMODE and append the current user, SID, CRP identifier, and affected rule paths to the CM log. Administrator rights do not imply elevation, and elevation does not substitute for ADMINMODE.
+
+---
+
+### RULE-REV-012: Review Tool Window Non-Interference, Title Neutrality & Baseline Currency Invariant
+1. **Window Non-Interference**: Beyond Compare review launchers (`Invoke-MacriumDailyBcrBaseline.ps1`, `BCR.cmd`) `MUST NOT` enforce arbitrary single-window constraints (e.g. `Count -ne 1`), kill existing operator instances, or terminate processes with `MainWindowHandle: 0` while they are initializing. Operators own their desktop windows and sessions.
+2. **Title Neutrality**: The launcher may append the review scope (`[CRP-xxx]`) to an opened window, but `MUST NOT` poll window titles in intrusive loops or kill instances whose titles deviate from automation expectations.
+3. **Baseline Currency Invariant**: Baseline preparation tools `MUST NEVER` silently reuse an older mounted image when a newer completed backup exists for the current day on `B:\Backups\`. Before reusing any mounted partition, the tool `MUST` verify whether today has a newer completed `.mrimgx`. If a newer image exists, the tool `MUST` unmount the stale partition and mount today's fresh image. If an older image is intentionally reused, the tool `MUST` explicitly notify the operator of the image date, file name, and mounted drive letter before review dispatch.

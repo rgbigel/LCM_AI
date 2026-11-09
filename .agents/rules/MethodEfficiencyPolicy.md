@@ -73,6 +73,14 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 
 ---
 
+### RULE-EFF-009: Anti-Code-Reading & Direct Goal Execution Invariant
+- **Atomic Goal Precondition**: Agents must possess an explicit, atomic goal prior to invoking any tool. Every tool call must directly serve that discrete goal without wandering into exploratory parameter discovery.
+- **Direct Intent Dispatch**: Command invocations must resolve directly via structured mappings (`LCM_Inventory/config/tool_intents.json`, the tool catalog, or the authoritative database).
+- **Prohibition of Pre-Execution Code Reading**: Reading tool source code (`read_file`), executing `Get-Content` on tool scripts, or dumping script bodies into the conversation context to "discover" how to run a tool or its parameters is **strictly prohibited**.
+- **Log Hygiene**: Execution logs and conversation traces must record only the tool name, arguments, and execution outcome—never the full source code of the executed tool.
+
+---
+
 ### RULE-ENV-003: Zero Speculative Relative Pathing
 - Speculative dot-traversal paths (such as `.\..lcm`, `..\..\`, or any path containing `..` without explicit validation) are **prohibited** in tool invocations and script references.
 - Tool and script invocations **must** anchor strictly to one of:

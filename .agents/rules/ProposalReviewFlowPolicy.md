@@ -339,8 +339,10 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - **No Architectural Redesign**: The fix requires no architectural redesign, schema changes, or breaking API alterations.
    - **Net Positive Impact**: The fix will not create cascading side-effects or regressions exceeding the problem being solved.
 2. **Mandatory 2-Attempt Loop Breaker**:
-   - If two (2) consecutive attempts to fix the runtime defect fail to resolve the issue, the autonomous `PROCEED` exception is **immediately and irrevocably revoked**.
-   - The agent `MUST HALT` all modification attempts, mark the BUG item as `blocked`/`open` in the ledger, document the failure telemetry, and yield full control back to the operator.
+   - If two (2) consecutive attempts to fix a runtime defect or launch an operational action fail, the autonomous `PROCEED` exception is **immediately and irrevocably revoked**.
+   - When an operational command, tool dispatch, or GUI launch fails on Attempt 1, at most ONE direct alternative may be attempted (Attempt 2). If Attempt 2 also fails, the agent `MUST HALT` immediately, report the exact raw diagnostic evidence to the operator, and await explicit instructions.
+   - Cascading through speculative launch mechanisms (such as background tasks, CIM process creation, cmd start wrappers, or ad-hoc scheduled tasks) is strictly prohibited.
+   - The agent `MUST` mark the blocked item in the ledger, document the failure telemetry, and yield full control back to the operator.
 
 ### RULE-LCM-018: Credit Exhaustion & Batch Execution Granularity Guard
 1. **Batch Size Safety**: Multi-item batches `MUST` be segmented into manageable, verifiable increments to prevent credit, context, and token exhaustion.

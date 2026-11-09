@@ -9,9 +9,9 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.0.2
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-09 20:05:00
 
 ---
 
@@ -102,8 +102,9 @@ All PowerShell scripts (`*.ps1`, `*.psm1`, `*.psd1`) `MUST` contain a standardiz
 - `Version`: Semantic version or date-based version (`YYYY-MM-DD` or `MAJOR.MINOR.PATCH`).
 - `Date`: Modification date (`YYYY-MM-DD`).
 
-**Date Update Invariant**:
-Whenever an existing script is modified, the `Date:` field (and changelog/version if applicable) `MUST` be updated to the current date. AI agents `MUST NOT` leave stale dates upon modifying script files.
+**Date & Version Update Invariants**:
+- **Date Invariant**: Whenever an existing script is modified, the `Date:` field `MUST` be updated to the current date/timestamp (`YYYY-MM-DD` or `YYYY-MM-DD HH:mm:ss`). AI agents `MUST NOT` leave stale dates upon modifying script files.
+- **Single-Commit Version Increment Invariant**: Whenever a script or module is modified under a CRP, BUG, or FIX, its version number `MUST` only be incremented **ONCE** across the editing cycle leading up to its associated `git commit` (strictly bound to commit, not `push`). Intermediate edits, turns, or iterations prior to committing `MUST NOT` repeatedly increment the version. The version is incremented again `ONLY IF` that script or module is modified again in a subsequent commit cycle after a commit has taken place.
 
 **Canonical Header Format**:
 ```powershell
@@ -113,10 +114,13 @@ Whenever an existing script is modified, the `Date:` field (and changelog/versio
 .DESCRIPTION
     Module: <ScriptOrModuleName>
     Purpose: <Description>
+    Implementation Choices (<CRP-ID>): <Architectural decisions, trade-offs, and rationale>
     Path: <Path>
     Authors: <Author>
     Version: <Version>
     Date: <YYYY-MM-DD>
+.NOTES
+    Caveats: <Runtime constraints, elevation boundaries, timeout behaviors, and failure modes>
 #>
 ```
 
@@ -140,6 +144,7 @@ All PowerShell automation tools performing system mutations, diagnostics, remedi
 All standalone PowerShell scripts, diagnostic tools, and CLI automation utilities `MUST`:
 1. **Explicit Help Parameter**: Declare `[Alias('h', '?')][switch]$Help` in the `param(...)` block.
 2. **Help Intercept & Exit**: When `-h`, `-Help`, or `-?` is passed, the tool `MUST` display a comprehensive, clean usage help screen (detailing synopsis, parameter reference table, and copy-paste examples) and exit cleanly without executing any mutation actions or throwing `ParameterBindingException`.
+3. **Caller Admin Dependency Disclosure & Anti-Staleness**: In conformance with `RULE-ELEV-007`, if a script delegates to, orchestrates, or depends upon any tool requiring administrative privileges (`Admin = $true`), its help screen and `.DEPENDENCIES` header block `MUST` explicitly declare that administrative dependency. Conversely, when the dependency is removed or decoupled, the help documentation `MUST` be updated immediately to purge the stale administrative reference.
 
 ---
 

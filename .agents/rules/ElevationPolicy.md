@@ -9,9 +9,9 @@ Module: ElevationPolicy
 Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
 Path: .agents/rules/ElevationPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.1.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-09
 
 ---
 
@@ -81,4 +81,12 @@ Before executing any tool, script, or shorthand command, the AI agent or CLI lau
      pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <Args>] [-NoExit]
      ```
    - **Automated Dispatch Pipeline**: `Invoke-PrivilegedTool.ps1` and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to `Invoke-InteractiveDesktop.ps1 -Elevated` if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
+
+---
+
+### `RULE-ELEV-007` (Caller Admin Dependency Disclosure & Anti-Staleness Invariant)
+Whenever a tool, orchestrator, or workflow script (caller) invokes, relies upon, or delegates execution to an administrative tool (`"Admin": true`):
+1. **Explicit Help Screen Disclosure**: The caller `MUST` declare this administrative dependency within its interactive `-h` / `-Help` usage reference screen (under a dedicated `PREREQUISITES:` or `ADMIN DEPENDENCIES:` section), notifying operators and agents that elevated execution or privileged worker delegation will be initiated.
+2. **Header Documentation Alignment**: The caller `MUST` document the dependent admin tool in its script header block (`.DEPENDENCIES` in PowerShell, or header metadata in batch/Python scripts).
+3. **Anti-Staleness Invariant (Vice Versa)**: When a caller is refactored, decoupled, or redesigned such that it no longer invokes or depends upon the administrative tool, the caller's `-h` / `-Help` output, `.DEPENDENCIES` comment block, and related documentation `MUST` immediately remove that administrative dependency reference to prevent false privilege assumptions and keep automation contracts accurate.
 

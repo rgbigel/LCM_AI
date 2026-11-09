@@ -9,9 +9,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.1
+Version: 10.0.2
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-08 12:46:00
 
 ---
 
@@ -151,3 +151,19 @@ For governed repositories that scale beyond single-purpose scripts into multi-ca
 3. **In-Place Correction Permitted**: Editing comments to maintain factual accuracy, correcting outdated paths/versions/names, or expanding documentation is permitted and encouraged, but the explanatory context must be preserved, not removed.
 4. **JSON Comment Preservation Invariant**: In `.json` files, comment keys (including `_comment`, `//`, `description`, `notes`, or metadata header properties) are semantic assets. All JSON processors, serialization routines, parsers, formatters, and migration engines MUST preserve these comment fields intact; stripping comments during deserialization/reserialization is strictly prohibited.
 5. **Quality Gate Enforcement**: Universal and incremental governance gates (`Test-LCMIncrementalGovernance.ps1`, `LCM_QualityGates.psm1`, and `Test-ReviewCommitGate.ps1`) MUST audit change diffs for deleted comment lines without corresponding replacements and fail the gate whenever comment destruction is detected.
+
+---
+
+### RULE-DOC-010: Mandatory Modification Timestamp Update Invariant (Frozen Invariant)
+1. **Universal Scope**: Under all circumstances, whenever any governed specification, proposal, plan, architectural document, or documentation asset (`*.md`, `*.json`) is created, revised, or modified, its header `Date:` / timestamp `MUST` be updated to the exact current timestamp (`YYYY-MM-DD HH:mm:ss`).
+2. **Prohibition of Stale Modification Timestamps**: Modifying document body content while leaving a historical or registration-time timestamp unchanged is strictly prohibited.
+3. **Diff Distinction Guarantee**: Every substantive change to a working document must produce an unambiguous timestamp advance in the header metadata, guaranteeing that live working tree copies can never be visually or programmatically conflated with earlier committed baselines or historical revisions.
+4. **Single-Commit Version Increment Invariant**: Whenever a documentation asset, specification, or plan is modified under a CRP, BUG, or FIX, its version number `MUST` only be incremented **ONCE** across the cycle leading up to its associated `git commit` (bound to commit, not `push`). It is incremented again `ONLY IF` modified again in a subsequent commit cycle after a commit occurs.
+
+---
+
+### RULE-DOC-011: Mandatory Implementation Choices, Rationale & Caveats Synchronization Invariant
+1. **Implementation Choices & Rationale Synthesis**: Whenever a component (script, module, UI asset, or data schema) is created or modified under a CRP, BUG, or FIX, its DOX header block (`.DESCRIPTION` or YAML frontmatter) `MUST` include an `Implementation Choices (<CRP-ID>):` or `Rationale:` entry capturing the foundational architectural decisions, alternatives rejected, and "why" underlying the implementation, directly synthesized from the proposal's `Specification.md`.
+2. **Operational Caveats & Boundaries (`.NOTES`)**: Scripts and modules executing system operations, elevation, hardware interlocks, or inter-process communication `MUST` document known runtime caveats, platform constraints, timeout behaviors, and failure modes in a dedicated `.NOTES` (PowerShell) or `Caveats:` section.
+3. **Stale Comment & Description Scrubbing**: Modifying parameter signatures, defaults, validation attributes, or internal logic `MUST` be accompanied by a synchronized update to all related Comment-Based Help summaries, `.PARAMETER` documentation, and inline remarks. Leaving obsolete parameters, outdated ranges (e.g. claiming a hardcoded drive range when dynamic lists are used), or stale operational descriptions in comments is strictly prohibited.
+4. **Tripartite Architecture Synchronization**: All architectural choices and normative rules defined in `Specification.md` `MUST` be absorbed into the governing repository's tripartite specifications (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`) prior to CRP closure (`COMPLETE`).

@@ -1,6 +1,6 @@
-# Lifecycle Model (LCM) Authoritative Governance Framework
+﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-09 20:09:57 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-10 20:51:05 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -320,9 +320,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.1
+Version: 10.2.3
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-10 18:47:00
 
 ---
 
@@ -782,6 +782,36 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ---
 
+### RULE-LCM-030: Session Quiescence & GoodNight / GoodMorning Protocol Invariant
+1. **Quiescent State Invariant**:
+   - Following the execution of an end-of-day sequence (`GoodNight`, `goodnight`, `SaveAll`), the workspace enters a **Quiescent State**.
+   - While in a Quiescent State, if an automated or synthetic turn is triggered (such as platform context compaction, background message, or schedule wakeup) without a new, explicit `<USER_REQUEST>` from the operator, the AI agent `MUST REMAIN SILENT`. It `MUST NOT` proactively emit greetings, status summaries, or initiate unprompted workflows.
+2. **GoodNight Terminal Message Protocol**:
+   - The final output line/message of a GoodNight sequence `MUST` display the completion timestamp:
+     `🌙 Good Night completed at YYYY-MM-DD HH:mm:ss. Session is Quiescent.`
+3. **GoodMorning Resumption Response Protocol**:
+   - When the operator initiates the next session with a morning greeting or command (`GoodMorning`, `goodmorning`, `ShowTools`, etc.), the **FIRST MESSAGE RESPONSE** from the AI agent `MUST` explicitly state the resumption and reference the preceding GoodNight timestamp:
+     `☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h).`
+
+---
+
+### RULE-LCM-031: Context Absorption, Reverse-Ticket Invariant & Guaranteed Learned-Advice Retirement
+1. **Reverse-the-Ticket Invariant (Authoritative CRP Ownership)**:
+   - When operational items, operator remarks, or learned guidance are taken up for execution, the proposal (CRP/BUG) is the authoritative lifecycle owner.
+   - The CRP specification (`Specification.md`) `MUST` incorporate the verbatim original text of the absorbed item in a dedicated section (`## Absorbed Operator Remarks` or `## Recognized Learned Advice`).
+   - **Contradiction Pre-Check**: The absorbed text `MUST` be evaluated against the CRP's target state, purpose, and invariants. If an incompatibility or contradiction exists, the CRP intake `MUST` fail closed or document an explicit reconciliation before proceeding.
+2. **Immediate Source Uncluttering for Operator Remarks (`ACTIVE_CONTEXT.md`)**:
+   - The moment an operator remark from `.agents/ACTIVE_CONTEXT.md` is absorbed into an active CRP specification, it has graduated to a governed lifecycle artifact.
+   - The remark `MUST` be removed immediately from `.agents/ACTIVE_CONTEXT.md`.
+   - No historical archive, lingering notes, or pseudo-states (`DONE:`, `RESOLVED:`) `MAY` remain in `ACTIVE_CONTEXT.md`. Historical provenance is preserved via Git history and the CRP proposal bundle.
+3. **Two-Stage Lifecycle & Guaranteed Retirement for Learned Advice (`LEARNED_ADVICE.md`)**:
+   - Because `.agents/LEARNED_ADVICE.md` contains binding operational invariants for all AI agents, it `MUST NOT` be prematurely deleted merely because a CRP was created or is in progress.
+   - **Stage 1 (Recognized Status)**: Upon intake into an active CRP, the advice entry is annotated as `[RECOGNIZED: CRP-XXX]`. It remains 100% active, binding, and enforceable. It `MUST NEVER` be marked `done` or deleted during implementation.
+   - **Stage 2 (Guaranteed Retirement)**: Deletion from `LEARNED_ADVICE.md` is unlocked `ONLY` when the CRP's goals—specifically including the issue governed by the learned advice—are **guaranteed to be met** by the test harness (e.g. passing Pester test, automated readiness gate, or formal policy codification in `.agents/rules/`).
+   - Only upon verified passage of the guarantee at `verify` / `in_review` / `complete` is the advice entry safely purged from `LEARNED_ADVICE.md`.
+
+---
+
 <a id="reviewcommitgovernancepolicymd"></a>
 ## Rule #7: ReviewCommitGovernancePolicy.md
 > **Category**: 2. Proposal, Review & Commit Lifecycle | **Canonical Source**: `.agents/rules/ReviewCommitGovernancePolicy.md`
@@ -792,9 +822,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.1
+Version: 10.2.3
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-10 20:28:00
 
 ---
 
@@ -896,6 +926,21 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 1. **Window Non-Interference**: Beyond Compare review launchers (`Invoke-MacriumDailyBcrBaseline.ps1`, `BCR.cmd`) `MUST NOT` enforce arbitrary single-window constraints (e.g. `Count -ne 1`), kill existing operator instances, or terminate processes with `MainWindowHandle: 0` while they are initializing. Operators own their desktop windows and sessions.
 2. **Title Neutrality**: The launcher may append the review scope (`[CRP-xxx]`) to an opened window, but `MUST NOT` poll window titles in intrusive loops or kill instances whose titles deviate from automation expectations.
 3. **Baseline Currency Invariant**: Baseline preparation tools `MUST NEVER` silently reuse an older mounted image when a newer completed backup exists for the current day on `B:\Backups\`. Before reusing any mounted partition, the tool `MUST` verify whether today has a newer completed `.mrimgx`. If a newer image exists, the tool `MUST` unmount the stale partition and mount today's fresh image. If an older image is intentionally reused, the tool `MUST` explicitly notify the operator of the image date, file name, and mounted drive letter before review dispatch.
+4. **Prohibition of Baseline Re-Creation / Re-Launch & Sandbox Preservation**:
+   - Automation and AI agents `MUST NEVER` re-launch a Beyond Compare review session or re-allocate/remount a new baseline unless the underlying baseline image itself has physically changed.
+   - The comparison dynamically refreshes on filesystem change or manual operator reload, independent of individual CRP identifiers (window title differences are negligible).
+   - **Operator Review Markers**: The operator utilizes file modifications and markers on the Left-Hand Side (LHS baseline) to track review progress; introducing a new baseline or remounting wipes out these markers.
+   - **Sandbox State Preservation**: In sandbox environments (where a simulated drive mirrors `D:` with junction adjustments), re-allocating or remounting the baseline causes catastrophic loss of the sandbox state.
+
+---
+
+### RULE-REV-013: Baseline Modification Detection & Interactive Dismount Choice Guardrail
+1. **Pre-Dismount Content Audit**: Before detaching, dismounting, or reallocating an active baseline candidate drive (`F:` through `I:`), automation and dismount tools `MUST` inspect the mounted repositories for active modifications, untracked files, or operator review markers (`git status --porcelain`).
+2. **Interactive Operator Choice**: If modifications are detected:
+   - Dismount tools `MUST NOT` abort silently or detach without consent.
+   - When run in an interactive session, the tool `MUST` present a high-visibility warning listing the affected repositories and file counts, and prompt the operator for an explicit choice (`[Y] Dismount and discard changes / [N] Cancel`).
+   - When run in automated or non-interactive contexts, the tool `MUST` fail closed unless an explicit `-Force` / `-DiscardChanges` parameter is supplied.
+3. **Explicit Override Authority**: The operator retains full authority to proceed with dismounting (for example, when a fresh Macrium backup is ready to be attached) by selecting `[Y]` or passing `-Force`.
 
 ---
 
@@ -1752,8 +1797,8 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 > **Category**: 4. Documentation & Subsystem Architecture | **Canonical Source**: `.agents/rules/macro-definitions.md`
 
 # macro-definitions.md
-# version: 10.2.1
-# date: 2026-10-21
+# version: 10.2.2
+# date: 2026-11-10
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory
@@ -1798,13 +1843,28 @@ MACRO: profile status
   - summarize version alignment
 
 MACRO: GoodMorning
-- description: full read-only session-start check (RULE-CTX-006): time gap, work in between, versions, context staleness, pending learned advice
-- syntax: GoodMorning
+- description: full read-only session-start check (RULE-CTX-006, RULE-LCM-030): time gap, work in between, versions, context staleness, pending learned advice
+- syntax: GoodMorning | goodmorning
 - primary target: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1 -Force
 - rules:
+  - the first line of the AI's response MUST reference the preceding GoodNight timestamp: "☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h)."
   - report every attention item to the operator before other work
   - confirm that ACTIVE_CONTEXT.md and LEARNED_ADVICE.md were read and can be followed
   - change nothing
+
+MACRO: GoodNight
+- description: comprehensive end-of-day workspace save, log archival, commit, optional push, and quiescence transition (RULE-LCM-030)
+- syntax: GoodNight [-Push] | goodnight [-Push] | SaveAll
+- aliases: goodnight, SaveAll
+- primary target: LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1 [-Push]
+- rules:
+  - scan working-tree cleanliness across all governed repositories
+  - save session memory to ACTIVE_CONTEXT.md and record Quiescent state in ACTIVE_SESSION.md
+  - archive daemon logs before any publish-owned maintenance can change them
+  - commit governed repositories (and publish with -Push)
+  - the final console banner and AI terminal message MUST show the completion timestamp: "🌙 Good Night completed at YYYY-MM-DD HH:mm:ss. Session is Quiescent."
+  - after GoodNight completes, the workspace enters a Quiescent State; AI MUST NOT emit unprompted wakeups or greetings until operator speaks
+
 
 MACRO: learn
 - description: record something learned as a candidate for LEARNED_ADVICE.md (RULE-CTX-005)
@@ -1938,6 +1998,174 @@ MACRO: PUBLISH
   - `push` and `PUSH` remain backward-compatible aliases.
   - requires every target proposal to be completed and LCM_Inventory to be ahead before any remote dispatch
 
+<!-- MANAGED-SHOW-MACROS-START -->
+## Managed Catalog Show* Command Macros (Auto-Synchronized by CRP-280)
+<!-- The entries below are synchronized from config/tool_catalog.json. Do not edit directly. -->
+
+MACRO: ShowHaAuthDialog
+- description: WPF desktop dialog for secure ephemeral credentials with password reveal (RULE-SUB-003).
+- syntax: ShowHaAuthDialog [switches] | @ShowHaAuthDialog [switches]
+- primary target: HaSSD06/tools/subsystem/Show-HaAuthDialog.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowHaInventoryApp
+- description: Show-HaInventoryApp execution tool.
+- syntax: ShowHaInventoryApp [switches] | @ShowHaInventoryApp [switches]
+- primary target: HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowDaemon
+- description: Displays live telemetry, runtime status, and log tailing for the LCM Desktop REST Bridge Daemon.
+- syntax: ShowDaemon [switches] | @ShowDaemon [switches]
+- primary target: LCM_Inventory/tools/Show-LcmDaemon.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLastLog
+- description: Displays the most recently updated audit log in the workspace with live tail and level filtering.
+- syntax: ShowLastLog [switches] | @ShowLastLog [switches]
+- primary target: LCM_Inventory/tools/Show-LastLog.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowCM
+- description: Unified LCM Control Hub dashboard and proposal lifecycle manager.
+- syntax: ShowCM [switches] | @ShowCM [switches]
+- primary target: LCM_Inventory/tools/Show-LcmControl.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowCmdAnalysis
+- description: Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents.
+- syntax: ShowCmdAnalysis [switches] | @ShowCmdAnalysis [switches]
+- primary target: LCM_Inventory/tools/Show-CmdFolderAnalysis.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowHaInventory
+- description: Generates and launches the authoritative Home Assistant HaSSD06 Subsystem Viewer dashboard.
+- syntax: ShowHaInventory [switches] | @ShowHaInventory [switches]
+- primary target: LCM_Inventory/tools/Show-HaInventory.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowActions
+- description: Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries.
+- syntax: ShowActions [switches] | @ShowActions [switches]
+- primary target: LCM_Inventory/tools/Show-Actions.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowToolIndex
+- description: Underlying generation engine for the interactive LCM Tool Explorer HTML application.
+- syntax: ShowToolIndex [switches] | @ShowToolIndex [switches]
+- primary target: LCM_Inventory/tools/Show-ToolIndex.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowFailureDiagnostic
+- description: Show-LcmFailureDiagnostic execution tool.
+- syntax: ShowFailureDiagnostic [switches] | @ShowFailureDiagnostic [switches]
+- primary target: LCM_Inventory/tools/Show-LcmFailureDiagnostic.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLcmActiveLauncher
+- description: Show-LcmActiveLauncher execution tool.
+- syntax: ShowLcmActiveLauncher [switches] | @ShowLcmActiveLauncher [switches]
+- primary target: LCM_Inventory/tools/Show-LcmActiveLauncher.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLcmAnalysisViewer
+- description: Show-LcmAnalysisViewer execution tool.
+- syntax: ShowLcmAnalysisViewer [switches] | @ShowLcmAnalysisViewer [switches]
+- primary target: LCM_Inventory/tools/Show-LcmAnalysisViewer.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLCMInventoryApp
+- description: Show-LCM_InventoryApp execution tool.
+- syntax: ShowLCMInventoryApp [switches] | @ShowLCMInventoryApp [switches]
+- primary target: LCM_Inventory/tools/Show-LCM_InventoryApp.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLCMReadiness
+- description: Show-LCM_Readiness execution tool.
+- syntax: ShowLCMReadiness [switches] | @ShowLCMReadiness [switches]
+- primary target: LCM_Inventory/tools/Show-LCM_Readiness.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowRepos
+- description: Show-Repos execution tool.
+- syntax: ShowRepos [switches] | @ShowRepos [switches]
+- primary target: LCM_Inventory/tools/Show-Repos.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowRules
+- description: Show-Rules execution tool.
+- syntax: ShowRules [switches] | @ShowRules [switches]
+- primary target: LCM_Inventory/tools/Show-Rules.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowToolIntents
+- description: Show-ToolIntents execution tool.
+- syntax: ShowToolIntents [switches] | @ShowToolIntents [switches]
+- primary target: LCM_Inventory/tools/Show-ToolIntents.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowSupervision
+- description: Show-Supervision execution tool.
+- syntax: ShowSupervision [switches] | @ShowSupervision [switches]
+- primary target: LCM_Supervision/tools/Show-Supervision.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+<!-- MANAGED-SHOW-MACROS-END -->
+
 MACRO: tsr (Legacy / Automated)
 - note: Superseded by persistent TimestampHeaderRule codified in InvariantRules.md. Automated on every turn; manual macro invocation is deprecated.
 
@@ -1970,9 +2198,9 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 
 | Rule File | Rule Identifiers | Domain | Scope | Core Invariant |
 |:---|:---|:---|:---|:---|
-| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `029` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`), Question Response & Anti-Overreaction Invariant (`RULE-LCM-028`), and Boundary Ambiguity & Alternatives Invariant (`RULE-LCM-029`). |
+| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `031` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`), Question Response & Anti-Overreaction Invariant (`RULE-LCM-028`), Boundary Ambiguity & Alternatives Invariant (`RULE-LCM-029`), Session Quiescence & GoodNight / GoodMorning Protocol Invariant (`RULE-LCM-030`), and Context Absorption, Reverse-Ticket Invariant & Guaranteed Learned-Advice Retirement (`RULE-LCM-031`). |
 | **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `025` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`), Left-Side Null Equality Comparison Invariant (`RULE-PS-023`), Prohibition of Implicit Confirmation & SupportsShouldProcess (`RULE-PS-024`), and Model-Atom-Controller (MAC) Modular Implementation Invariant (`RULE-PS-025`). |
-| **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `012` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`), ADMINMODE rule change authorization (`RULE-REV-011`), and Review Tool Window Non-Interference, Title Neutrality & Baseline Currency Invariant (`RULE-REV-012`). |
+| **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `013` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`), ADMINMODE rule change authorization (`RULE-REV-011`), Review Tool Window Non-Interference, Title Neutrality, Baseline Currency & Baseline Re-Creation Prohibition Invariant (`RULE-REV-012`), and Baseline Modification Detection & Interactive Dismount Choice Guardrail (`RULE-REV-013`). |
 | **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `009`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing, and Anti-Code-Reading & Direct Goal Execution Invariant (`RULE-EFF-009`). |
 | **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `007` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, automated privilege-aware execution/elevation interception, and caller admin dependency disclosure & anti-staleness invariant. |
 | **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |

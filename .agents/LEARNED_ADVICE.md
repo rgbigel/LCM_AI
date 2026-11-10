@@ -19,7 +19,6 @@ How it works:
 ## Accepted
 
 - **2026-11-09** (Caller Admin Dependency Disclosure & Anti-Staleness): Whenever a caller tool invokes or relies upon an admin-mode tool, it `MUST` declare that dependency in its `-h` / `-Help` usage reference and header block. Conversely, when no longer needed, the caller `MUST` purge that dependency immediately to avoid stale elevation assumptions (`RULE-ELEV-007`, `RULE-PS-010.3`).
-- **2026-11-09** (Tool Intents Optimization Metrics): The Show-ToolIntents catalog is designated as the repository substrate for tracking tool access frequencies and relative computational cost for future workflow and AI speed optimizations.
 
 ### Working agreement
 - Learned advice retention invariant: Unless an advice entry was actively (requires crp-nnn) corrected and properly set into function as a rule, gate, or other reliable contract, it must NEVER be removed. New advice is always added at the top; removal can be in the middle only with explicit CRP citation. The insight MUST be taken up by the AI, or there must be a comment in context explicitly stating that it is being ignored and why. (2026-11-09, operator)
@@ -42,7 +41,8 @@ How it works:
 - Structured database transition for large JSON: Large unwieldy JSON stores in _Inventory should be mapped to an SQLite database for structured querying to eliminate pretend-DB grep/rip patterns, with DuckDB as a secondary option for logs/history. (2026-11-09, operator)
 
 ### Macrium & BCR Baseline
-- Decoupled baseline backup generation: Macrium backup creation is a separate atom (`Start-MacriumDailyBackup.ps1`) that must be removed from GoodMorning. It is executed at operator discretion after GoodMorning, and provides an option (`-Mount`) to immediately mount the newly generated backup/baseline partition. (2026-11-09, operator)
+- **2026-11-10** (Prohibition of Baseline Re-Creation / Re-Launch & Sandbox Preservation): You `MUST NEVER` re-launch the BCR review or re-allocate/remount a new baseline unless the underlying baseline image has physically changed. The comparison dynamically updates itself (or on operator reload) and is independent of individual CRPs (window title variance is negligible). The operator uses changes on the Left-Hand Side (baseline side) to mark review progress; re-opening or remounting destroys those markers. Furthermore, in the upcoming sandbox environment (a simulated drive mirroring `D:` with junction adjustments), re-allocating the baseline causes total destruction of sandbox state. (operator)
+- Decoupled baseline backup generation: Macrium backup creation is a separate atom (`Start-MacriumDailyBackup.ps1`) that must be removed from GoodMorning. It is executed at operator discretion after GoodMorning, and provides an option (`-Mount`) to immediately mount the newly generated baseline partition. (2026-11-09, operator)
 - Baseline currency evaluation: Always evaluate today's completed Macrium backup before checking candidate drives. Never silently reuse a stale mount from a prior day when a newer completed backup exists today. (2026-11-09, operator)
 - Review tool window non-interference: Do not kill or terminate open Beyond Compare processes. Verify only that the current baseline comparison is open and has the correct scope title. Never enforce single-window assertions (`Count -ne 1`); allow operator multi-window workflows without disruption. (2026-11-09, operator)
 
@@ -56,6 +56,7 @@ How it works:
 - Content changes reach the index with a delay, usually under 1 second. (2026-10-13, operator)
 
 ### Files
+- **2026-11-10** (Directory Modification Timestamps Exclusively Operator-Controlled): The operator maintains a tool that sets each encompassing folder's LastWriteTime to the maximum timestamp of its constituent files, executed at irregular intervals. Therefore, directory modification timestamps across drive D: are strictly operator-owned. AI and automation MUST NOT use, mutate, or base freshness/ordering decisions on directory modification dates. (operator)
 - Write byte-sensitive files with latin1 or the edit tool and keep CRLF/BOM; a UTF-8 round-trip corrupted a script once. (2026-10-13, Copilot)
 
 ### Versioning

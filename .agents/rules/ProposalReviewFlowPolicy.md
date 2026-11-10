@@ -9,9 +9,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.1
+Version: 10.0.3
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-10 18:47:00
 
 ---
 
@@ -468,3 +468,34 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 1. **Mandatory Pause on Ambiguous Boundaries**: Wherever the operational boundary, scope, or resolution path is not explicit or given by the goal contract, the AI agent `MUST` halt autonomous execution immediately.
 2. **Presentation of Alternatives**: The AI agent `MUST` present clear, concrete alternatives (with their respective trade-offs) and **WAIT FOR CONFIRMATION** before modifying any workspace files or advancing lifecycle state.
 3. **Prohibition of Speculative Extrapolation**: The AI agent `MUST NOT` guess, speculate, or unilaterally assume a boundary (whether leaning toward sweeping maximalist execution or complete abandonment). The operational boundary remains frozen until explicitly confirmed by the operator.
+
+---
+
+### RULE-LCM-030: Session Quiescence & GoodNight / GoodMorning Protocol Invariant
+1. **Quiescent State Invariant**:
+   - Following the execution of an end-of-day sequence (`GoodNight`, `goodnight`, `SaveAll`), the workspace enters a **Quiescent State**.
+   - While in a Quiescent State, if an automated or synthetic turn is triggered (such as platform context compaction, background message, or schedule wakeup) without a new, explicit `<USER_REQUEST>` from the operator, the AI agent `MUST REMAIN SILENT`. It `MUST NOT` proactively emit greetings, status summaries, or initiate unprompted workflows.
+2. **GoodNight Terminal Message Protocol**:
+   - The final output line/message of a GoodNight sequence `MUST` display the completion timestamp:
+     `🌙 Good Night completed at YYYY-MM-DD HH:mm:ss. Session is Quiescent.`
+3. **GoodMorning Resumption Response Protocol**:
+   - When the operator initiates the next session with a morning greeting or command (`GoodMorning`, `goodmorning`, `ShowTools`, etc.), the **FIRST MESSAGE RESPONSE** from the AI agent `MUST` explicitly state the resumption and reference the preceding GoodNight timestamp:
+     `☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h).`
+
+---
+
+### RULE-LCM-031: Context Absorption, Reverse-Ticket Invariant & Guaranteed Learned-Advice Retirement
+1. **Reverse-the-Ticket Invariant (Authoritative CRP Ownership)**:
+   - When operational items, operator remarks, or learned guidance are taken up for execution, the proposal (CRP/BUG) is the authoritative lifecycle owner.
+   - The CRP specification (`Specification.md`) `MUST` incorporate the verbatim original text of the absorbed item in a dedicated section (`## Absorbed Operator Remarks` or `## Recognized Learned Advice`).
+   - **Contradiction Pre-Check**: The absorbed text `MUST` be evaluated against the CRP's target state, purpose, and invariants. If an incompatibility or contradiction exists, the CRP intake `MUST` fail closed or document an explicit reconciliation before proceeding.
+2. **Immediate Source Uncluttering for Operator Remarks (`ACTIVE_CONTEXT.md`)**:
+   - The moment an operator remark from `.agents/ACTIVE_CONTEXT.md` is absorbed into an active CRP specification, it has graduated to a governed lifecycle artifact.
+   - The remark `MUST` be removed immediately from `.agents/ACTIVE_CONTEXT.md`.
+   - No historical archive, lingering notes, or pseudo-states (`DONE:`, `RESOLVED:`) `MAY` remain in `ACTIVE_CONTEXT.md`. Historical provenance is preserved via Git history and the CRP proposal bundle.
+3. **Two-Stage Lifecycle & Guaranteed Retirement for Learned Advice (`LEARNED_ADVICE.md`)**:
+   - Because `.agents/LEARNED_ADVICE.md` contains binding operational invariants for all AI agents, it `MUST NOT` be prematurely deleted merely because a CRP was created or is in progress.
+   - **Stage 1 (Recognized Status)**: Upon intake into an active CRP, the advice entry is annotated as `[RECOGNIZED: CRP-XXX]`. It remains 100% active, binding, and enforceable. It `MUST NEVER` be marked `done` or deleted during implementation.
+   - **Stage 2 (Guaranteed Retirement)**: Deletion from `LEARNED_ADVICE.md` is unlocked `ONLY` when the CRP's goals—specifically including the issue governed by the learned advice—are **guaranteed to be met** by the test harness (e.g. passing Pester test, automated readiness gate, or formal policy codification in `.agents/rules/`).
+   - Only upon verified passage of the guarantee at `verify` / `in_review` / `complete` is the advice entry safely purged from `LEARNED_ADVICE.md`.
+

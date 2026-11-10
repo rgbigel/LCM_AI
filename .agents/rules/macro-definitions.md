@@ -9,8 +9,8 @@ globs: "*"
 <!-- Activation: Workspace Automatic                                       -->
 <!-- ===================================================================== -->
 # macro-definitions.md
-# version: 10.0.1
-# date: 2026-10-21
+# version: 10.0.2
+# date: 2026-11-10
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory
@@ -55,13 +55,28 @@ MACRO: profile status
   - summarize version alignment
 
 MACRO: GoodMorning
-- description: full read-only session-start check (RULE-CTX-006): time gap, work in between, versions, context staleness, pending learned advice
-- syntax: GoodMorning
+- description: full read-only session-start check (RULE-CTX-006, RULE-LCM-030): time gap, work in between, versions, context staleness, pending learned advice
+- syntax: GoodMorning | goodmorning
 - primary target: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1 -Force
 - rules:
+  - the first line of the AI's response MUST reference the preceding GoodNight timestamp: "☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h)."
   - report every attention item to the operator before other work
   - confirm that ACTIVE_CONTEXT.md and LEARNED_ADVICE.md were read and can be followed
   - change nothing
+
+MACRO: GoodNight
+- description: comprehensive end-of-day workspace save, log archival, commit, optional push, and quiescence transition (RULE-LCM-030)
+- syntax: GoodNight [-Push] | goodnight [-Push] | SaveAll
+- aliases: goodnight, SaveAll
+- primary target: LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1 [-Push]
+- rules:
+  - scan working-tree cleanliness across all governed repositories
+  - save session memory to ACTIVE_CONTEXT.md and record Quiescent state in ACTIVE_SESSION.md
+  - archive daemon logs before any publish-owned maintenance can change them
+  - commit governed repositories (and publish with -Push)
+  - the final console banner and AI terminal message MUST show the completion timestamp: "🌙 Good Night completed at YYYY-MM-DD HH:mm:ss. Session is Quiescent."
+  - after GoodNight completes, the workspace enters a Quiescent State; AI MUST NOT emit unprompted wakeups or greetings until operator speaks
+
 
 MACRO: learn
 - description: record something learned as a candidate for LEARNED_ADVICE.md (RULE-CTX-005)
@@ -195,6 +210,174 @@ MACRO: PUBLISH
   - `push` and `PUSH` remain backward-compatible aliases.
   - requires every target proposal to be completed and LCM_Inventory to be ahead before any remote dispatch
 
+<!-- MANAGED-SHOW-MACROS-START -->
+## Managed Catalog Show* Command Macros (Auto-Synchronized by CRP-280)
+<!-- The entries below are synchronized from config/tool_catalog.json. Do not edit directly. -->
+
+MACRO: ShowHaAuthDialog
+- description: WPF desktop dialog for secure ephemeral credentials with password reveal (RULE-SUB-003).
+- syntax: ShowHaAuthDialog [switches] | @ShowHaAuthDialog [switches]
+- primary target: HaSSD06/tools/subsystem/Show-HaAuthDialog.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowHaInventoryApp
+- description: Show-HaInventoryApp execution tool.
+- syntax: ShowHaInventoryApp [switches] | @ShowHaInventoryApp [switches]
+- primary target: HaSSD06_Inventory/tools/Show-HaInventoryApp.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowDaemon
+- description: Displays live telemetry, runtime status, and log tailing for the LCM Desktop REST Bridge Daemon.
+- syntax: ShowDaemon [switches] | @ShowDaemon [switches]
+- primary target: LCM_Inventory/tools/Show-LcmDaemon.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLastLog
+- description: Displays the most recently updated audit log in the workspace with live tail and level filtering.
+- syntax: ShowLastLog [switches] | @ShowLastLog [switches]
+- primary target: LCM_Inventory/tools/Show-LastLog.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowCM
+- description: Unified LCM Control Hub dashboard and proposal lifecycle manager.
+- syntax: ShowCM [switches] | @ShowCM [switches]
+- primary target: LCM_Inventory/tools/Show-LcmControl.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowCmdAnalysis
+- description: Interactive HTML viewer analyzing all legacy batch scripts and modern PowerShell tool equivalents.
+- syntax: ShowCmdAnalysis [switches] | @ShowCmdAnalysis [switches]
+- primary target: LCM_Inventory/tools/Show-CmdFolderAnalysis.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowHaInventory
+- description: Generates and launches the authoritative Home Assistant HaSSD06 Subsystem Viewer dashboard.
+- syntax: ShowHaInventory [switches] | @ShowHaInventory [switches]
+- primary target: LCM_Inventory/tools/Show-HaInventory.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowActions
+- description: Fast lightweight terminal reader displaying recent operational actions and tool execution step summaries.
+- syntax: ShowActions [switches] | @ShowActions [switches]
+- primary target: LCM_Inventory/tools/Show-Actions.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowToolIndex
+- description: Underlying generation engine for the interactive LCM Tool Explorer HTML application.
+- syntax: ShowToolIndex [switches] | @ShowToolIndex [switches]
+- primary target: LCM_Inventory/tools/Show-ToolIndex.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowFailureDiagnostic
+- description: Show-LcmFailureDiagnostic execution tool.
+- syntax: ShowFailureDiagnostic [switches] | @ShowFailureDiagnostic [switches]
+- primary target: LCM_Inventory/tools/Show-LcmFailureDiagnostic.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLcmActiveLauncher
+- description: Show-LcmActiveLauncher execution tool.
+- syntax: ShowLcmActiveLauncher [switches] | @ShowLcmActiveLauncher [switches]
+- primary target: LCM_Inventory/tools/Show-LcmActiveLauncher.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLcmAnalysisViewer
+- description: Show-LcmAnalysisViewer execution tool.
+- syntax: ShowLcmAnalysisViewer [switches] | @ShowLcmAnalysisViewer [switches]
+- primary target: LCM_Inventory/tools/Show-LcmAnalysisViewer.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLCMInventoryApp
+- description: Show-LCM_InventoryApp execution tool.
+- syntax: ShowLCMInventoryApp [switches] | @ShowLCMInventoryApp [switches]
+- primary target: LCM_Inventory/tools/Show-LCM_InventoryApp.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowLCMReadiness
+- description: Show-LCM_Readiness execution tool.
+- syntax: ShowLCMReadiness [switches] | @ShowLCMReadiness [switches]
+- primary target: LCM_Inventory/tools/Show-LCM_Readiness.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowRepos
+- description: Show-Repos execution tool.
+- syntax: ShowRepos [switches] | @ShowRepos [switches]
+- primary target: LCM_Inventory/tools/Show-Repos.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowRules
+- description: Show-Rules execution tool.
+- syntax: ShowRules [switches] | @ShowRules [switches]
+- primary target: LCM_Inventory/tools/Show-Rules.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowToolIntents
+- description: Show-ToolIntents execution tool.
+- syntax: ShowToolIntents [switches] | @ShowToolIntents [switches]
+- primary target: LCM_Inventory/tools/Show-ToolIntents.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+MACRO: ShowSupervision
+- description: Show-Supervision execution tool.
+- syntax: ShowSupervision [switches] | @ShowSupervision [switches]
+- primary target: LCM_Supervision/tools/Show-Supervision.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
+<!-- MANAGED-SHOW-MACROS-END -->
+
 MACRO: tsr (Legacy / Automated)
 - note: Superseded by persistent TimestampHeaderRule codified in InvariantRules.md. Automated on every turn; manual macro invocation is deprecated.
 
@@ -207,3 +390,5 @@ MACRO: ar
   - 'ar -TranscriptPath <file> -From <quoted text>' -> analyzes an explicit offline JSON or JSONL export.
   - Legacy numeric offsets require an explicit transcript path and remain a fallback only.
   - generates a structured report in LCM_Inventory/data/logs/ containing Execution Trace, Error Triage & Avoidance Matrix, and Decision Rationale
+
+

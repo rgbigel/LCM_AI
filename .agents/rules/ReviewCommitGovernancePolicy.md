@@ -9,9 +9,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.1
+Version: 10.0.3
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-10 20:28:00
 
 ---
 
@@ -113,3 +113,18 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 1. **Window Non-Interference**: Beyond Compare review launchers (`Invoke-MacriumDailyBcrBaseline.ps1`, `BCR.cmd`) `MUST NOT` enforce arbitrary single-window constraints (e.g. `Count -ne 1`), kill existing operator instances, or terminate processes with `MainWindowHandle: 0` while they are initializing. Operators own their desktop windows and sessions.
 2. **Title Neutrality**: The launcher may append the review scope (`[CRP-xxx]`) to an opened window, but `MUST NOT` poll window titles in intrusive loops or kill instances whose titles deviate from automation expectations.
 3. **Baseline Currency Invariant**: Baseline preparation tools `MUST NEVER` silently reuse an older mounted image when a newer completed backup exists for the current day on `B:\Backups\`. Before reusing any mounted partition, the tool `MUST` verify whether today has a newer completed `.mrimgx`. If a newer image exists, the tool `MUST` unmount the stale partition and mount today's fresh image. If an older image is intentionally reused, the tool `MUST` explicitly notify the operator of the image date, file name, and mounted drive letter before review dispatch.
+4. **Prohibition of Baseline Re-Creation / Re-Launch & Sandbox Preservation**:
+   - Automation and AI agents `MUST NEVER` re-launch a Beyond Compare review session or re-allocate/remount a new baseline unless the underlying baseline image itself has physically changed.
+   - The comparison dynamically refreshes on filesystem change or manual operator reload, independent of individual CRP identifiers (window title differences are negligible).
+   - **Operator Review Markers**: The operator utilizes file modifications and markers on the Left-Hand Side (LHS baseline) to track review progress; introducing a new baseline or remounting wipes out these markers.
+   - **Sandbox State Preservation**: In sandbox environments (where a simulated drive mirrors `D:` with junction adjustments), re-allocating or remounting the baseline causes catastrophic loss of the sandbox state.
+
+---
+
+### RULE-REV-013: Baseline Modification Detection & Interactive Dismount Choice Guardrail
+1. **Pre-Dismount Content Audit**: Before detaching, dismounting, or reallocating an active baseline candidate drive (`F:` through `I:`), automation and dismount tools `MUST` inspect the mounted repositories for active modifications, untracked files, or operator review markers (`git status --porcelain`).
+2. **Interactive Operator Choice**: If modifications are detected:
+   - Dismount tools `MUST NOT` abort silently or detach without consent.
+   - When run in an interactive session, the tool `MUST` present a high-visibility warning listing the affected repositories and file counts, and prompt the operator for an explicit choice (`[Y] Dismount and discard changes / [N] Cancel`).
+   - When run in automated or non-interactive contexts, the tool `MUST` fail closed unless an explicit `-Force` / `-DiscardChanges` parameter is supplied.
+3. **Explicit Override Authority**: The operator retains full authority to proceed with dismounting (for example, when a fresh Macrium backup is ready to be attached) by selecting `[Y]` or passing `-Force`.

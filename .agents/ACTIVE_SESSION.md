@@ -1,33 +1,32 @@
 # Active Session State & Memory (Lifecycle Model)
-- **Last Updated**: 2026-11-10 11:30:00
-- **Status**: Active
-- **Last GoodNight**: 2026-11-09 20:10:21
-- **Tomorrow Reminder**: The Show-ToolIntents explorer is an ideal substrate to store tool access frequencies and relative execution cost for future AI and operator workflow optimizations.
-- **LCM Version**: 10.0.1
-- **Active Proposal**: `CRP-310` (Cohort `COH-310`)
-- **Lifecycle Gate**: `2 - REVIEW` (Active Review Window PID 24264)
+- **Last Updated**: 2026-11-10 20:45:00
+- **Status**: Quiescent / Review Cohort Completed
+- **LCM Version**: 10.0.3
+- **Completed Cohort**: `CRP-263`, `CRP-267`, `CRP-280`, `BUG-311`, `CRP-312`, `BUG-313`, `BUG-314`, `CRP-315`, `CRP-316`, `CRP-318`
+- **Commits**:
+  - `LCM_AI`: `14de019`
+  - `LCM_Inventory`: `5ca2601`
+  - `Git_Repositories` (Root): `3af4215`
+- **Pending Implementation**: `CRP-317` (Gate 1 Accepted; ready for implementation in next cycle)
+- **Next Release Backlog**: `CRP-218`
 - **Quality Gates**: `Test-GeneralReadiness.ps1` (100% PASS across 6 gates in all governed repos)
 
 ---
 
-## 1. Elevated Logon Auto-Start & Privilege Routing Resolved
-
-- **Execution Path**: Routed `RegisterDaemon` through the workspace privilege interceptor (`Invoke-PrivilegedTool.ps1`) targeting the Session 1 daemon bridge.
-- **Scheduled Task Parity**: The Scheduled Task `LCM_DesktopDaemon_rgbig` is now registered with:
-  - `<RunLevel>HighestAvailable</RunLevel>` (Administrative token).
-  - `<LogonTrigger>` (Auto-starts automatically at user interactive logon with **zero UAC prompts**).
-  - Bounded restart recovery (3 retries at 1-minute intervals).
-- **Active Daemon Process**: Verified running elevated on Port 9876 (PID 21036, Session 1).
+## 1. Completed Cohort Summary (All Accepted & Committed)
+1. **`CRP-263` (LCM Inbox Two-Phase Acknowledgement)**: Implemented dual-channel ACK recording (`D:\GDrive\LCM\INBOX\acks\` and local mirror) and created `Get-GeminiInboxStatus.ps1`.
+2. **`CRP-267` (Durable Documentation Completeness)**: Added `LCM_Inventory/install/Installation.md`, `New-RepositoryDocumentation.ps1`, and selective audit tool `Test-DocumentationCompleteness.ps1`.
+3. **`CRP-280` (Catalog-Synced Show Command Macros)**: Built `Sync-LcmCatalogMacros.ps1` to keep `macro-definitions.md` synchronized with `tool_catalog.json`.
+4. **`BUG-311` (Macrium Daily Baseline Selection & BCompare Non-Interference)**: Multi-window non-interference, daily `.mrimgx` currency evaluation, and direct intent mapping.
+5. **`CRP-312` (Dedicated Show-ToolIntents Viewer)**: Interactive tool intents dashboard with column filters and command copy.
+6. **`BUG-313` (Action Gateway Argument Preservation & Macrium CLI Syntax)**: Repaired argument passing, single-argument CLI dispatching, and AutoHotkey v2 browse dialog automation atom.
+7. **`BUG-314` (Tool Explorer Reset Filters Fix & Pipe Filter Support)**: Fixed global reset filters and added multi-token OR filtering.
+8. **`CRP-315` (Tool Intent Usage Metrics & Millisecond Timestamps)**: Added `call_count`, `last_called_at` (`yyyy-MM-dd HH:mm:ss.fff`), `last_duration_ms`, `total_duration_ms` tracking to `LcmToolCatalog.psm1`, auto-updating on invocation; retired learned advice under `RULE-LCM-031`.
+9. **`CRP-316` (Trampoline Window Caller Context and Goal Identification Header)**: Emits `# [LCM Launcher] %~nx0 - Goal: <Goal>` at the top of the PowerShell window across ~250 trampolines in `LCM_Inventory/Cmd/`.
+10. **`CRP-318` (Baseline Modification Detection & Interactive Dismount Choice)**: `Test-LcmBaselineModifications` audits mounted volumes via `git status --porcelain`, warns operator of LHS review markers, prompts `[Y/N]` choice, and supports `-Force` bypass (`RULE-REV-013`).
 
 ---
 
-## 2. Live Verification Confirmed
-
-1. **Atomic Registry Telemetry Persistence**:
-   - Executed `Invoke-MacriumDailyBcrBaseline.ps1 -NoLaunchReview`.
-   - Result: Fast-path completed in 40ms; machine registry written atomically via elevated daemon worker to `HKLM:\SOFTWARE\LCM\MacriumBaseline` (`ActMTimeStamp` & `actMdrive`).
-   - Verified 0 UAC prompts, 0 access denied warnings, and single-hive `HKLM` authority.
-2. **Comprehensive Security Specification**:
-   - Published [Implementation of Security in LCM.md](file:///d:/Git_Repositories/LCM_Inventory/docs/Implementation%20of%20Security%20in%20LCM.md) covering goals, privilege tiers, sequence diagrams, code mappings, limitations, and architectural rationale.
-3. **Quality Gates Certified**:
-   - `Test-GeneralReadiness.ps1` passed 100% across all 6 gates.
+## 2. Sandbox Architecture Reference Material (CRP-251)
+- Cataloged all 1,644 references to `Git_Root` and drive `D:` across the entire LCM workspace into [`LCM_Inventory/docs/Proposals/CRP-251-Sandboxed-Prototyping-Mode/reference/Git_Root_And_Drive_Usage_Inventory.md`](file:///D:/Git_Repositories/LCM_Inventory/docs/Proposals/CRP-251-Sandboxed-Prototyping-Mode/reference/Git_Root_And_Drive_Usage_Inventory.md).
+- Decoupling blueprint prepared for `CRP-317` and HKLM workspace profile switcher.

@@ -1,4 +1,4 @@
-﻿# Lifecycle Model (LCM) Authoritative Governance Framework
+# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
 > *Exported on: 2026-11-09 20:09:57 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
@@ -44,7 +44,7 @@ Module: RuleAuthority
 Purpose: Defines canonical rule authority, governance hierarchy, and mandatory cross-reference synchronization across the workspace.  
 Path: .agents/rules/RuleAuthority.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.1
+Version: 10.2.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -85,7 +85,7 @@ Module: InvariantRules
 Purpose: Authoritative invariant rules for workspace behavior, encoding, determinism, and generation.  
 Path: .agents/rules/InvariantRules.md  
 Authors: Rolf  
-Version: 10.0.1
+Version: 10.2.1
 Status: Authoritative Invariant Rule  
 Date: 2026-11-08 12:22:00
 
@@ -144,7 +144,7 @@ Module: ElevationPolicy
 Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
 Path: .agents/rules/ElevationPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.1.0
+Version: 10.2.0
 Status: Authoritative Invariant Rule  
 Date: 2026-11-09
 
@@ -237,7 +237,7 @@ Module: LanguagePolicy
 Purpose: Authoritative rule enforcing English language usage across all workspace documentation, file names, and code.
 Path: .agents/rules/LanguagePolicy.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
 
@@ -260,7 +260,7 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 
@@ -320,7 +320,7 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.1
+Version: 10.2.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -792,7 +792,7 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.1
+Version: 10.2.1
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -909,7 +909,7 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.1
+Version: 10.2.1
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 
@@ -1014,7 +1014,7 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.2
+Version: 10.2.2
 Status: Authoritative Policy  
 Date: 2026-11-09 20:05:00
 
@@ -1366,7 +1366,7 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 10.0.1
+Version: 10.2.1
 Changelog:
 - 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.
 - 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.
@@ -1412,7 +1412,7 @@ Module: PythonRules
 Purpose: Authoritative rule definitions for Python code quality, import ordering, string formatting, and linter compliance.  
 Path: .agents/rules/PythonRules.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 
@@ -1452,7 +1452,7 @@ Module: CMDRules
 Purpose: Authoritative rules for CMD batch generation, echo control, error levels, and normalization.  
 Path: .agents/rules/CMDRules.md  
 Authors: Rolf  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 
@@ -1480,7 +1480,7 @@ Module: JsonRules
 Purpose: Authoritative rules for JSON normalization, schema referencing, encoding, and indentation.  
 Path: .agents/rules/JsonRules.md  
 Authors: Rolf  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 
@@ -1509,7 +1509,7 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.2
+Version: 10.2.2
 Status: Authoritative Policy  
 Date: 2026-11-08 12:46:00
 
@@ -1680,7 +1680,7 @@ Module: SubsystemGovernancePolicy
 Purpose: Governs disjunct Subsystem repositories (e.g. Home Assistant OS), dedicated subsystem inventories, JIT ephemeral write authentication, host hardware interlocks, and log segregation.  
 Path: .agents/rules/SubsystemGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Policy  
 Date: 2026-10-13
 
@@ -1752,7 +1752,7 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 > **Category**: 4. Documentation & Subsystem Architecture | **Canonical Source**: `.agents/rules/macro-definitions.md`
 
 # macro-definitions.md
-# version: 10.0.1
+# version: 10.2.1
 # date: 2026-10-21
 
 # MACRO-DEFINITIONS-METADATA

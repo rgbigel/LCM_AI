@@ -1,5 +1,5 @@
 {
-  "version": "10.0.0",
+  "version": "10.2.0",
   "name": "DefaultProfile",
   "description": "Deterministic command-language profile for Copilot VS Code Chat",
   "instructions": "./instructions.md",

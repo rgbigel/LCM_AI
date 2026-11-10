@@ -9,7 +9,7 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.3
+Version: 10.2.3
 Status: Authoritative Policy  
 Date: 2026-11-10 20:28:00
 

@@ -1,5 +1,5 @@
 # STANDARDS-METADATA
-# version: 10.0.0
+# version: 10.2.0
 # scope: durable-memory
 # location: Standards.md
 # update-policy: manual

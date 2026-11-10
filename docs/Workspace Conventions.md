@@ -4,7 +4,7 @@ Module: Workspace Conventions.md
 Purpose: Defines workspace documentation and operational rules for Workspace Conventions.
 Path: D:/Git_Repositories/LCM_AI/docs/Workspace Conventions.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Decoupled git.ignoredRepositories from LCM_AI; scoped to root container and LCM_Inventory.
 - 2026-10-13: Codified Working directory scratchpad convention and .agents/skills packaging.

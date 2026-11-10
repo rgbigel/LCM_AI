@@ -9,7 +9,7 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 

@@ -5,7 +5,7 @@ CRP-ID: CRP-243
 Gemini-Reference: CRP-2026-005
 Title: Integration of Read-Only Analysis Protocol & Implementation Gating into Workspace Governance
 Scope: LCM_AI, LCM_Inventory, Workspace-wide
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13
 Status: Approved

@@ -1,10 +1,10 @@
-# version: 10.0.0
+# version: 10.2.0
 
 Module: version-consistency-check.md
 Purpose: Defines workspace documentation and operational rules for version-consistency-check.
 Path: D:/Git_Repositories/LCM_AI/docs/version-consistency-check.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Updated to LCM Version 10.0.0 with M.Y.Z Major Version Alignment Invariant (RULE-DOC-005).
 - 2026-10-13: Bumped to LCM pre-release Version 4.1.0.

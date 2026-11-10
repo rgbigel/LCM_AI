@@ -4,7 +4,7 @@
 CRP-ID: CRP-298
 Title: Formalize LCM Repository and App Onboarding Modes
 Scope: LCM_AI
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-10-20 19:08:00
 Status: Suggested

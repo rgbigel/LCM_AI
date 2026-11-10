@@ -2,7 +2,7 @@
 
 **Authoritative Governance, Lifecycle Model (LCM), and Baseline Source for Solution Workspace Engineering**
 
-- **LCM Governance Baseline**: `10.0.1` (Active Baseline)
+- **LCM Governance Baseline**: `10.2.3` (Active Baseline)
 - **Module**: `README.md`
 - **Authors**: Rolf, LCM_AI Engine
 - **Status**: Authoritative Reference Baseline

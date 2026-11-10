@@ -13,7 +13,7 @@ Module: LanguagePolicy
 Purpose: Authoritative rule enforcing English language usage across all workspace documentation, file names, and code.
 Path: .agents/rules/LanguagePolicy.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
 

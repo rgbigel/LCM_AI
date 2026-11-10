@@ -9,7 +9,7 @@ Module: DisplayStandardsPolicy
 Purpose: Governs presentation standards, CSS design system tokens, application topbars, control toolbars, status rails, Lucide iconography, WPF/WinForms desktop GUIs, print-to-PDF paged media, theme persistence, and interactive desktop dispatching across all LCM-generated UI presentations and dashboards.  
 Path: .agents/rules/DisplayStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Policy
 Date: 2026-10-13
 

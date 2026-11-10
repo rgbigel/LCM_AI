@@ -1,10 +1,10 @@
-# version: 10.0.0
+# version: 10.2.0
 
 Module: LCM_AI/Standards
 Purpose: Authoritative specification of repository structure, file roles, and standard practices.
 Path: docs/Standards.md
 Authors: Rolf, LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Date: 2026-10-13
 Changelog:
 - 2026-10-13: Bumped to LCM Version 10.0.0 (Minor version release: Subsystem Governance & Acceptance).

@@ -83,7 +83,7 @@ Executes immediately following tool execution:
 ```json
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "version": "10.0.0",
+  "version": "10.2.0",
   "hooks": {
     "PreToolUse": [
       {

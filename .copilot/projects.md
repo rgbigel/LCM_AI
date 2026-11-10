@@ -1,5 +1,5 @@
 # projects.md
-# version: 10.0.0
+# version: 10.2.0
 
 # PROJECTS-METADATA
 # scope: variable-memory

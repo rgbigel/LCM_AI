@@ -4,7 +4,7 @@
 CRP-ID: CRP-221
 Title: Distinguish Cancelled vs Rejected & Preserve Baseline Scratchpad Timestamps
 Scope: LCM_AI, LCM_Inventory
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: rgbig
 Date: 2026-10-13 19:15:58
 Status: Verified

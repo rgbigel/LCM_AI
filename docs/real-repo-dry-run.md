@@ -4,7 +4,7 @@ Module: real-repo-dry-run.md
 Purpose: Describes inspectable LCM_AI real-repository dry-run cases, flows, gates, and non-goals.
 Path: D:/Git_Repositories/LCM_AI/docs/real-repo-dry-run.md
 Authors: LCM_AI Engine
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Added read-only target-local proposal cleanup scanner.
 - 2026-10-13: Added target-local method instance bootstrap command and policy.

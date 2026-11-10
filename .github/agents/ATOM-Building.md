@@ -4,7 +4,7 @@ Module: ATOM-Building.md
 Purpose: Defines workspace documentation and operational rules for ATOM-Building.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/ATOM-Building.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Normalized Markdown metadata header.
 

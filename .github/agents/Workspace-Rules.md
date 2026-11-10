@@ -4,7 +4,7 @@ Module: Workspace-Rules.md
 Purpose: Defines workspace documentation and operational rules for Workspace-Rules.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/Workspace-Rules.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Reconciled with LCM 10.0.0; codified System Prerequisites mandate, ElevationPolicy.md (RULE-ELEV-001..004) authority, and Assert-RepoDocumentationFabric quality gate.
 - 2026-10-13: Consolidated Workspace-Rules authority, canonical LCM_AI paths, agent registry requirements, and WorkspaceLog governance logging.
@@ -182,7 +182,7 @@ Override detection:
 =====================================================================
 11. Versioning
 =====================================================================
-Version: 10.0.0
+Version: 10.2.0
 - MAJOR: structural change to workspace methodology
 - MINOR: non-breaking workspace rule clarification or agent behavior alignment
 - PATCH: revision cycle

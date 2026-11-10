@@ -9,7 +9,7 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.2
+Version: 10.2.2
 Status: Authoritative Policy  
 Date: 2026-11-08 12:46:00
 

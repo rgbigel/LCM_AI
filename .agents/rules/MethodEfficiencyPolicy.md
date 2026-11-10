@@ -9,7 +9,7 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.0.1
+Version: 10.2.1
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 

@@ -4,7 +4,7 @@
 CRP-ID: CRP-270
 Title: LCM Beta 10.0.0 Pass 1 Publication - LCM_AI
 Scope: LCM_AI
-Baseline-Version: 10.0.0
+Baseline-Version: 10.2.0
 Author: Copilot
 Date: 2026-10-13 19:26:17
 Status: Suggested

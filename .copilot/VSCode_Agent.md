@@ -1,5 +1,5 @@
 # Name: VSCode_Agent
-Version: 10.0.0
+Version: 10.2.0
 # Path: .copilot/VSCode_Agent.md
 # Purpose: Define the execution model for fix-modules inside LCM_AI.
 

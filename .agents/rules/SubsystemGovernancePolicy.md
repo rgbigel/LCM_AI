@@ -9,7 +9,7 @@ Module: SubsystemGovernancePolicy
 Purpose: Governs disjunct Subsystem repositories (e.g. Home Assistant OS), dedicated subsystem inventories, JIT ephemeral write authentication, host hardware interlocks, and log segregation.  
 Path: .agents/rules/SubsystemGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Policy  
 Date: 2026-10-13
 

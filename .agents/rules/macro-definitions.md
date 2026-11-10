@@ -9,7 +9,7 @@ globs: "*"
 <!-- Activation: Workspace Automatic                                       -->
 <!-- ===================================================================== -->
 # macro-definitions.md
-# version: 10.0.2
+# version: 10.2.2
 # date: 2026-11-10
 
 # MACRO-DEFINITIONS-METADATA

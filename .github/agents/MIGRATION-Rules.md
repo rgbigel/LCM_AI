@@ -4,7 +4,7 @@ Module: MIGRATION-Rules.md
 Purpose: Defines workspace documentation and operational rules for MIGRATION-Rules.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/MIGRATION-Rules.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Normalized Markdown metadata header.
 

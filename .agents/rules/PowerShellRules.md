@@ -14,7 +14,7 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 10.0.1
+Version: 10.2.1
 Changelog:
 - 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.
 - 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.

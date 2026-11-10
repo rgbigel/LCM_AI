@@ -9,7 +9,7 @@ Module: GoalFirstDesignPolicy
 Purpose: Defines Goal-First execution, Gate 0 target-state contracts, discrepancy-led design refinement, and traceability from implementation work to an accepted target state.  
 Path: .agents/rules/GoalFirstDesignPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.0.1  
+Version: 10.2.1  
 Status: Authoritative Policy  
 Date: 2026-10-17
 

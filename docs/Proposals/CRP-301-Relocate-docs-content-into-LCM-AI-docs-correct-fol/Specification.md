@@ -4,7 +4,7 @@
 CRP-ID: CRP-301
 Title: Relocate docs content into LCM_AI docs: correct folder references, shift versions to 10.0.0, update LCM_* references
 Scope: LCM_AI, LCM_Inventory, LCM_Shared, LCM_Supervision (references only)
-Baseline-Version: 10.0.1
+Baseline-Version: 10.2.1
 Author: rgbig
 Date: 2026-10-21 13:01:30
 Status: Suggested

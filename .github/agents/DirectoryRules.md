@@ -4,7 +4,7 @@ Module: DirectoryRules.md
 Purpose: Defines workspace directory structure rules and LCM governance alignment.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/DirectoryRules.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Reconciled with LCM 10.0.0; authorized .github/agents/ for agent discovery, root AGENTS.md/GEMINI.md hardlinks, LCM_Inventory/ configuration, and governance rule junctions.
 - 2026-10-13: Normalized Markdown metadata header.

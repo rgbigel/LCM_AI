@@ -9,7 +9,7 @@ Module: JsonRules
 Purpose: Authoritative rules for JSON normalization, schema referencing, encoding, and indentation.  
 Path: .agents/rules/JsonRules.md  
 Authors: Rolf  
-Version: 10.0.0
+Version: 10.2.0
 Status: Authoritative Invariant Rule  
 Date: 2026-10-13
 

@@ -12,7 +12,7 @@ Module: DOX.agent.md
 Purpose: Defines unified workspace documentation behavior for DOX.agent.
 Path: D:/Git_Repositories/LCM_AI/.github/agents/DOX.agent.md
 Authors: Rolf
-Version: 10.0.0
+Version: 10.2.0
 Changelog:
 - 2026-10-13: Resolved DOX unification follow-ups; confirmed custom-agent discovery, workspace rule alignment, and index alignment are complete.
 - 2026-10-13: Moved custom-agent frontmatter to file start and aligned behavior with Workspace-Rules and WorkspaceAgentIndex.

@@ -9,7 +9,7 @@ Module: ElevationPolicy
 Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
 Path: .agents/rules/ElevationPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.1.0
+Version: 10.2.0
 Status: Authoritative Invariant Rule  
 Date: 2026-11-09
 

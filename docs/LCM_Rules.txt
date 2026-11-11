@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-10 20:52:39 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-11 21:28:30 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -822,9 +822,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.3
+Version: 10.2.4
 Status: Authoritative Policy  
-Date: 2026-11-10 20:28:00
+Date: 2026-11-11 15:30:00
 
 ---
 
@@ -941,6 +941,14 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
    - When run in an interactive session, the tool `MUST` present a high-visibility warning listing the affected repositories and file counts, and prompt the operator for an explicit choice (`[Y] Dismount and discard changes / [N] Cancel`).
    - When run in automated or non-interactive contexts, the tool `MUST` fail closed unless an explicit `-Force` / `-DiscardChanges` parameter is supplied.
 3. **Explicit Override Authority**: The operator retains full authority to proceed with dismounting (for example, when a fresh Macrium backup is ready to be attached) by selecting `[Y]` or passing `-Force`.
+
+---
+
+### RULE-REV-014: Prohibition of Ad-Hoc / Git-Based BCompare Invocations & Exclusivity of BCR Invariant
+1. **Absolute Prohibition of Ad-Hoc BCompare Invocations**: Direct execution of `BCompare.exe`, custom diff scripts, or Git-based comparisons against branches, remote tracking heads (e.g. `origin/main`, GitHub base), or isolated single-repository subtrees (such as `LCM_AI` alone) is **STRICTLY PROHIBITED AND INVALID**. Under no circumstances may an AI agent or automated script craft or execute a bespoke BCompare command line.
+2. **Exclusivity of BCR**: The **ONLY** valid and authorized method to perform baseline comparisons across the workspace is **`BCR`** (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1` / `Invoke-MacriumDailyBcrBaseline.ps1`).
+3. **Workspace-Wide Root Scope**: Baseline reviews must execute against the workspace root (`<MountedDrive>:\Git_Repositories` vs `D:\Git_Repositories`) using the operator-owned `_LCM` Beyond Compare profile, guaranteeing that all repositories (`LCM_AI`, `LCM_Inventory`, `LCM_Tools`, etc.), tools, rules, and specifications are fully visible in one unified review session.
+4. **Unmounted Baseline Handling**: If today's Macrium Reflect backup is not yet mounted, automation and AI agents `MUST NOT` substitute a Git-based baseline or narrow the comparison. The agent must invoke the governed `BCR` workflow to mount the backup or halt and await operator mount confirmation.
 
 ---
 
@@ -1797,8 +1805,8 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 > **Category**: 4. Documentation & Subsystem Architecture | **Canonical Source**: `.agents/rules/macro-definitions.md`
 
 # macro-definitions.md
-# version: 10.2.2
-# date: 2026-11-10
+# version: 10.2.3
+# date: 2026-11-11 15:30:00
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory
@@ -2164,6 +2172,15 @@ MACRO: ShowSupervision
   - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
   - external browser launch requires explicit operator action
 
+MACRO: ShowPathPS
+- description: ShowPathPS execution tool.
+- syntax: ShowPathPS [switches] | @ShowPathPS [switches]
+- primary target: LCM_Tools/tools/ShowPathPS.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
 <!-- MANAGED-SHOW-MACROS-END -->
 
 MACRO: tsr (Legacy / Automated)
@@ -2200,7 +2217,7 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 |:---|:---|:---|:---|:---|
 | **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `031` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`), Question Response & Anti-Overreaction Invariant (`RULE-LCM-028`), Boundary Ambiguity & Alternatives Invariant (`RULE-LCM-029`), Session Quiescence & GoodNight / GoodMorning Protocol Invariant (`RULE-LCM-030`), and Context Absorption, Reverse-Ticket Invariant & Guaranteed Learned-Advice Retirement (`RULE-LCM-031`). |
 | **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `025` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`), Left-Side Null Equality Comparison Invariant (`RULE-PS-023`), Prohibition of Implicit Confirmation & SupportsShouldProcess (`RULE-PS-024`), and Model-Atom-Controller (MAC) Modular Implementation Invariant (`RULE-PS-025`). |
-| **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `013` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`), ADMINMODE rule change authorization (`RULE-REV-011`), Review Tool Window Non-Interference, Title Neutrality, Baseline Currency & Baseline Re-Creation Prohibition Invariant (`RULE-REV-012`), and Baseline Modification Detection & Interactive Dismount Choice Guardrail (`RULE-REV-013`). |
+| **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `014` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`), ADMINMODE rule change authorization (`RULE-REV-011`), Review Tool Window Non-Interference, Title Neutrality, Baseline Currency & Baseline Re-Creation Prohibition Invariant (`RULE-REV-012`), Baseline Modification Detection & Interactive Dismount Choice Guardrail (`RULE-REV-013`), and Prohibition of Ad-Hoc / Git-Based BCompare Invocations & Exclusivity of BCR Invariant (`RULE-REV-014`). |
 | **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `009`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing, and Anti-Code-Reading & Direct Goal Execution Invariant (`RULE-EFF-009`). |
 | **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `007` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, automated privilege-aware execution/elevation interception, and caller admin dependency disclosure & anti-staleness invariant. |
 | **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |

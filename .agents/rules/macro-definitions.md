@@ -9,8 +9,8 @@ globs: "*"
 <!-- Activation: Workspace Automatic                                       -->
 <!-- ===================================================================== -->
 # macro-definitions.md
-# version: 10.2.2
-# date: 2026-11-10
+# version: 10.2.3
+# date: 2026-11-11 15:30:00
 
 # MACRO-DEFINITIONS-METADATA
 # scope: durable-memory
@@ -376,6 +376,15 @@ MACRO: ShowSupervision
   - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
   - external browser launch requires explicit operator action
 
+MACRO: ShowPathPS
+- description: ShowPathPS execution tool.
+- syntax: ShowPathPS [switches] | @ShowPathPS [switches]
+- primary target: LCM_Tools/tools/ShowPathPS.ps1
+- rules:
+  - IDE-hosted display by default when supported by the host environment
+  - does not automatically launch an external browser when IDE display is unavailable; reports local display URL
+  - external browser launch requires explicit operator action
+
 <!-- MANAGED-SHOW-MACROS-END -->
 
 MACRO: tsr (Legacy / Automated)
@@ -390,5 +399,6 @@ MACRO: ar
   - 'ar -TranscriptPath <file> -From <quoted text>' -> analyzes an explicit offline JSON or JSONL export.
   - Legacy numeric offsets require an explicit transcript path and remain a fallback only.
   - generates a structured report in LCM_Inventory/data/logs/ containing Execution Trace, Error Triage & Avoidance Matrix, and Decision Rationale
+
 
 

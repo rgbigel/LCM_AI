@@ -9,9 +9,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.3
+Version: 10.2.4
 Status: Authoritative Policy  
-Date: 2026-11-10 20:28:00
+Date: 2026-11-11 15:30:00
 
 ---
 
@@ -128,3 +128,11 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
    - When run in an interactive session, the tool `MUST` present a high-visibility warning listing the affected repositories and file counts, and prompt the operator for an explicit choice (`[Y] Dismount and discard changes / [N] Cancel`).
    - When run in automated or non-interactive contexts, the tool `MUST` fail closed unless an explicit `-Force` / `-DiscardChanges` parameter is supplied.
 3. **Explicit Override Authority**: The operator retains full authority to proceed with dismounting (for example, when a fresh Macrium backup is ready to be attached) by selecting `[Y]` or passing `-Force`.
+
+---
+
+### RULE-REV-014: Prohibition of Ad-Hoc / Git-Based BCompare Invocations & Exclusivity of BCR Invariant
+1. **Absolute Prohibition of Ad-Hoc BCompare Invocations**: Direct execution of `BCompare.exe`, custom diff scripts, or Git-based comparisons against branches, remote tracking heads (e.g. `origin/main`, GitHub base), or isolated single-repository subtrees (such as `LCM_AI` alone) is **STRICTLY PROHIBITED AND INVALID**. Under no circumstances may an AI agent or automated script craft or execute a bespoke BCompare command line.
+2. **Exclusivity of BCR**: The **ONLY** valid and authorized method to perform baseline comparisons across the workspace is **`BCR`** (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1` / `Invoke-MacriumDailyBcrBaseline.ps1`).
+3. **Workspace-Wide Root Scope**: Baseline reviews must execute against the workspace root (`<MountedDrive>:\Git_Repositories` vs `D:\Git_Repositories`) using the operator-owned `_LCM` Beyond Compare profile, guaranteeing that all repositories (`LCM_AI`, `LCM_Inventory`, `LCM_Tools`, etc.), tools, rules, and specifications are fully visible in one unified review session.
+4. **Unmounted Baseline Handling**: If today's Macrium Reflect backup is not yet mounted, automation and AI agents `MUST NOT` substitute a Git-based baseline or narrow the comparison. The agent must invoke the governed `BCR` workflow to mount the backup or halt and await operator mount confirmation.

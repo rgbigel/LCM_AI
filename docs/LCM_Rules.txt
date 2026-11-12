@@ -1,6 +1,6 @@
-# Lifecycle Model (LCM) Authoritative Governance Framework
+﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-11 22:00:08 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-12 19:28:09 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -201,7 +201,7 @@ When an interactive script or launcher delegates execution to an elevated consol
    - The elevated worker `MUST` output a clear completion notice upon finishing indicating that the window has been intentionally kept open for operator inspection.
 
 ### `RULE-ELEV-006` (Automated Privilege-Aware Tool Execution & Elevation Interception)
-Ensure that any tool, script, or shorthand command requiring administrative privileges is never executed directly within a standard un-elevated user context. Instead, enforce automatic discovery and routing through the standardized CLI interceptor (`LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`), the background desktop daemon (`http://127.0.0.1:9876/execute`), or `Invoke-InteractiveDesktop.ps1`.
+Ensure that any tool, script, or shorthand command requiring administrative privileges is never executed directly within a standard un-elevated user context. Instead, enforce automatic discovery and routing through the standardized CLI interceptor (`LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`), the `do` Unified Tool Gateway (`LCM_Inventory/DoT/do.cmd <command> [-elevated] [-sync]` / `do.exe`), or the background desktop daemon (`http://127.0.0.1:9876/execute`).
 
 Before executing any tool, script, or shorthand command, the AI agent or CLI launcher `MUST` perform the following validation sequence:
 1. **Catalog & Schema Lookup**:
@@ -211,11 +211,11 @@ Before executing any tool, script, or shorthand command, the AI agent or CLI lau
    - Check whether the current runtime shell session holds elevated administrative rights (e.g. `([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)`).
 3. **Execution Routing & Interception**:
    - **Standard Execution**: If the tool does **not** require admin rights (`"Admin": false` or unset), execute it directly in the current session.
-   - **Elevated Interception**: If `"Admin": true` and the current session is running under a standard un-elevated user context, **do not** execute the script directly in that session. Immediately route the call via:
-     ```powershell
-     pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <Args>] [-NoExit]
+   - **Elevated Interception & DO Gateway**: If `"Admin": true` and the current session is running under a standard un-elevated user context (or within an agent background shell), **do not** execute raw `pwsh` or `Start-Process -Verb RunAs` directly, as this causes silent non-interactive UAC deadlocks. Dispatched calls `MUST` route via the `do` Unified Tool Gateway or privileged interceptor:
+     ```cmd
+     LCM_Inventory\DoT\do.cmd "<command>" -elevated -sync
      ```
-   - **Automated Dispatch Pipeline**: `Invoke-PrivilegedTool.ps1` and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to `Invoke-InteractiveDesktop.ps1 -Elevated` if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
+   - **Automated Dispatch Pipeline**: `do.exe`, `Invoke-PrivilegedTool.ps1`, and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to `Invoke-InteractiveDesktop.ps1 -Elevated` if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
 
 ---
 
@@ -1038,7 +1038,7 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 - Speculative dot-traversal paths (such as `.\..lcm`, `..\..\`, or any path containing `..` without explicit validation) are **prohibited** in tool invocations and script references.
 - Tool and script invocations **must** anchor strictly to one of:
   1. `$PSScriptRoot` for same-repository references.
-  2. Registered trampolines in `LCM_Inventory/Cmd/` for cross-repository dispatch.
+  2. Registered trampolines in `LCM_Inventory/DoT/` for cross-repository dispatch.
   3. An explicit `Resolve-Path` / `Test-Path` pre-flight check before any path is consumed.
 
 ---
@@ -1562,9 +1562,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.2
+Version: 10.2.3
 Status: Authoritative Policy  
-Date: 2026-11-08 12:46:00
+Date: 2026-11-12 16:20:00
 
 ---
 
@@ -1720,6 +1720,23 @@ For governed repositories that scale beyond single-purpose scripts into multi-ca
 2. **Operational Caveats & Boundaries (`.NOTES`)**: Scripts and modules executing system operations, elevation, hardware interlocks, or inter-process communication `MUST` document known runtime caveats, platform constraints, timeout behaviors, and failure modes in a dedicated `.NOTES` (PowerShell) or `Caveats:` section.
 3. **Stale Comment & Description Scrubbing**: Modifying parameter signatures, defaults, validation attributes, or internal logic `MUST` be accompanied by a synchronized update to all related Comment-Based Help summaries, `.PARAMETER` documentation, and inline remarks. Leaving obsolete parameters, outdated ranges (e.g. claiming a hardcoded drive range when dynamic lists are used), or stale operational descriptions in comments is strictly prohibited.
 4. **Tripartite Architecture Synchronization**: All architectural choices and normative rules defined in `Specification.md` `MUST` be absorbed into the governing repository's tripartite specifications (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`) prior to CRP closure (`COMPLETE`).
+
+---
+
+### RULE-DOC-012: Data Design Specification Standard (`DataDesign-<Domain>.md`)
+1. **Scope & Mandatory Applicability**: Any LCM-governed repository containing or managing structured persistent databases (e.g. SQLite, relational stores, indexed transactional ledgers) `MUST` maintain dedicated, domain-focused Data Design specifications in `<Repo>/docs/DataDesign-<Domain>.md` (e.g. `docs/DataDesign-Proposals.md`, `docs/DataDesign-Tools.md`). When only one primary database exists in a repository, `docs/DataDesign.md` `MAY` be used.
+2. **Implementation Focus**: The Data Design document carries Implementation-level technical depth and rigorous code-level precision, focused specifically on database architecture, schema definitions, and data constraints.
+3. **Mandatory Schema & Constraint Specification**:
+   - Complete table creation DDL (`CREATE TABLE ...`).
+   - Column types, nullability, default values, and primary/foreign keys.
+   - Normative integrity constraints (`CHECK` expressions, unique constraints, referential integrity).
+4. **Dual-State Projection Governance**:
+   - Detailed specification of the Dual-State Projection Architecture separating binary runtime databases (`*.db`, git-ignored per `RULE-REV-001`) from human-readable text dumps (`*.sql`, committed).
+   - Traceability of data synchronization between application JSON/REST structures and database tables.
+5. **Views, Indexes & Tooling Inventory**:
+   - Exhaustive catalog of performance B-Tree indexes and their targeted query patterns.
+   - Formal definition of database views (`CREATE VIEW ...`) used by UI explorers and status dashboards.
+   - Comprehensive table of operational tools, scripts, and test suites used to inspect, query, mutate, migrate, and synchronize the database.
 
 ---
 
@@ -1885,7 +1902,7 @@ MACRO: ToolExplorer
 - description: generate and launch the authoritative LCM Tool Explorer interactive HTML application via Show-ToolsExplorer.ps1
 - syntax: ToolExplorer [switches] | tools [switches] | ShowTools [switches]
 - aliases: tools, ToolsExplorer, ShowTools
-- primary target: LCM_Inventory/tools/Show-ToolsExplorer.ps1 (trampolines: LCM_Inventory/Cmd/ToolExplorer.cmd, ToolsExplorer.cmd)
+- primary target: LCM_Inventory/tools/Show-ToolsExplorer.ps1 (trampolines: LCM_Inventory/DoT/ToolExplorer.cmd, ToolsExplorer.cmd)
 - delivery: publish and open only through http://127.0.0.1:9876; pages, assets, data, and refreshes must not use file URLs or offline local-file fallbacks
 - parameters:
   - -Audience <User|Dev|All>: pre-filter audience category (defaults to 'User')
@@ -1908,7 +1925,7 @@ MACRO: ToolExplorer
 MACRO: AnalyzeFailures
 - description: investigate session failures and execution-purpose evidence, retain Markdown/JSON, and open the readable failure-analysis snapshot
 - syntax: AnalyzeFailures -Number <item> | AnalyzeFailures -From <literal text>
-- primary target: LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1 (trampoline: LCM_Inventory/Cmd/AnalyzeFailures.cmd)
+- primary target: LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1 (trampoline: LCM_Inventory/DoT/AnalyzeFailures.cmd)
 - parameters:
   - -TranscriptPath <path>: analyze only the supplied offline transcript
   - -NoLaunch: retain reports and the viewer snapshot without opening a browser
@@ -1919,7 +1936,7 @@ MACRO: AnalyzeFailures
 MACRO: ShowFailureAnalysis
 - description: open a readable retained failure-analysis report without executing its producer
 - syntax: ShowFailureAnalysis [-ReportPath <exact .md or .json path>] [-NoLaunch]
-- primary target: LCM_Inventory/tools/Show-FailureAnalysis.ps1 (trampoline: LCM_Inventory/Cmd/ShowFailureAnalysis.cmd)
+- primary target: LCM_Inventory/tools/Show-FailureAnalysis.ps1 (trampoline: LCM_Inventory/DoT/ShowFailureAnalysis.cmd)
 - parameters:
   - -ReportPath <path>: select the exact retained report
   - -SnapshotRoot <directory>: override the backend snapshot destination; a noncanonical destination requires -NoLaunch
@@ -1995,7 +2012,7 @@ MACRO: FixDocumentation
   - `-Apply` writes only explicit `Documentation Updates` payloads declared by the selected bundles
   - conflicting or ambiguous payloads stop without modifying documentation
   - an applied update requires BCompare review before local commit
-  - executes `pwsh -File LCM_Inventory/tools/Fix-Documentation.ps1 <scope>` (or `LCM_Inventory/Cmd/FixDocumentation.cmd`)
+  - executes `pwsh -File LCM_Inventory/tools/Fix-Documentation.ps1 <scope>` (or `LCM_Inventory/DoT/FixDocumentation.cmd`)
 
 MACRO: PUBLISH
 - description: publish a completed proposal cohort and LCM_Inventory to their remotes in lockstep
@@ -2228,12 +2245,13 @@ This root container operates under the **Lifecycle Model (LCM)** architecture. A
 | **[JsonRules.md](file:///.agents/rules/JsonRules.md)** | `JSON-RULES` | **Data Serialization** | `*.json` | UTF-8 without BOM, 2-space indentation, `$schema` references, and comment preservation invariant. |
 | **[PythonRules.md](file:///.agents/rules/PythonRules.md)** | `RULE-PY-001` - `008` | **Python Standards** | All `*.py` | No redundant f-strings (`F541`), strict import ordering, zero unused imports/variables (`F401`/`F841`), Windows UTF-8 stdout reconfiguration, template/JS interpolation safety. |
 | **[GoRules.md](file:///.agents/rules/GoRules.md)** | `LCM-RULE-GO-001` | **Go Standards** | All `*.go` | Mandatory file header block, explicit error handling and control flow, resource discipline, memory/slice/type rules, Windows platform rules. |
-| **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `012` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance, Comment & Documentation Preservation Invariant (`RULE-DOC-009`), Mandatory Modification Timestamp Update Invariant (`RULE-DOC-010`), Implementation Choices, Rationale & Caveats Synchronization Invariant (`RULE-DOC-011`), and Model-Atom-Controller (MAC) Modular Architecture Standard (`RULE-DOC-012`). |
+| **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `012` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance, Comment & Documentation Preservation Invariant (`RULE-DOC-009`), Mandatory Modification Timestamp Update Invariant (`RULE-DOC-010`), Implementation Choices, Rationale & Caveats Synchronization Invariant (`RULE-DOC-011`), and Data Design Specification Standard (`RULE-DOC-012`). |
 | **[DisplayStandardsPolicy.md](file:///.agents/rules/DisplayStandardsPolicy.md)** | `RULE-DSP-001` - `016` | **UI & Display Standards** | All UI Displays, Dashboards & GUIs | Antigravity-IDE Light Mode default palette & typography (`IBM Plex Mono/Sans`, `CM_CONTROL_HUB_IMPLEMENTATION_0.html`), Topbar & Status Rail architecture, Lucide vector icons, WPF/WinForms desktop GUIs, print-to-PDF paged media, theme persistence, desktop dispatching, IDE Canvas forward-compatibility, test window hygiene, and dynamic tool versioning. |
 | **[SubsystemGovernancePolicy.md](file:///.agents/rules/SubsystemGovernancePolicy.md)** | `RULE-SUB-001` - `007` | **Subsystem Architecture** | Subsystem Repositories | Disjunct domains, dedicated subsystem inventories, JIT ephemeral tokens, host safety hardware interlocks, log segregation, Update-Gate & CRP bundling, central registry non-mutation invariant. |
 | **[AnalysisGovernancePolicy.md](file:///.agents/rules/AnalysisGovernancePolicy.md)** | `RULE-ANA-001` - `006` | **Analysis Governance** | Workspace & Gemini Sessions | Intent wake words (`ANALYZE` / `IMPLEMENT`), read-only tool lock, provenance tagging (`[VERIFIED]`, `[GAP]`), search radius fence ($\le 2$), Circuit Breaker protocol (`[ANALYSIS RESUMED]`), and runtime state transparency. |
 | **[GoalFirstDesignPolicy.md](file:///.agents/rules/GoalFirstDesignPolicy.md)** | `RULE-GOAL-001` - `005` | **Goal-First Design** | Workspace-wide | Gate 0 target-state contracts, implicit no-havoc non-goals for ordinary evident work, explicit contracts for structural scope, traceability, and safeguard preservation. |
 | **[RuleAuthority.md](file:///.agents/rules/RuleAuthority.md)** | `RULE-AUTHORITY` | **Governance Hierarchy** | Core Governance | Single source of truth, no rule forking, machine-readable canonical rules in `.agents/rules/`. |
+| **[DecisionCascadeGovernancePolicy.md](file:///.agents/rules/DecisionCascadeGovernancePolicy.md)** | `RULE-DEC-001` - `005` | **Decision Cascade & Docs** | Workspace-wide & Child Repos | System-1/System-2 Decision Cascade architecture, Sub-85% Low-Confidence Operator Triage Invariant (`RULE-DEC-002`), Standalone Gate 2A Documentation Checkpoint (`RULE-DEC-003`), automated Gate 2A bypass conditions for low-significance changes and minimal-tests cycles (`RULE-DEC-004`), and Pre-Push Clean State & Relief Switch Reset Invariant (`RULE-DEC-005`). |
 | **[macro-definitions.md](file:///.agents/rules/macro-definitions.md)** | `MACRO-DEFS` | **Operator Macros** | Interactive Shell | Antigravity IDE bare-word standard (`ToolExplorer`, `ShowTools`, `tools`, `ar`, `bcr`, `COMPLETE`, `PUSH`), `@tsr` superseded by persistent `TimestampHeaderRule`, `@RULEAUTH`, `@ml`. |
 
 ---

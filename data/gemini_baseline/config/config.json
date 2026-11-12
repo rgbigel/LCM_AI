@@ -89,6 +89,7 @@
     "remoteControlEnabled": true,
     "remoteControlHostname": "d5p0-ssd980-z-frozen-ray",
     "sandboxEnabledAtV2Migration": false,
-    "themeMode": "THEME_MODE_LIGHT"
+    "themeMode": "THEME_MODE_LIGHT",
+    "useAiCredits": true
   }
 }

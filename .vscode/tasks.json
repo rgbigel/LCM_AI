@@ -26,6 +26,16 @@
         "isDefault": true
       },
       "problemMatcher": []
+    },
+    {
+      "label": "LCM: Run Decision Gate (LEV with Fallback)",
+      "type": "shell",
+      "command": "pwsh -NoProfile -ExecutionPolicy Bypass -File ..\\LCM_Inventory\\tools\\Invoke-LcmDecisionGate.ps1 -DiagnosticOnFailure",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
     }
   ]
 }

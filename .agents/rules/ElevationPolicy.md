@@ -66,7 +66,7 @@ When an interactive script or launcher delegates execution to an elevated consol
    - The elevated worker `MUST` output a clear completion notice upon finishing indicating that the window has been intentionally kept open for operator inspection.
 
 ### `RULE-ELEV-006` (Automated Privilege-Aware Tool Execution & Elevation Interception)
-Ensure that any tool, script, or shorthand command requiring administrative privileges is never executed directly within a standard un-elevated user context. Instead, enforce automatic discovery and routing through the standardized CLI interceptor (`LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`), the background desktop daemon (`http://127.0.0.1:9876/execute`), or `Invoke-InteractiveDesktop.ps1`.
+Ensure that any tool, script, or shorthand command requiring administrative privileges is never executed directly within a standard un-elevated user context. Instead, enforce automatic discovery and routing through the standardized CLI interceptor (`LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`), the `do` Unified Tool Gateway (`LCM_Inventory/DoT/do.cmd <command> [-elevated] [-sync]` / `do.exe`), or the background desktop daemon (`http://127.0.0.1:9876/execute`).
 
 Before executing any tool, script, or shorthand command, the AI agent or CLI launcher `MUST` perform the following validation sequence:
 1. **Catalog & Schema Lookup**:
@@ -76,11 +76,11 @@ Before executing any tool, script, or shorthand command, the AI agent or CLI lau
    - Check whether the current runtime shell session holds elevated administrative rights (e.g. `([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)`).
 3. **Execution Routing & Interception**:
    - **Standard Execution**: If the tool does **not** require admin rights (`"Admin": false` or unset), execute it directly in the current session.
-   - **Elevated Interception**: If `"Admin": true` and the current session is running under a standard un-elevated user context, **do not** execute the script directly in that session. Immediately route the call via:
-     ```powershell
-     pwsh LCM_Inventory/tools/Invoke-PrivilegedTool.ps1 -Tool <ToolName> [-Arguments <Args>] [-NoExit]
+   - **Elevated Interception & DO Gateway**: If `"Admin": true` and the current session is running under a standard un-elevated user context (or within an agent background shell), **do not** execute raw `pwsh` or `Start-Process -Verb RunAs` directly, as this causes silent non-interactive UAC deadlocks. Dispatched calls `MUST` route via the `do` Unified Tool Gateway or privileged interceptor:
+     ```cmd
+     LCM_Inventory\DoT\do.cmd "<command>" -elevated -sync
      ```
-   - **Automated Dispatch Pipeline**: `Invoke-PrivilegedTool.ps1` and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to `Invoke-InteractiveDesktop.ps1 -Elevated` if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
+   - **Automated Dispatch Pipeline**: `do.exe`, `Invoke-PrivilegedTool.ps1`, and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to `Invoke-InteractiveDesktop.ps1 -Elevated` if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
 
 ---
 

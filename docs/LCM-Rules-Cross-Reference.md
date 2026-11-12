@@ -4,9 +4,9 @@ Module: docs/LCM-Rules-Cross-Reference.md
 Purpose: Authoritative cross-reference matrix cataloging all 19 LCM governance rules, invariants, and enforcement gates.  
 Path: LCM_AI/docs/LCM-Rules-Cross-Reference.md  
 Authors: Rolf & Antigravity AI Assistant  
-Version: 10.2.4  
+Version: 10.2.5  
 Status: Authoritative Policy Matrix  
-Date: 2026-11-11 15:30:00  
+Date: 2026-11-12 09:30:00  
 
 **Governance Authority**: `LCM_AI`  
 **LCM Governance Baseline**: `10.0.1`  
@@ -60,6 +60,7 @@ graph TD
 | **16** | [SubsystemGovernancePolicy.md](file:///.agents/rules/SubsystemGovernancePolicy.md) | `RULE-SUB-001`<br>`RULE-SUB-002`<br>`RULE-SUB-003`<br>`RULE-SUB-004`<br>`RULE-SUB-005`<br>`RULE-SUB-006`<br>`RULE-SUB-007` | **Subsystem Architecture** | Subsystem Repositories | • Disjunct domain classification & tripartite conformance.<br>• Dedicated internal subsystem inventory engine.<br>• Host-side physical disk hardware serial matching.<br>• Safe Write 5-stage pipeline & JIT ephemeral authentication.<br>• Strict PC vs Subsystem log segregation.<br>• Subsystem Update-Gate & Breaking-Change CRP bundling.<br>• **RULE-SUB-007**: Central Registry Non-Mutation Invariant. | • Subsystem inventory tools<br>• Safe mutation runners<br>• `Invoke-HaUpdateGate.ps1` |
 | **17** | [macro-definitions.md](file:///.agents/rules/macro-definitions.md) | `MACRO-DEFS` | **Operator Macros** | Interactive Shell | • Operator shorthand macros & Antigravity IDE bare-word standard (`ToolExplorer`, `ShowTools`, `tools`, `ar`, `bcr`, `ACCEPT`).<br>• `@tsr` superseded by persistent `TimestampHeaderRule`. | • Governance CLI dispatcher |
 | **18** | [AnalysisGovernancePolicy.md](file:///.agents/rules/AnalysisGovernancePolicy.md) | `RULE-ANA-001`<br>`RULE-ANA-002`<br>`RULE-ANA-003`<br>`RULE-ANA-004`<br>`RULE-ANA-005`<br>`RULE-ANA-006` | **Analysis Governance** | Workspace-wide & AI Sessions | • Intent wake word gating (`ANALYZE` &rarr; `READ_ONLY_ANALYSIS`).<br>• Strict tool restrictions (no file edits/commits in analysis).<br>• 4-part output contract & provenance tags (`[VERIFIED]`, `[GAP]`, `[INFERRED]`).<br>• Search radius fencing (&le; 2 levels, max 3 matches).<br>• Governed implementation transition (`IMPLEMENT`).<br>• Circuit breaker protocol (`[ANALYSIS RESUMED]`).<br>• Real-time Control Hub state transparency. | • Quality gates<br>• `AnalysisGovernance.psm1`<br>• Control Hub |
+| **19** | [DecisionCascadeGovernancePolicy.md](file:///.agents/rules/DecisionCascadeGovernancePolicy.md) | `RULE-DEC-001`<br>`RULE-DEC-002`<br>`RULE-DEC-003`<br>`RULE-DEC-004`<br>`RULE-DEC-005` | **Decision Cascade & Docs** | Workspace-wide & Child Repos | • Multi-Stage System-1 Decision Cascade architecture (`RULE-DEC-001`).<br>• Sub-85% Low-Confidence Operator Triage Invariant (`RULE-DEC-002`).<br>• Standalone Gate 2A Documentation Completeness & Consistency Checkpoint (`RULE-DEC-003`).<br>• Automated Gate 2A bypass conditions for low-significance changes and minimal-tests cycles (`RULE-DEC-004`).<br>• Pre-Push Clean State & Relief Switch Reset Invariant (`RULE-DEC-005`). | • `Invoke-LcmDecisionGate.ps1`<br>• `Invoke-LCM_Push.ps1`<br>• Gate 2A |
 
 ---
 

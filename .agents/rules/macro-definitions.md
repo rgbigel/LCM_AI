@@ -89,7 +89,7 @@ MACRO: ToolExplorer
 - description: generate and launch the authoritative LCM Tool Explorer interactive HTML application via Show-ToolsExplorer.ps1
 - syntax: ToolExplorer [switches] | tools [switches] | ShowTools [switches]
 - aliases: tools, ToolsExplorer, ShowTools
-- primary target: LCM_Inventory/tools/Show-ToolsExplorer.ps1 (trampolines: LCM_Inventory/Cmd/ToolExplorer.cmd, ToolsExplorer.cmd)
+- primary target: LCM_Inventory/tools/Show-ToolsExplorer.ps1 (trampolines: LCM_Inventory/DoT/ToolExplorer.cmd, ToolsExplorer.cmd)
 - delivery: publish and open only through http://127.0.0.1:9876; pages, assets, data, and refreshes must not use file URLs or offline local-file fallbacks
 - parameters:
   - -Audience <User|Dev|All>: pre-filter audience category (defaults to 'User')
@@ -112,7 +112,7 @@ MACRO: ToolExplorer
 MACRO: AnalyzeFailures
 - description: investigate session failures and execution-purpose evidence, retain Markdown/JSON, and open the readable failure-analysis snapshot
 - syntax: AnalyzeFailures -Number <item> | AnalyzeFailures -From <literal text>
-- primary target: LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1 (trampoline: LCM_Inventory/Cmd/AnalyzeFailures.cmd)
+- primary target: LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1 (trampoline: LCM_Inventory/DoT/AnalyzeFailures.cmd)
 - parameters:
   - -TranscriptPath <path>: analyze only the supplied offline transcript
   - -NoLaunch: retain reports and the viewer snapshot without opening a browser
@@ -123,7 +123,7 @@ MACRO: AnalyzeFailures
 MACRO: ShowFailureAnalysis
 - description: open a readable retained failure-analysis report without executing its producer
 - syntax: ShowFailureAnalysis [-ReportPath <exact .md or .json path>] [-NoLaunch]
-- primary target: LCM_Inventory/tools/Show-FailureAnalysis.ps1 (trampoline: LCM_Inventory/Cmd/ShowFailureAnalysis.cmd)
+- primary target: LCM_Inventory/tools/Show-FailureAnalysis.ps1 (trampoline: LCM_Inventory/DoT/ShowFailureAnalysis.cmd)
 - parameters:
   - -ReportPath <path>: select the exact retained report
   - -SnapshotRoot <directory>: override the backend snapshot destination; a noncanonical destination requires -NoLaunch
@@ -199,7 +199,7 @@ MACRO: FixDocumentation
   - `-Apply` writes only explicit `Documentation Updates` payloads declared by the selected bundles
   - conflicting or ambiguous payloads stop without modifying documentation
   - an applied update requires BCompare review before local commit
-  - executes `pwsh -File LCM_Inventory/tools/Fix-Documentation.ps1 <scope>` (or `LCM_Inventory/Cmd/FixDocumentation.cmd`)
+  - executes `pwsh -File LCM_Inventory/tools/Fix-Documentation.ps1 <scope>` (or `LCM_Inventory/DoT/FixDocumentation.cmd`)
 
 MACRO: PUBLISH
 - description: publish a completed proposal cohort and LCM_Inventory to their remotes in lockstep

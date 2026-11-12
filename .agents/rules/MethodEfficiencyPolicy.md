@@ -85,7 +85,7 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 - Speculative dot-traversal paths (such as `.\..lcm`, `..\..\`, or any path containing `..` without explicit validation) are **prohibited** in tool invocations and script references.
 - Tool and script invocations **must** anchor strictly to one of:
   1. `$PSScriptRoot` for same-repository references.
-  2. Registered trampolines in `LCM_Inventory/Cmd/` for cross-repository dispatch.
+  2. Registered trampolines in `LCM_Inventory/DoT/` for cross-repository dispatch.
   3. An explicit `Resolve-Path` / `Test-Path` pre-flight check before any path is consumed.
 
 ---

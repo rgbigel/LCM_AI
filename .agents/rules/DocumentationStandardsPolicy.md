@@ -9,9 +9,9 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.2
+Version: 10.2.3
 Status: Authoritative Policy  
-Date: 2026-11-08 12:46:00
+Date: 2026-11-12 16:20:00
 
 ---
 
@@ -167,3 +167,20 @@ For governed repositories that scale beyond single-purpose scripts into multi-ca
 2. **Operational Caveats & Boundaries (`.NOTES`)**: Scripts and modules executing system operations, elevation, hardware interlocks, or inter-process communication `MUST` document known runtime caveats, platform constraints, timeout behaviors, and failure modes in a dedicated `.NOTES` (PowerShell) or `Caveats:` section.
 3. **Stale Comment & Description Scrubbing**: Modifying parameter signatures, defaults, validation attributes, or internal logic `MUST` be accompanied by a synchronized update to all related Comment-Based Help summaries, `.PARAMETER` documentation, and inline remarks. Leaving obsolete parameters, outdated ranges (e.g. claiming a hardcoded drive range when dynamic lists are used), or stale operational descriptions in comments is strictly prohibited.
 4. **Tripartite Architecture Synchronization**: All architectural choices and normative rules defined in `Specification.md` `MUST` be absorbed into the governing repository's tripartite specifications (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`) prior to CRP closure (`COMPLETE`).
+
+---
+
+### RULE-DOC-012: Data Design Specification Standard (`DataDesign-<Domain>.md`)
+1. **Scope & Mandatory Applicability**: Any LCM-governed repository containing or managing structured persistent databases (e.g. SQLite, relational stores, indexed transactional ledgers) `MUST` maintain dedicated, domain-focused Data Design specifications in `<Repo>/docs/DataDesign-<Domain>.md` (e.g. `docs/DataDesign-Proposals.md`, `docs/DataDesign-Tools.md`). When only one primary database exists in a repository, `docs/DataDesign.md` `MAY` be used.
+2. **Implementation Focus**: The Data Design document carries Implementation-level technical depth and rigorous code-level precision, focused specifically on database architecture, schema definitions, and data constraints.
+3. **Mandatory Schema & Constraint Specification**:
+   - Complete table creation DDL (`CREATE TABLE ...`).
+   - Column types, nullability, default values, and primary/foreign keys.
+   - Normative integrity constraints (`CHECK` expressions, unique constraints, referential integrity).
+4. **Dual-State Projection Governance**:
+   - Detailed specification of the Dual-State Projection Architecture separating binary runtime databases (`*.db`, git-ignored per `RULE-REV-001`) from human-readable text dumps (`*.sql`, committed).
+   - Traceability of data synchronization between application JSON/REST structures and database tables.
+5. **Views, Indexes & Tooling Inventory**:
+   - Exhaustive catalog of performance B-Tree indexes and their targeted query patterns.
+   - Formal definition of database views (`CREATE VIEW ...`) used by UI explorers and status dashboards.
+   - Comprehensive table of operational tools, scripts, and test suites used to inspect, query, mutate, migrate, and synchronize the database.

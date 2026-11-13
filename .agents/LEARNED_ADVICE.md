@@ -21,6 +21,10 @@ How it works:
 - **2026-11-09** (Caller Admin Dependency Disclosure & Anti-Staleness): Whenever a caller tool invokes or relies upon an admin-mode tool, it `MUST` declare that dependency in its `-h` / `-Help` usage reference and header block. Conversely, when no longer needed, the caller `MUST` purge that dependency immediately to avoid stale elevation assumptions (`RULE-ELEV-007`, `RULE-PS-010.3`).
 
 ### Working agreement
+- Gate 2 Pre-Review Live Testability Invariant: At the time of Gate 2 review (BCR), the implementation must be fully working and testable by the operator in a live test. A visual review is completely meaningless unless the target state is functioning and verifiable in runtime; never transition to review or assert completion on untestable or incomplete deliverables. (2026-11-13, Operator)
+- Mandatory Authority & Lifecycle State Declaration: When addressing any defect, regression, or runtime issue, the AI must immediately establish an authoritative ticket (BUG-xxx / CRP-xxx) and explicitly state the exact lifecycle state reached (suggested -> in_progress -> verified -> Gate 2) rather than delivering unclassified ad-hoc repairs. (2026-11-13, Antigravity)
+- Proactive Display Refresh & Foregrounding on UI Fixes: Following any repair to standard display generators, backend parsers, or templates, the AI must actively dispatch an automated refresh signal (POST /displays/refresh/<id>) and foreground the live viewer (POST /open) so the operator immediately sees the resolved UI. (2026-11-13, Antigravity)
+- Authoritative Proposal Database Transition: Proposals.db is the authoritative store for proposal lifecycle management; proposals.json is to be completely eliminated once database readers, writers, and git hooks are fully verified. (2026-11-13, Antigravity)
 - Learned advice retention invariant: Unless an advice entry was actively (requires crp-nnn) corrected and properly set into function as a rule, gate, or other reliable contract, it must NEVER be removed. New advice is always added at the top; removal can be in the middle only with explicit CRP citation. The insight MUST be taken up by the AI, or there must be a comment in context explicitly stating that it is being ignored and why. (2026-11-09, operator)
 - Multi-IDE environment support: Stay inside whichever IDE wants to use the editor (where the request was entered); do not enforce an external static editor hierarchy across IDEs. (2026-11-09, operator)
 - Execution loop breaker: Stop working immediately and report to the operator when multiple attempts (max 2) to reach a goal fail. Do not speculatively cascade through alternate execution methods (CIM, cmd start, tasks). (2026-11-09, operator)
@@ -63,3 +67,5 @@ How it works:
 - A reset to 10.0.0 is a major release and WILL set all constituent versions (every LCM component) to 10.0.0 at once. During a major release run the normal versioning rules (parity, version lead by LCM_AI, no hand edits) stay in place; they are not suspended by the reset. (2026-10-13, operator)
 
 ## Candidates (pending review)
+
+

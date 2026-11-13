@@ -6,7 +6,7 @@ Path: LCM_AI/.claude/translation/WORKPLAN.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.2.5
 Status: Draft  
-Date: 2026-11-13 21:22:52
+Date: 2026-11-13 21:34:53
 
 ---
 
@@ -58,7 +58,7 @@ Translation fidelity: condensed normative MUST / MUST NOT statements with source
 | D-12 | Finding types `HOST-CONTEXT` (correct for Antigravity, needs Claude reading) and `OPEN-END` (known unfinished, not an error) - the methodology evolves; open ends and sparse context are expected. |
 | D-13 | Plan-mode trigger is context-based: BUG and `DOIT` -> no Gate 0 pause; CRP in standard flow with non-evident target -> plan mode with Gate 0 Contract. |
 | D-14 | Version semantics (corrected 2026-11-13): version bump = +1.0.0 with minor and patch reset to 0, for ALL parts (e.g. 10.2.5 -> 11.0.0); release = +0.1.0; GoodNight push = +0.0.1 only for components that really changed (component level), unchanged components keep their patch digit. "Clean" required at release only, not at GoodNight pushes. Open: whether a release resets patch and applies to all parts (not stated). |
-| D-15 | Correction requests to the Antigravity side: Claude MUST NOT write to `D:\GDrive\LCM\INBOX` (processed periodically by another daemon). The operator has AG register the existing "fragment" (start of Claude's delivered items) as an open proposal and gives Claude its CRP number; Claude stores its correction requests into that CRP when ready. CRP number: pending. |
+| D-15 | Correction requests to the Antigravity side: Claude MUST NOT write to `D:\GDrive\LCM\INBOX` (processed periodically by another daemon). The operator has AG register the existing "fragment" (start of Claude's delivered items) as an open proposal and gives Claude its CRP number; Claude stores its correction requests into that CRP when ready. CRP number: **CRP-326** (`LCM_Inventory/docs/Proposals/CRP-326-Governance-Rules-Harmonization-and-Documentation-Alignment/Specification.md`); Claude appends to its section 5 ("Scope for Upcoming Claude Amendments"); edit at Claude's discretion, but not while Antigravity is pushing / running GoodNight. |
 | D-11 | Session continuity: this WORKPLAN plus `translation/SESSION_HANDOFF.md` (Claude-side analogue of GoodNight/GoodMorning, kept separate from `.agents` state until the rule sets are synchronized). |
 
 ## 5. Verified Platform Facts

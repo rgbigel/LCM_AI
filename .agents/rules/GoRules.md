@@ -1,26 +1,18 @@
-<!--
-================================================================================
-FILE NAME      : GoRules.md
-DOCUMENT ID    : LCM-RULE-GO-001
-REPOSITORY     : LCM_AI
-LOCATION       : "D:\Git_Repositories\LCM_AI\.agents\rules\GoRules.md"
-DESCRIPTION    : Automated AI agent governance directive and strict coding
-                 constraints for Go source code generation and refactoring.
-AUTHOR         : Rolf
-DATE CREATED   : 2026-10-13
-LAST MODIFIED  : 2026-10-13
-VERSION        : 10.2.0
-ENCODING       : ASCII (No BOM)
-================================================================================
-CHANGE LOG:
-2026-10-13 - 10.0.0: Initial release of automated Go coding rules for IDE agents.
-================================================================================
--->
-
 ---
+name: GoRules
 description: Automated code generation and refactoring rules for Go source files.
-globs: ["**/*.go"]
-alwaysApply: true
+globs: "*.go"
+---
+# File: GoRules.md
+
+Module: GoRules  
+Purpose: Automated AI agent governance directive and strict coding constraints for Go source code generation and refactoring.  
+Path: .agents/rules/GoRules.md  
+Authors: Rolf, LCM_AI  
+Version: 10.3.0
+Status: Authoritative Invariant Rule  
+Date: 2026-11-14 22:00:00
+
 ---
 
 # Directive for AI Agents: Go Code Generation Standards
@@ -35,15 +27,15 @@ Every `.go` file generated must start with this exact comment structure prior to
 FILE NAME      : <filename>.go
 PACKAGE        : <packagename>
 DESCRIPTION    : <precise description of file responsibility>
-AUTHOR         : Rolf
+AUTHOR         : <author name>
 DATE CREATED   : <YYYY-MM-DD>
 LAST MODIFIED  : <YYYY-MM-DD>
-VERSION        : 10.2.0
+VERSION        : <MAJOR.MINOR.PATCH>
 GO VERSION     : 1.22+
-ENCODING       : ASCII (No BOM)
+ENCODING       : UTF-8 (No BOM)
 ================================================================================
 CHANGE LOG:
-<YYYY-MM-DD> - 10.0.0: Initial implementation.
+<YYYY-MM-DD> - <VERSION>: Initial implementation.
 ================================================================================
 */
 
@@ -69,4 +61,8 @@ CHANGE LOG:
 ### 2.4 Windows OS & Platform Rules
 - NEVER concatenate filesystem paths with string operators (`+` or `fmt.Sprintf`). Always use `filepath.Join(...)`.
 - NEVER pass unsanitized single-string command lines to shells. Always pass discrete argument slices using `exec.CommandContext(ctx, name, arg1, arg2, ...)`.
-- All generated files must be plain ASCII without UTF Byte Order Marks (BOM).
+- All generated files must be UTF-8 without Byte Order Marks (BOM).
+
+### 2.5 Indentation & Formatting
+- All Go source code MUST use hard tabs for indentation in accordance with standard Go formatting enforced by `gofmt`.
+- In accordance with the Language Deference Hierarchy (`InvariantRules.md`), this Go language standard takes strict precedence over the workspace-wide 2-space default indentation.

@@ -11,7 +11,7 @@ Path: .agents/rules/RepositoryContextPolicy.md
 Authors: Rolf, LCM_AI  
 Version: 10.3.0
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 22:00:00
 
 ---
 
@@ -25,9 +25,9 @@ At the start of every interaction or when switching focus, the agent `MUST` auto
 
 ### `RULE-CTX-002` (Fast-Tier Repository Context Priming)
 When active work begins on a specific repository (e.g. `VolumeInventory`, `BootEntryManager`, `HaSSD06`, `BackgroundModifier`), the agent `MUST` prime its working context in a single targeted tier by reading:
-1. `LCM_Inventory/config.json` and `LCM_Inventory/data/inventory.json` (for target repository elevation requirements, governance version, and classification).
+1. `LCM_Inventory/data/inventory.json` and canonical governance rules (common governance resides in `.agents/rules/` and subsystem specifics in repo `docs/`; repository elevation requirements, governance version, and classification are audited in `inventory.json`).
 2. `<TargetRepo>/README.md` (for module purpose, exported functions/atoms, and prerequisites).
-3. Any open Change Requests / proposals in `<TargetRepo>/docs/Proposals/` (or active task files).
+3. Any open Change Requests / proposals in `LCM_Inventory/docs/Proposals/` (or active proposal bundle per `RULE-SUB-008`).
 
 > [!NOTE]
 > **Repository Onboarding Status:**  
@@ -44,18 +44,20 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 
 ### `RULE-CTX-005` (Learned Advice)
 1. **Binding Status**: At the start of a session the agent `MUST` read `.agents/ACTIVE_CONTEXT.md` and `.agents/LEARNED_ADVICE.md`. Entries under **Accepted** are binding; entries under **Candidates** are guidance only.
-2. **Top-Insertion Ordering**: New learned advice entries and candidates `MUST` always be added at the top of the relevant section (newest first).
-3. **Non-Removal Invariant**: Unless an advice entry was actively corrected via a formal proposal (`requires crp-nnn`) and properly set into function as an enforceable rule, quality gate, or reliable contract, it `MUST NOT` be removed. Removal can happen in the middle of a section only when accompanied by explicit CRP citation.
-4. **AI Observance & Non-Ignorance Invariant**: The insights in `LEARNED_ADVICE.md` `MUST` be actively taken up and followed by the AI. If an entry is ever ignored for a specific action, the AI `MUST` provide an explicit comment stating that it is being ignored and explaining why.
-5. **Intake Flow**: When the operator writes `/learn <text>` the agent `MUST` add the text as a candidate (`Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI name>`), without changing anything else. An agent `MAY` also propose a candidate on its own when it learns something durable; it `MUST` tell the operator.
-6. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
-7. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
+2. **Multi-Host Authorship & Contribution**: All sanctioned AI hosts (Antigravity, Claude Code) `MAY` and `SHOULD` contribute durable insights. Authorship follows the workspace standard: the operator is always named first (`Authors: Rolf, <AI-Host>`); an AI host adds its identifier (ahead of another AI host) only if it creates or modifies the candidate.
+3. **Top-Insertion Ordering**: New learned advice entries and candidates `MUST` always be added at the top of the relevant section (newest first).
+4. **Non-Removal Invariant**: Unless an advice entry was actively corrected via a formal proposal (`requires crp-nnn`) and properly set into function as an enforceable rule, quality gate, or reliable contract, it `MUST NOT` be removed. Removal can happen in the middle of a section only when accompanied by explicit CRP citation.
+5. **AI Observance & Non-Ignorance Invariant**: The insights in `LEARNED_ADVICE.md` `MUST` be actively taken up and followed by the AI. If an entry is ever ignored for a specific action, the AI `MUST` provide an explicit comment stating that it is being ignored and explaining why.
+6. **Intake Flow**: When the operator writes `/learn <text>` the agent `MUST` add the text as a candidate (`Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI name>`), without changing anything else. An agent `MAY` also propose a candidate on its own when it learns something durable; it `MUST` tell the operator.
+7. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
+8. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
 
 ### `RULE-CTX-006` (GoodMorning Session Start — Operator Exclusivity)
 1. **Operator Exclusivity**: `Invoke-LCM_GoodMorning.ps1` is an operator-executed command and `MUST NEVER` be launched automatically by an AI assistant as an envelope to obtain a baseline or perform multi-repo research.
-2. **AI Read-Only Resumption Protocol**: At session start, the AI assistant's role is strictly read-only:
+2. **Multi-Host Attention Aggregation**: `Invoke-LCM_GoodMorning.ps1` aggregates session status, time gaps, repository drift, and pending attention items across all registered AI hosts (Antigravity, Claude Code) into a unified report.
+3. **AI Read-Only Resumption Protocol**: At session start, the AI assistant's role is strictly read-only:
    - Read `.agents/ACTIVE_SESSION.md`, `.agents/ACTIVE_CONTEXT.md`, and `.agents/LEARNED_ADVICE.md`.
    - Adhere to the Session Quiescence and GoodMorning Resumption Response Protocol per `RULE-LCM-030`.
-   - State that active context and binding learned advice have been verified, identify any stated attention items or stale entries, and await explicit operator direction.
+   - State that active context and binding learned advice have been verified, identify any stated attention items or stale entries across all registered hosts, and await explicit operator direction.
 
 

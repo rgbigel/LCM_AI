@@ -11,7 +11,7 @@ Path: .agents/rules/AnalysisGovernancePolicy.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.2.1
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 22:25:00
 
 ---
 
@@ -28,12 +28,14 @@ Goal-First design is the required analytical starting point. Analysts establish 
 ## 2. Invariant Rules
 
 ### RULE-ANA-000 (Step 0 Rule-Baseline Equivalence Gate)
-1. **Mandatory First Step**: Before beginning Level 1 or any later LCM analysis level, the analyst `MUST` compare the active `.copilot/Rules/` rule source with the authoritative `LCM_AI/.agents/rules/` source.
-2. **Linkage Verification**: The comparison `MUST` verify the active rule directory's resolved junction or symbolic-link target when present. It `MUST` also compare the complete Markdown rule filename set and SHA-256 content hash of every corresponding file.
+1. **Mandatory First Step**: Before beginning Level 1 or any later LCM analysis level, the analyst `MUST` compare the active rule source with the authoritative `LCM_AI/.agents/rules/` source.
+2. **Linkage & Adapter Verification**:
+   - For native environments linked via NTFS directory junctions (e.g. `.agents/rules/`), verify junction resolution and content integrity.
+   - For translated multi-host adapters (e.g. `.claude/rules/` per `RULE-AUTH-004`), verify baseline commit equality, tier mapping, and adapter drift check (`Test-LCMRuleHealth.ps1`) rather than raw byte-hash equivalence.
 3. **Result Marker**: Record the result at the start of the analysis artifact as exactly one of:
-   - `Check 0: OK` — linkage, filename set, and all hashes match.
+   - `Check 0: OK` — linkage, baseline commit, and rules integrity verified.
    - `Check 0: not found` — the active or authoritative rule directory cannot be read.
-   - `Check 0: mismatch` — linkage, filename set, or one or more hashes differ.
+   - `Check 0: mismatch` — baseline commit, rule set, or adapter integrity differs.
 4. **Failure Gate**: `Check 0: not found` or `Check 0: mismatch` `MUST` halt downstream code-versus-documentation comparisons. The report `MUST` identify the divergent paths and defer all later results until the operator resolves the rule baseline.
 5. **Artifact Requirement**: Retained analysis artifacts and their visualizations `MUST` include the active path, authoritative path, linkage result, compared rule count, mismatch count, and `Check 0` marker.
 
@@ -109,7 +111,7 @@ Status: Implementation Halted | Reason: Ambiguity / Constraint Mismatch
 ---
 
 ### RULE-ANA-006 (Runtime State Telemetry & Control Hub Register Invariant)
-The analysis engine and session runners must synchronize active governance variables to `active_session.json` and expose them to the LCM Control Hub:
+The analysis engine and session runners must synchronize active governance variables to `LCM_Inventory/data/session_state/active_session.json` (mirrored in `.agents/ACTIVE_SESSION.md`) and expose them to the LCM Control Hub:
 
 | State Register | Type | Permitted Values | Enforcement & Display Rule |
 |:---|:---|:---|:---|

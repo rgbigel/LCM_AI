@@ -11,7 +11,7 @@ Path: .agents/rules/InvariantRules.md
 Authors: Rolf  
 Version: 10.3.0
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -34,18 +34,25 @@ Date: 2026-11-14 14:40:00
 - **structure**: Clear hierarchical markdown sections, bulleted lists, and typed code blocks.
 - **no-assumptions**: State unknown facts rather than guessing; never invent facts or speculate.
 - **zero-assumption-testing**: The AI assistant `MUST NOT` assume or claim that code, scripts, configurations, or proposals are valid, functional, or ready without actively running mechanical tests, compilation, or parser verification. Relying on visual inspection alone or declaring ready without executing test verification is strictly prohibited.
-- **mandatory-pre-handoff-syntax-gate**: Every created or modified script, module, or configuration file (`*.ps1`, `*.psm1`, `*.py`, `*.go`, `*.json`, `*.cmd`) `MUST` pass automated syntax parsing, type checking, or compilation (`ParseInput` for PowerShell, `py_compile` for Python, `go vet`/`go build` for Go, `ConvertFrom-Json` for JSON) before concluding a turn, proposing review, or claiming completion. Zero syntax errors or parse warnings are tolerated.
-- **no-verbosity**: Minimal, direct, and non-repetitive communication; zero conversational padding or pleasantries.
-- **zero-conversational-padding**: Prohibit conversational filler, greetings, pleasantries, or preamble/postamble framing.
+- **mandatory-pre-handoff-syntax-gate**: Every created or modified script, module, or configuration file MUST pass automated syntax parsing, type checking, or compilation before concluding a turn, proposing review, or claiming completion:
+  - PowerShell (`*.ps1`, `*.psm1`): `[System.Management.Automation.Language.Parser]::ParseInput`
+  - PowerShell Data (`*.psd1`): `Import-PowerShellDataFile`
+  - Python (`*.py`): `python -m py_compile`
+  - Go (`*.go`): `go vet` or `go build`
+  - JSON (`*.json`): `ConvertFrom-Json`
+  - Windows CMD / Batch (`*.cmd`, `*.bat`): Structural encoding, `@echo off`, and ASCII verification.
+  - Markup & Documentation (`*.md`, `*.html`, `*.css`, `*.yaml`): Structure, UTF-8 No-BOM encoding, and YAML frontmatter validation.
+  Zero syntax errors or parse warnings are tolerated.
+- **no-verbosity-and-zero-padding**: Minimal, direct, and non-repetitive communication; zero conversational padding, greetings, pleasantries, or preamble/postamble framing.
 - **explicit-reasoning**: Provide clear, deterministic technical rationale for all actions, architecture, and diagnostics.
-- **english-default-language**: English invariant for all code, comments, documentation, and commit messages.
+- **english-default-language**: English invariant for all code, comments, documentation, and commit messages (governed authoritatively by [`LanguagePolicy.md`](file:///d:/Git_Repositories/.agents/rules/LanguagePolicy.md)).
 - **timestamp-header-rule**: Mandatory response output header on every assistant response in the exact format:
   `YYYYMMDD_HHMM "<short-task-description>"`
-  Permanent, automated mechanism inherited across all sessions. **Macro Retirement**: Legacy `@tsr` is permanently dropped and retired across all platforms and host adapters (no longer required due to VSCode changes). Datetime format and precision invariants remain strictly enforced.
+  Permanent, automated mechanism inherited across all sessions. **Macro Retirement**: Legacy `@tsr` is permanently dropped and retired across all platforms and host adapters. **Host Exception Provision**: Claude Code operates under an explicit operator waiver (2026-11-13 decision) exempting its responses from emitting this chat header. Datetime format and precision invariants remain strictly enforced.
 - **tool-and-log-timestamp-precision**: Tool execution timestamps, generated log file names, and internal log entries `MUST` include at least second-level precision (`ss`) (e.g. `yyyyMMdd_HHmmss` or `yyyy-MM-dd HH:mm:ss[.fff]`). The minute-level format (`YYYYMMDD_HHMM`) applies strictly and exclusively to the assistant chat response header, never to tools or logs.
 - **comment-preservation**: Comments and documentation are first-class assets equivalent to executable code across ALL file formats (`*.ps1`, `*.psm1`, `*.js`, `*.ts`, `*.py`, `*.json`, `*.md`, `*.html`, `*.css`, `*.cmd`, etc.). No redesign, refactoring, code formatting, auto-repair, or optimization may silently delete, strip, or truncate comments, docstrings, or explanatory remarks. Editing comments to update or correct them is permitted; wholesale stripping or deletion of comments is strictly prohibited. For JSON configurations, comment properties (e.g. `_comment`, `//`, `description`, `notes`) must be preserved across serialization and editing.
 - **no-backtick-line-continuations**: Script generation must not use backticks (`` ` ``) for line continuation; use splatting, pipeline wrapping, or parenthesized expressions instead.
-- **universal-header-modification-timestamp-invariant**: Under all circumstances, whenever ANY governed file—whether source code (`*.ps1`, `*.psm1`, `*.py`, `*.go`, `*.js`, `*.cmd`, `*.bat`), configuration (`*.json`, `*.yaml`), or documentation (`*.md`, `*.html`)—is created, revised, or modified, any header date/timestamp metadata field (`Date:`, `LastModified:`, `meta.date`, etc.) `MUST` be updated to the exact current timestamp (`YYYY-MM-DD HH:mm:ss` or `YYYY-MM-DD`). Leaving stale timestamps upon modifying any asset is strictly prohibited across the entire workspace.
+- **universal-header-modification-timestamp-invariant**: Under all circumstances, whenever ANY governed file—whether source code (`*.ps1`, `*.psm1`, `*.py`, `*.go`, `*.js`, `*.cmd`, `*.bat`), configuration (`*.json`, `*.yaml`), or documentation (`*.md`, `*.html`)—is created, revised, or modified, any header date/timestamp metadata field (`Date:`, `LastModified:`, `meta.date`, etc.) `MUST` be updated to the current date or timestamp (`YYYY-MM-DD HH:mm:ss` for specifications/policies, `YYYY-MM-DD` for code/script headers). Leaving stale timestamps upon modifying any asset is strictly prohibited across the entire workspace.
 - **single-commit-version-increment-invariant**: Whenever a component (script, module, document, or configuration file) is modified under a CRP, BUG, or FIX, its version number `MUST` only be incremented **ONCE** across the entire editing cycle leading up to its associated `git commit` (strictly bound to commit, not `push`). Intermediate edits, turns, or iterations prior to committing `MUST NOT` repeatedly increment the version number. Standard SemVer arithmetic applies:
   - Version Bump (Major: `+1.0.0`): Resets the second and third digits to `0` across all repository components (e.g. `10.2.5` → `11.0.0`).
   - Release Bump (Minor: `+0.1.0`): Applied at formal release boundaries. Release rules **DO NOT** reset the patch digit to `0`; the last digit follows component change state only.

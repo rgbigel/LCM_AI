@@ -11,7 +11,7 @@ Path: .agents/rules/PowerShellStandardsPolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -153,17 +153,17 @@ All PowerShell scripts, automation tools, and diagnostic reporters that launch i
 1. **Interactive Session Isolation Awareness**:
    Never assume script execution is running inside the interactive desktop. When executed from background agent sessions, IDE workers, or automated task runners (Session 0), raw `Start-Process` invocations are isolated and completely invisible on the user's physical screen.
 2. **Mandatory Desktop Dispatch Routing**:
-   Inspect whether `Invoke-InteractiveDesktop.ps1` exists in the workspace (`D:\Git_Repositories\LCM_Tools\Invoke-InteractiveDesktop.ps1` or `$toolsDir`). If present, GUI execution `MUST` be routed through `Invoke-InteractiveDesktop.ps1` using:
+   Desktop GUI execution `MUST` be routed through the DO gateway (`LCM_Inventory\DoT\do.exe` / `do.cmd`) communicating with the background Session 1 Desktop Daemon on port 9876:
    ```powershell
-   $dispatcher = Join-Path $toolsDir "Invoke-InteractiveDesktop.ps1"
-   if (Test-Path $dispatcher) {
-     & pwsh -File $dispatcher -FilePath "explorer.exe" -ArgumentList "`"$htmlPath`"" | Out-Null
+   $doExe = "D:\Git_Repositories\LCM_Inventory\DoT\do.exe"
+   if (Test-Path $doExe) {
+     & $doExe "explorer.exe `"$htmlPath`"" | Out-Null
    } else {
      Start-Process $htmlPath
    }
    ```
 3. **Privileged GUI Elevation**:
-   When launching tools requiring administrative elevation in the interactive session, pass `-Elevated` to `Invoke-InteractiveDesktop.ps1` rather than relying on in-process `Start-Process -Verb RunAs`.
+   When launching tools requiring administrative elevation in the interactive session, route through `do.exe "<command>" -elevated` rather than relying on in-process `Start-Process -Verb RunAs`.
 4. **Applies Universally To**:
    - HTML Dashboards (`TOOLS_VIEWER.html`, `INVENTORY_VIEWER.html`, `CMD_FOLDER_ANALYSIS.html`)
    - File Explorers (`explorer.exe /select,"<Path>"`)

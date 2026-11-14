@@ -11,7 +11,7 @@ Path: .agents/rules/GoalFirstDesignPolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.2.1  
 Status: Authoritative Policy  
-Date: 2026-10-17
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -30,9 +30,12 @@ The Gate 0 Contract MUST state:
 2. **Invariants and Exit Criteria:** the testable evidence that proves the target state;
 3. **Explicit Non-Goals:** deliberately excluded work that prevents lateral scope expansion.
 
-For an ordinary, evidently scoped BUG or CRP, the title, stated defect, or stated request may supply the target state and the following default Non-Goal applies without separate prose: **Cause no havoc: ask rather than invent or infer, and avoid unnecessary complexity.**
+For an ordinary, evidently scoped BUG or CRP, the title, stated defect, or stated request may supply the target state and the following binding core invariant applies without separate prose: **Cause no havoc: ask rather than invent or infer, and avoid unnecessary complexity.** Explicit Non-Goals deliberately exclude work that prevents lateral scope expansion.
 
-An explicit, written Gate 0 Contract is required only for structural, cross-cutting, materially ambiguous, or scope-expanding work. If that contract is missing, execution MUST pause at the planning boundary until the operator supplies or accepts it. This is a planning requirement, not a waiver of any later review gate.
+An explicit, written Gate 0 Contract is triggered by operational context:
+- **`BUG` Disposition**: Diagnoses and resolves a reported defect; target state is inherent in correcting the defect, so no Gate 0 pause occurs.
+- **`DOIT` Mode**: Target state is authorized by operator directive (`do`); execution advances continuously to Gate 2.
+- **`CRP` in Standard Flow**: Requires an explicit written Gate 0 Contract only for structural, cross-cutting, materially ambiguous, or scope-expanding work where the target state is not evident from the request. If missing, execution MUST pause at the planning boundary until accepted. This is a planning requirement, not a waiver of any later review gate.
 
 ### RULE-GOAL-003 (Discrepancy-Led Design Refinement)
 Documentation gaps, rule tensions, lifecycle inconsistencies, and failed assumptions MUST be recorded as discrepancies with their known cause, owner, and next candidate design cycle. They MUST NOT cause speculative local patching or an unexplained terminal block.

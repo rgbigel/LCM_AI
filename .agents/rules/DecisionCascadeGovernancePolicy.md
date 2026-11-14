@@ -11,7 +11,7 @@ Path: .agents/rules/DecisionCascadeGovernancePolicy.md
 Authors: Rolf, LCM_AI Engine
 Version: 10.2.1
 Status: Authoritative Invariant Rule
-Date: 2026-11-12 09:30:00
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -62,12 +62,12 @@ To eliminate friction and prevent reviewing irrelevant details, Gate 2A shall be
    - Changes with zero contract, interface, or behavioral impact (e.g., internal variable renames, comment adjustments, formatting, or 2-attempt mechanical bug fixes per `RULE-REV-002`).
    - Gate 2A auto-passes with: `[GATE 2A: BYPASSED] Low-significance mechanical change; no contract impact.`
 2. **Minimal-Testing Cycles (`RULE-LCM-023`)**:
-   - When `-MinimalTests` is active, or the proposal is in `completed [minimal-tests]` state.
+   - When `-MinimalTests` is active, or the proposal carries `"state": "completed"` with `"test_scope": "minimal"`.
    - Gate 2A auto-passes with: `[GATE 2A: DEFERRED] Minimal testing active; documentation polishing deferred until final verification.`
 
 ### RULE-DEC-005: Pre-Push Clean State & Relief Switch Reset Invariant
 1. **Zero-Bypass on Remote Push**: At the time of `PUSH` (`Invoke-LCM_Push.ps1`), *there are no irrelevant documentation aspects*. Gate 2A is strictly enforced with zero bypasses allowed.
-2. **Interactive Pre-Publish Triage**: If Relief Mode is active or any proposal carries minimal-test debt (`completed [minimal-tests]` or `quality_checks_deferred: true`) at publish time, `Invoke-LCM_Push.ps1` shall not silently bypass or abruptly fail. It must present the four-choice pre-publish triage:
+2. **Interactive Pre-Publish Triage**: If Relief Mode is active or any proposal carries minimal-test debt (`"state": "completed"` with `"test_scope": "minimal"`, or `quality_checks_deferred: true`) at publish time, `Invoke-LCM_Push.ps1` shall not silently bypass or abruptly fail. It must present the four-choice pre-publish triage:
    - `[1] Force Requalification`: Executes the transparent Stepwise Requalification Pipeline to bring all code and proposals into full qualification before push.
    - `[2] Circumvent / Force Push`: Temporarily bypasses preflight gating with an explicit audit receipt (`-BypassReliefGate` / `-ForceRelief`).
    - `[3] Continue (May Fail)`: Proceeds without altering state; fails downstream if unresolvable blockers remain.

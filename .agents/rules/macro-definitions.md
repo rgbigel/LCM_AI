@@ -1,21 +1,19 @@
 ---
 name: macro-definitions
-description: Authoritative governance rule mirror for macro-definitions
+description: Authoritative macro definitions, syntax conventions, and execution routing for operator and agent CLI commands.
 globs: "*"
 ---
-<!-- ===================================================================== -->
-<!-- ANTIGRAVITY RULE MIRROR                                               -->
-<!-- Source Authority: LCM_Inventory/.agents/rules/macro-definitions.md -->
-<!-- Activation: Workspace Automatic                                       -->
-<!-- ===================================================================== -->
-# macro-definitions.md
-# version: 10.2.3
-# date: 2026-11-11 15:30:00
+# File: macro-definitions.md
 
-# MACRO-DEFINITIONS-METADATA
-# scope: durable-memory
-# location: .agents/rules/macro-definitions.md
-# update-policy: manual
+Module: macro-definitions  
+Purpose: Defines operator and agent command macros, bare-word syntax standards, execution routing, and parameter mappings across the workspace.  
+Path: .agents/rules/macro-definitions.md  
+Authors: Rolf, LCM_AI Governance  
+Version: 10.3.0  
+Status: Authoritative Invariant Rule  
+Date: 2026-11-14 21:40:00  
+
+---
 
 ## Syntax Convention: Antigravity IDE Bare-Word Standard
 In the Antigravity IDE environment, typing the `@` character triggers the IDE's interactive context-attachment popup (`@Files`, `@Docs`, `@Git`). Therefore, bare-word command invocations (`ToolExplorer`, `ShowTools`, `tools`, `ar`, `bcr`, `COMPLETE`, `PUBLISH`, `DO <#>`, etc.) are the primary and preferred syntax. The `@` prefix remains supported as a backward-compatible alias.
@@ -29,6 +27,7 @@ MACRO: technical
   - no emojis
   - no unicode
   - explicit structures only
+  - precedence: when technical mode is active, plain ASCII tags ([GOODNIGHT], [GOODMORNING]) substitute for protocol emojis in RULE-LCM-030.
 
 MACRO: user
 - description: normal user-facing mode
@@ -155,7 +154,7 @@ MACRO: BCR
   - the dispatcher records a cohort-resolution receipt before launch. `in_progress` members are reported as pending verification, `verified` members are review-ready, and `in_review` members refresh rather than duplicate a review session.
   - omitted or broadened scope requires an interactive confirmation. A scope that exceeds configured proposal or repository limits, has incompatible baselines, or has unresolved overlap/conflict evidence requires explicit operator selection; non-interactive or cancelled resolution fails closed.
   - only review-ready `verified` members may transition to `in_review`, and only after their review handoff succeeds.
-  - the dispatcher executes `Invoke-BeyondCompareReview.ps1` against the resolved baseline and preserves the configured coarse or tight review granularity.
+  - the dispatcher executes `BCR.cmd` (`Invoke-MacriumBcrReview.ps1`) against the resolved baseline and preserves the configured coarse or tight review granularity.
   - an optional baseline commit is accepted only when it matches the resolved review scope.
   - generated artifacts, scratch, data, logs, and routine test output require no review, but `BCR` may peek at them unfiltered and report non-blocking advice.
 
@@ -169,14 +168,14 @@ MACRO: cohort
   - `create` uses the first selected proposal as the prime member; `add` and `remove` update the open cohort; `close` ends it without altering member lifecycle state.
   - a prime member cannot be removed; close the cohort instead. Cross-repository creation or membership changes require explicit confirmation and produce per-repository BCR baselines.
 
-MACRO: ReOpen
-- description: restore a held CRP, BUG, or declared cohort
-- syntax: reopen <CRP-ID|BUG-ID> | ReOpen <CRP-ID|BUG-ID> | cohort reopen [COH-nnn]
-- aliases: reopen, ReOpen, CONTINUE
+MACRO: continue
+- description: restore a held CRP, BUG, or declared cohort to active lifecycle flow
+- syntax: continue <CRP-ID|BUG-ID> | reopen <CRP-ID|BUG-ID> | cohort reopen [COH-nnn]
+- aliases: continue, CONTINUE, reopen, ReOpen, resume
 - rules:
-  - a held CRP or BUG restores its recorded `resume_state`; it re-enters OPEN only when that restored state is active.
+  - a held CRP or BUG restores its recorded `resume_state` (clearing `held` disposition).
   - `cohort reopen` restores a held declared cohort only when no cohort is open; it does not change any member lifecycle state.
-  - `CONTINUE` remains a backward-compatible alias for `ReOpen`.
+  - `reopen`, `ReOpen`, and `resume` remain backward-compatible aliases for `continue`.
 
 MACRO: COMPLETE
 - description: submit a completed review result for an exact CRP/BUG, repository, declared cohort, or all eligible cohorts, then commit locally
@@ -387,8 +386,8 @@ MACRO: ShowPathPS
 
 <!-- MANAGED-SHOW-MACROS-END -->
 
-MACRO: tsr (Legacy / Automated)
-- note: Superseded by persistent TimestampHeaderRule codified in InvariantRules.md. Automated on every turn; manual macro invocation is deprecated.
+MACRO: tsr (Retired)
+- note: Permanently retired workspace-wide. Superseded by persistent TimestampHeaderRule codified in InvariantRules.md and RULE-DOC-010.
 
 MACRO: ar
 - description: generate retrospective execution trace and error triage diagnostics report analogous to BC5-Resolution-Analysis.md

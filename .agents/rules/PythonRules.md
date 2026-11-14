@@ -11,7 +11,7 @@ Path: .agents/rules/PythonRules.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.2.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -30,6 +30,7 @@ Date: 2026-10-13
   2. **Safe Serialization**: When injecting Python data into JavaScript or HTML context, always serialize via `json.dumps()` (e.g., `const DATA = {json.dumps(obj)};`) rather than ad-hoc string formatting.
   3. **No Embedded Backtick Ambiguity**: When constructing dynamic paths or strings in generated JavaScript, use standard JavaScript string concatenation (`tabName + '_suffix.html'`) rather than backtick template literals (` `${tabName}_...` `) to avoid escape-stripping defects across string generation pipelines.
   4. **Ahead-of-Occurrence Verification**: Python scripts that generate web artifacts (HTML, JS, JSON) must perform pre-emission syntax validation (e.g. `json.loads()` on JSON payloads, or verifying no unexpanded Python expressions `{...}` remain in the emitted text).
+- **python-indentation-standard** (`RULE-PY-009`): All Python source files MUST use 4 spaces per indentation level in accordance with PEP 8. In accordance with the Language Deference Hierarchy (`InvariantRules.md`), this Python language standard takes strict precedence over the workspace-wide 2-space default indentation.
 
 ---
 

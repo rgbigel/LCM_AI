@@ -1,7 +1,7 @@
 ---
 name: DocumentationStandardsPolicy
 description: Authoritative documentation standard mandating tripartite repository specifications (Architecture, Requirements, Implementation) and DOX header invariants.
-globs: "*.md"
+globs: "*"
 ---
 # File: DocumentationStandardsPolicy.md
 
@@ -11,7 +11,7 @@ Path: .agents/rules/DocumentationStandardsPolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -63,7 +63,7 @@ Every LCM-governed repository `MUST` maintain three distinct core specifications
    - **Immediately below frontmatter**: The standardized DOX metadata header block per Section 1.
 
 ### RULE-DOC-003.1: Goal-First Proposal Contract Governance
-Proposal and specification contracts are governed authoritatively by `GoalFirstDesignPolicy.md` (`RULE-GOAL-001` through `RULE-GOAL-005`). Tripartite documentation and proposal specifications MUST maintain complete traceability to the accepted Gate 0 target state. Ordinary evidently scoped work inherits the default Non-Goal: **Cause no havoc: ask rather than invent or infer, and avoid unnecessary complexity.** This requirement complements, and does not replace, tripartite documentation or lifecycle review gates.
+Proposal and specification contracts are governed authoritatively by `GoalFirstDesignPolicy.md` (`RULE-GOAL-001` through `RULE-GOAL-005`). Tripartite documentation and proposal specifications MUST maintain complete traceability to the accepted Gate 0 target state. Ordinary evidently scoped work inherits the binding core invariant: **Cause no havoc: ask rather than invent or infer, and avoid unnecessary complexity.** This requirement complements, and does not replace, tripartite documentation or lifecycle review gates.
 
 ---
 
@@ -88,12 +88,14 @@ Every LCM-governed repository that deploys or installs operational payloads `MUS
 
 ### RULE-DOC-005: LCM Major Version Alignment Invariant (`M.Y.Z`)
 Whenever a new major LCM version $M$ (e.g. advancing from `9.x.x` to `10.0.0`) is established and pushed:
-1. **Major Parity**: All contained modules, specification documents, scripts, and configuration manifests `MUST` have their version updated such that their **Major** version component matches $M$.
-2. **Subversion Preservation**: Subversions (**Minor** $Y$ and **Patch** $Z$) `MUST NOT` be reset or wiped by pre-push major version actions; their relative evolution history and component-level differentiation are strictly preserved.
+1. **Major Parity & Standard SemVer Reset**: In accordance with `RULE-REV-007` and standard SemVer arithmetic, advancing to a new major version ($+1.0.0$) resets minor ($Y$) and patch ($Z$) digits to `0` across all contained modules, specification documents, scripts, and configuration manifests ($10.2.5 \rightarrow 11.0.0$).
+2. **Release & Push Arithmetic**:
+   - **Minor Release Bumps**: Release increments ($+0.1.0$) increment the minor version while preserving the current patch level.
+   - **GoodNight Push Bumps**: Automated GoodNight push increments ($+0.0.1$) apply strictly to components that actually changed.
 3. **Transformation Formula**: If a module or spec has version $X.Y.Z$ and the new LCM major version is $M$, the new version becomes:
-   $$\text{NewVersion} = M.Y.Z$$
-   *(Example: A module at version `9.2.1` when major version 10 is established becomes `10.2.1`).*
-4. **Baseline Synchronization**: All explicit global baseline references in configuration files (`LCM_Inventory/config.json`, `.vscode/settings.json`, `.github/agents/Config.json`), agent profiles, and DOX headers `MUST` reference the current active LCM baseline.
+   $$\text{NewVersion} = M.0.0$$
+   *(Example: A module or spec at version `10.2.5` when major version 11 is established becomes `11.0.0`).*
+4. **Baseline Synchronization**: All explicit global baseline references in configuration files (`.vscode/settings.json`, `.github/agents/Config.json`), agent profiles, and DOX headers `MUST` reference the current active LCM baseline. Common governance resides authoritatively in `.agents/rules/` and subsystem-specific configurations in repository `docs/`.
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 name: DisplayStandardsPolicy
 description: Authoritative governance policy for LCM HTML Displays, Interactive Table Dashboards, CSS Tokens, Sticky Filter Headers, Theme Synchronization, and Desktop Dispatching.
-globs: "*"
+globs: "*.html, *.css, *.js"
 ---
 # File: DisplayStandardsPolicy.md
 
@@ -11,7 +11,7 @@ Path: .agents/rules/DisplayStandardsPolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.2.0
 Status: Authoritative Policy
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -66,7 +66,7 @@ The architectural pattern established in `LCM_Inventory/assets/CM_CONTROL_HUB_IM
    - Right-aligned Reset button with distinctive red accent (`.reset-button`).
 3. **Status Rail Pipeline Bar (`.status-rail`)**:
    - Multi-stage horizontal pipeline visualization showing live proposal counts across states:
-     `Open` (recorded) $\rightarrow$ `Active` (in progress) $\rightarrow$ `Review` (BCR disposition) $\rightarrow$ `Complete` (commit ready) $\rightarrow$ `Published` (remote baseline) $\rightarrow$ `Held` (reason required) $\rightarrow$ `Cancelled` (superseded).
+     `suggested` $\rightarrow$ `in_progress` $\rightarrow$ `verified` $\rightarrow$ `in_review` $\rightarrow$ `completed` $\rightarrow$ `pushed` (plus filter toggles for `held`, `withdrawn`, `rejected`, `superseded`).
    - Dynamic active underline and soft accent fill indicating current cohort filter.
 
 ### RULE-DSP-004: Table Layout, Two-Row Filtering & Row Selection Highlights
@@ -96,17 +96,18 @@ The architectural pattern established in `LCM_Inventory/assets/CM_CONTROL_HUB_IM
    - On Windows operating systems, the logged-on user's physical display and GUI shell run inside the primary **interactive console session (designated as Session ID 1)**.
    - Non-interactive services, background task runners, and IDE agent sub-processes often run isolated in headless or background contexts (e.g., Session 0 isolation or detached agent worker runspaces), where spawned GUI processes cannot access the physical desktop or display windows to the operator.
 2. **Mandatory Dispatch Invariant**:
-   - Any CLI script, background agent, or automation utility that builds or triggers an HTML viewer, browser dashboard, diff tool (Beyond Compare), text editor, or native desktop GUI `MUST` route execution through `Invoke-InteractiveDesktop.ps1` (per `RULE-PS-011`).
+   - Any CLI script, background agent, or automation utility that builds or triggers an HTML viewer, browser dashboard, diff tool (Beyond Compare), text editor, or native desktop GUI `MUST` route execution through the DO gateway (`LCM_Inventory\DoT\do.exe "<command>"` / `do.cmd`) communicating with the background Session 1 Desktop Daemon on port 9876 (per `RULE-PS-011` and `RULE-ELEV-006`). Legacy `Invoke-InteractiveDesktop.ps1` is permanently retired.
    - This ensures the process is dispatched into the active user's interactive desktop (Session 1) on the physical monitor.
 3. **Prohibition of Direct Background Spawning**:
-   - Direct `Start-Process` invocations targeting GUI applications from background runner tasks or Session 0 contexts without `Invoke-InteractiveDesktop.ps1` routing are strictly prohibited, as they spawn headless, invisible "ghost" windows that block review workflows.
+   - Direct `Start-Process` invocations targeting GUI applications from background runner tasks or Session 0 contexts without DO gateway routing are strictly prohibited, as they spawn headless, invisible "ghost" windows that block review workflows.
 4. **Forward-Compatibility: Default Browser vs. IDE Canvas Hosting**:
-   - The presentation layer is currently dispatched to the default external browser window on Session 1 via `Invoke-InteractiveDesktop.ps1` because current IDE Canvas/Webview integrations exhibit instability and bugs.
+   - The presentation layer is currently dispatched to the default external browser window on Session 1 via the DO gateway because current IDE Canvas/Webview integrations exhibit instability and bugs.
    - However, presentation code and architecture `MUST NOT` preclude transitioning to an integrated **IDE Canvas** once that capability is stabilized.
    - HTML/CSS/JS presentation artifacts `MUST` remain container-agnostic so they can run either in a standalone browser window or embedded seamlessly within an IDE webview/canvas without code modifications.
 5. **Stale Window Termination & Test Execution Window Hygiene**:
    - Automated test runs, test suites, and interactive launchers `MUST NOT` leave multiple abandoned windows (browser displays, PowerShell shells, or diff viewers) accumulated across test cycles.
    - **Pre-Test / Pre-Launch Window Cleanup**: Before entering automated testing or spawning a new session, testing harnesses and dispatchers `MUST` proactively locate and terminate any prior/stale instances of the same display or test shells to eliminate visual clutter and operator confusion.
+   - **Operator Beyond Compare Window Protection**: In accordance with `RULE-REV-012`, pre-test and pre-launch window cleanup `MUST NOT` terminate or kill operator-owned Beyond Compare windows (`_LCM` profile, BCR sessions, or instances opened for manual comparison). Automation may clean up its own disposable browser displays or test consoles, but operator-owned review sessions are strictly exempt from termination.
    - **Inspection Gating**: Automated test runs `MUST` operate headless or close disposable test windows upon completion. A new display window `SHALL ONLY` be launched if explicit operator visual inspection is intended.
 
 
@@ -123,7 +124,7 @@ The architectural pattern established in `LCM_Inventory/assets/CM_CONTROL_HUB_IM
 
 ### RULE-DSP-011: Execution Ledger Horizontal Timeline & Bulk Cohort Action Panel
 1. Dashboards managing multi-step workflows `MUST` present a horizontal **Execution Ledger Timeline** (`.timeline` / `.step`) displaying lifecycle phases:
-   $$\text{Scope} \rightarrow \text{Checkpoint} \rightarrow \text{Apply} \rightarrow \text{Design} \rightarrow \text{Verify} \rightarrow \text{BCR} \rightarrow \text{Commit} \rightarrow \text{Publish}$$
+   $$\text{suggested} \rightarrow \text{in\_progress} \rightarrow \text{verified} \rightarrow \text{in\_review} \rightarrow \text{completed} \rightarrow \text{pushed}$$
 2. Multi-item selection workflows `MUST` provide a **Selection & Bulk Work Cohort Panel** (`.selection-panel`) that validates actions across the entire cohort before offering dispatch triggers.
 
 ### RULE-DSP-012: Terminal Console Formatting, ANSI Palette & Progress Atoms

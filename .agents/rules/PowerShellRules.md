@@ -1,11 +1,11 @@
 ---
 name: PowerShellRules
 description: Authoritative governance rule mirror for PowerShellRules
-globs: "*"
+globs: "*.ps1, *.psm1, *.psd1"
 ---
 <!-- ===================================================================== -->
 <!-- ANTIGRAVITY RULE MIRROR                                               -->
-<!-- Source Authority: LCM_AI/.agents/rules/PowerShellRules.md  -->
+<!-- Source Authority: LCM_AI/.agents/rules/PowerShellRules.md             -->
 <!-- Activation: Workspace Automatic                                       -->
 <!-- ===================================================================== -->
 # File: PowerShellRules.md
@@ -15,6 +15,8 @@ Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
 Version: 10.2.1
+Status: Authoritative Invariant Rule
+Date: 2026-11-14 21:40:00
 Changelog:
 - 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.
 - 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.

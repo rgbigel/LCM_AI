@@ -11,7 +11,7 @@ Path: .agents/rules/MethodEfficiencyPolicy.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.2.1
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -42,11 +42,11 @@ Changes strictly modifying tool-generated evidence, audit databases, dashboard s
 Modifications to the mechanical artifacts listed in `RULE-EFF-001` **MUST NEVER** trigger automated test runs, readiness test cascades, or validation cycles. These files are outputs/evidence of prior verification, not executable source code.
 
 ### RULE-EFF-003 (Machine-Only Mutation Authority)
-Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-LCM_Audit.ps1`, `Create-LCM_Baseline.ps1`, `Invoke-LCMUpdate.ps1`).
+Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-LCM_Audit.ps1`, `Create-LCM_Baseline.ps1`).
 
 ### RULE-EFF-004 (DOIT Mode & Autonomous Execution Velocity Standard)
 1. **DOIT Mode Execution**: When a proposal is in **`DOIT` Mode** (`always-proceed = $true`) — which occurs automatically upon `BUG` birth or when explicitly triggered on a `CRP` via the `do` command — AI pair-programming agents `SHALL` execute tool operations, script commands, and file edits directly under `always-proceed` and `allow` policies without introducing interactive chat planning pauses or per-tool confirmation prompts.
-2. **Universal Gate 2 Review Boundary**: Execution velocity under `DOIT` mode proceeds continuously until the downstream Gate 2 Review stage (`RR.ps1` / `Invoke-BeyondCompareReview.ps1`) is reached per `RULE-REV-001`. Even critical, urgent, or internally generated BUGs `MUST NOT` circumvent Gate 2 review.
+2. **Universal Gate 2 Review Boundary**: Execution velocity under `DOIT` mode proceeds continuously until the downstream Gate 2 Review stage (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`) is reached per `RULE-REV-001` and `RULE-REV-014`. Even critical, urgent, or internally generated BUGs `MUST NOT` circumvent Gate 2 review.
 3. **Normal Cycle Alignment**: For CRPs progressing under the Normal Review Cycle via `Proceed`, agents implement approved changes with interactive checkpoints whenever open questions, architectural alternatives, or user choices are encountered.
 4. **Goal-First Efficiency**: Direct execution starts only after the active work has a Gate 0 Contract. This prevents repeated symptom-level loops; it does not add redundant tests or waive any existing gate.
 
@@ -68,8 +68,8 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 
 ---
 ### RULE-EFF-008: Canonical Tool Discovery Standard
-- Agents inspecting, modifying, or querying workspace tools or platform commands **must** query `LCM_Inventory/tools/tool_catalog.json` first as the **authoritative single source of truth** before any filesystem traversal.
-- Agents are **strictly prohibited** from executing broad, unindexed grep searches across `.psm1`, `.ps1`, or `.cmd` files to locate tool signatures or parameters when `tool_catalog.json` can satisfy the query.
+- Agents inspecting, modifying, or querying workspace tools or platform commands **must** query the authoritative tool catalog (`LCM_Inventory/data/tools/tools.db`, via discovery tools such as `Show-ToolIntents.ps1`; `config/tool_catalog.json` serves strictly as a transitional fallback) as the **authoritative single source of truth** before any filesystem traversal.
+- Agents are **strictly prohibited** from executing broad, unindexed grep searches across `.psm1`, `.ps1`, or `.cmd` files to locate tool signatures or parameters when the tool catalog can satisfy the query.
 
 ---
 
@@ -108,9 +108,9 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 - **Optional BCR Peek**: Exempt artifacts may be shown in an explicitly unfiltered BCR session on
   request. Any observation is advisory only and does not convert the exempt artifact into a
   mandatory review candidate.
-- **Agent Execution Policy**: Agents must operate in direct execution mode; interactive approval loops in chat UI are superseded by the RR pipeline.
+- **Agent Execution Policy**: Under `DOIT` mode, agents must operate in direct execution mode; outside `DOIT`, Gate 1 planning pauses (`RULE-LCM-014`) and Gate 0 target-state pauses (`RULE-GOAL-002`) remain binding until operator direction is received.
 - **Search Enforcement (RULE-EFF-007)**: All agents and tooling must use `es.exe` (directly or through `Search-Everything.ps1`) for file-system searches; `rg.exe` is the fallback content-search tool when the Everything content index is unavailable.
-- **Tool Discovery Enforcement (RULE-EFF-008)**: `tool_catalog.json` is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
+- **Tool Discovery Enforcement (RULE-EFF-008)**: The authoritative SQLite tool catalog (`data/tools/tools.db`, via discovery tools such as `Show-ToolIntents.ps1`; `config/tool_catalog.json` serves strictly as transitional fallback) is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
 - **Path Safety Enforcement (RULE-ENV-003)**: All path constructions must be grounded via `$PSScriptRoot`, registered trampolines, or explicit pre-flight resolution; speculative traversal is prohibited.
 - **Diagnostic Triage Enforcement (RULE-EFF-010)**: AI assistants must execute 5-stage triage on daemon or execution failures and halt immediately at Stage 5 upon detecting architectural or state mismatches.
 

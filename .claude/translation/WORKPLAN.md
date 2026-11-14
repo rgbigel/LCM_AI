@@ -4,16 +4,16 @@ Module: .claude/translation/WORKPLAN.md
 Purpose: Durable record of the agreed task, layout, operator decisions and open questions for the Claude adaptation of the LCM rules; read at the start of every Claude session.  
 Path: LCM_AI/.claude/translation/WORKPLAN.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.2.5
+Version: 10.6.4
 Status: Draft  
-Date: 2026-11-13 21:39:39
+Date: 2026-11-14 22:36:18
 
 ---
 
 ## 1. Origin
 
 - Agreed in Claude session "LCM_* repositories governance rules" (`b800d0c4-5ef9-4c14-9a38-929082f5a63e`, 2026-11-13).
-- Refined in session "Model settings and Plan mode rules" (`3c16a548-e597-4d96-afad-b16b323472be`, 2026-11-13).
+- Refined in session "Model settings and Plan mode rules" (`3c16a548-e597-4d96-afad-b16b323472be`, 2026-11-13/14).
 - This file is the authority for the plan; Claude's private memory only points here.
 
 ## 2. Goal (operator)
@@ -22,24 +22,20 @@ Check the quality of the LCM_* repositories against the rule set they contain NO
 
 | Phase | Content | State |
 |:---|:---|:---|
-| 1 | USE/MAP the Antigravity rules (`.agents/rules`) into `LCM_AI/.claude`; deliver statements on incomplete, unclear or contradictory rules. | Active |
-| 2 | Discuss choices; resolve incorrect or imprecise rules; operator "retranslates" them for VS Code and Gemini/Antigravity. | Pending |
+| 1 | USE/MAP the Antigravity rules (`.agents/rules`) into `LCM_AI/.claude`; deliver statements on incomplete, unclear or contradictory rules. | Done 2026-11-14 (re-ingested at `2bebbaa`, all 21 files) |
+| 2 | Discuss choices; resolve incorrect or imprecise rules; operator "retranslates" them for VS Code and Gemini/Antigravity. | Next |
 | 3 | Analyze `docs/` (DOX first level), then code (mostly LCM_Inventory); sort out inconsistencies. | Pending |
 
-- The operator collects Claude's findings into a CRP of their own.
-- Phase 1 is a preliminary design: no CRPs, no source modifications.
+- Findings flow into operator-owned CRPs (first: CRP-326, now pushed).
+- Claude drafts no CRPs on its own and does not modify `.agents/rules`.
 
-## 3. Phase 1 Deliverables
+## 3. Deliverables
 
 | Path | Content |
 |:---|:---|
-| `rules/process/` | Lifecycle, gates, review/commit, analysis, goal-first, session protocol, macros. |
-| `rules/quality/` | Language-neutral solution quality obligations, each stated once. |
-| `rules/lang/` | Language bindings (PowerShell, Python, Go, CMD, JSON, Markdown/docs, HTML/display): how each language meets each neutral obligation; a missing binding is a finding. |
-| `translation/FINDINGS.md` | Contradictions, imprecisions, gaps, Antigravity-only mechanisms; each with a proposed resolution; numbered and quotable. |
-| `translation/COVERAGE.md` | Every source rule -> Claude mechanism (always-loaded rule, path-scoped rule, hook, skill, or not enforceable + reason) and enforcement level (1 mechanical, 2 instructed, 3 not enforceable). |
-
-Translation fidelity: condensed normative MUST / MUST NOT statements with source rule IDs. Enforcement matters most; hooks and settings are built only after discussion.
+| `rules/process/` (10), `rules/quality/` (4), `rules/lang/` (7) | 1:1 projection of the canonical files per RULE-AUTH-004; condensed MUST/MUST NOT with source IDs; host mechanics marked `[Claude]`; lang files path-scoped. |
+| `translation/FINDINGS.md` | C1-C6 and F-01..F-46 with type, status and proposed resolution. |
+| `translation/COVERAGE.md` | File mapping, drift-check result, rule-group mechanism and enforcement level. |
 
 ## 4. Operator Decisions
 
@@ -47,57 +43,57 @@ Translation fidelity: condensed normative MUST / MUST NOT statements with source
 |:---|:---|
 | D-01 | Root junction `D:\Git_Repositories\.claude` -> `LCM_AI\.claude`. Further junctions: ask first. |
 | D-02 | Git: hide only root items via root `.git/info/exclude` (`/.claude/`, `/CLAUDE.md`). Otherwise ignore git as much as practical; files on disk are the only trusted state. |
-| D-03 | Every produced file: DOX header, `Version: 10.2.5`, `Status: Draft`, CRLF, UTF-8 without BOM (verify after writing). |
+| D-03 | Every produced file: DOX header, `Version:` = current LCM version (`.agents/version.json`, now 10.6.4), `Status: Draft`, CRLF, UTF-8 without BOM (verify after writing). |
 | D-04 | Entry point: root `CLAUDE.md`, decoupled from `AGENTS.md`; rule-set synchronization via a future tool. |
-| D-05 | Rule baseline: LCM_AI commit `43e36b0` (2026-11-12 18:30:41). |
-| D-06 | Quality audit runs without LEV (LEV is a prototype-phase speed-up; rigor matters at publish). |
-| D-07 | Timestamp response header permanently waived for Claude (operator-approved exception to the timestamp-header rule). |
-| D-08 | Work stepwise; at most 1-3 lettered questions in chat; never guess - ask with alternatives. Questions from the operator are answered only, no actions. |
+| D-05 | Rule baseline: LCM_AI commit `2bebbaa` (2026-11-14 18:58:18, LCM 10.6.4) + CRP-331 Batch 1-3 working tree (uncommitted, converged 2026-11-14 22:07); hashes in `translation/CANONICAL_HASHES.md`; previous `43e36b0`. |
+| D-06 | Quality audit runs without LEV (prototype-phase speed-up; rigor matters at publish). |
+| D-07 | Timestamp response header permanently waived for Claude. |
+| D-08 | Work stepwise; at most 1-3 lettered questions in chat; never guess - ask with alternatives. Questions are answered only, no actions. |
 | D-09 | Do mechanical steps myself (e.g. test sessions via `claude -p`); bring the operator only real decisions. |
-| D-10 | Operator behaviour rules and plan-mode triggers go into a rule file under `rules/process/`; memory only points to it. |
-| D-12 | Finding types `HOST-CONTEXT` (correct for Antigravity, needs Claude reading) and `OPEN-END` (known unfinished, not an error) - the methodology evolves; open ends and sparse context are expected. |
+| D-10 | Operator behaviour rules and plan-mode triggers go into the matching process rule file; memory only points to it. |
+| D-11 | Session continuity: this WORKPLAN plus `translation/SESSION_HANDOFF.md` (Claude-side analogue of GoodNight/GoodMorning, separate from `.agents` state). |
+| D-12 | Finding types `HOST-CONTEXT` and `OPEN-END`: the methodology evolves; open ends are expected. |
 | D-13 | Plan-mode trigger is context-based: BUG and `DOIT` -> no Gate 0 pause; CRP in standard flow with non-evident target -> plan mode with Gate 0 Contract. |
-| D-14 | Version semantics (corrected 2026-11-13): version bump = +1.0.0 with minor and patch reset to 0, for ALL parts (e.g. 10.2.5 -> 11.0.0); release = +0.1.0; GoodNight push = +0.0.1 only for components that really changed (component level), unchanged components keep their patch digit. "Clean" required at release only, not at GoodNight pushes. Open: whether a release resets patch and applies to all parts (not stated). |
-| D-15 | Correction requests to the Antigravity side: Claude MUST NOT write to `D:\GDrive\LCM\INBOX` (processed periodically by another daemon). The operator has AG register the existing "fragment" (start of Claude's delivered items) as an open proposal and gives Claude its CRP number; Claude stores its correction requests into that CRP when ready. CRP number: **CRP-326** (`LCM_Inventory/docs/Proposals/CRP-326-Governance-Rules-Harmonization-and-Documentation-Alignment/Specification.md`); Claude appends to its section 5 ("Scope for Upcoming Claude Amendments"); edit at Claude's discretion, but not while Antigravity is pushing / running GoodNight. |
-| D-11 | Session continuity: this WORKPLAN plus `translation/SESSION_HANDOFF.md` (Claude-side analogue of GoodNight/GoodMorning, kept separate from `.agents` state until the rule sets are synchronized). |
+| D-14 | Versions: major +1.0.0 resets minor and patch for all parts; release +0.1.0 does not reset patch; patch +0.0.1 on commit only for changed components; clean only at release. (Canonical in REV-007/INV since 2bebbaa.) |
+| D-15 | Never write to `D:\GDrive\LCM\INBOX`. Correction requests go into operator-registered CRPs (CRP-326), not while Antigravity pushes or runs GoodNight. |
+| D-16 | Adapter layout follows RULE-AUTH-004 1:1 by canonical file name (operator CRP-326 decision 6.1.4). |
+| D-17 | (2026-11-14) All repairs are done in Antigravity until sync. Claude's findings and recommendations for the re-ingestion go into a NEW CRP's `Specification.md` under `D:\Git_Repositories\LCM_Inventory\docs\Proposals\` (never GDrive); Antigravity analyzes, outcome designed jointly, operator mediates. Discussion order: contradictions first (F-18, F-19, F-20, F-21, F-22, F-42). Phase 2 starts only after agreement. CRP: **CRP-331** (`LCM_Inventory/docs/Proposals/CRP-331-Claude-Reingestion-Rule-Harmonization-Findings/Specification.md`), created by Claude (operator option B, 2026-11-14); ledger registration by Antigravity; operator reviews before instructing Antigravity. |
+| D-18 | (2026-11-14) After joint agreement on a CRP, Antigravity changes its side first; Claude then converges to the new baseline and confirms it works: pin commit, re-map changed files, drift check 0 issues incl. negative test, verify each CRP item, fresh `claude -p` loading test; key-list files compared by hand and stated as such. |
+| D-20 | (2026-11-14, CRP-331 review) Q-02: external tools (`es.exe` etc.) via DO `do.exe "<cmd>" -sync`, built-in search only as escape hatch. Q-04: Claude may and should write `LEARNED_ADVICE.md`. Q-05: no per-repository LCM configuration (rules common, `docs/` specific). SC-1: no concurrent work; operator coordinates; one-sided changes are announced; disk wins over Git. SC-5: Claude commits/pushes via governed tools only, never raw git. SC-6: authors - operator always first; an AI adds its name (ahead of the other AI) only if it changed something. SC-7: removal only manually by the operator or automatically on CRP acceptance. Review rule: during an operator review Claude collects points and applies them in one pass afterwards. |
+| D-22 | (2026-11-14) Change-detection contract: the operator only tells Claude THAT Antigravity has finished (and with what); Claude determines WHAT changed via git from its last recorded baseline (log/diff, plus working-tree status/diff), then reads the changed files (disk is the truth). Not visible via git: git-ignored data (`proposals.db`, `tools.db`), untracked/outside-repo files - reported as "not verifiable via git". Corollary (operator): Antigravity changes `proposals.db` and `tools.db` only after CRP acceptance, at the latest at Gate 2. Claude may dump the databases to `.sql` at any time for comparison (into its scratchpad, never over the tracked dumps). Scope (operator, case A): the corollary covers structural/content changes a CRP brings to the databases; routine lifecycle bookkeeping through the governed tools continues at any time. |
+| D-23 | (2026-11-14) At every convergence Claude writes `translation/CANONICAL_HASHES.md` (SHA-256 per canonical rule file), so uncommitted batches stay distinguishable (git alone cannot separate them). |
+| D-27 | (2026-11-14) Claude good-morning: operator types `/goodmorning` (skill `LCM_AI/.claude/skills/goodmorning/SKILL.md`) or "good morning"; Claude reads the continuity layer and WORKPLAN, runs the Claude Check 0 against `CANONICAL_HASHES.md`, reports gap and attention items, sets its block to Active, then waits. Never runs `Invoke-LCM_GoodMorning.ps1`. |
+| D-26 | (2026-11-14) Claude good-night: operator types `/goodnight` (skill `LCM_AI/.claude/skills/goodnight/SKILL.md`) or "good night"; Claude updates only its `ACTIVE_SESSION.md` block and WORKPLAN, never runs `Invoke-LCM_GoodNight.ps1`, never commits. Order: Claude good-night first, then Antigravity GoodNight (commit), then Macrium backup = next BCR baseline. |
+| D-25 | (2026-11-14, F-52 A) Session continuity switched to the host-neutral layer: Claude maintains only its "Host: Claude Code" block in `.agents/ACTIVE_SESSION.md`; `SESSION_HANDOFF.md` is a pointer; WORKPLAN stays the Claude host workplan (charter/decisions). Supersedes D-11. Session concepts per host are individual (operator). |
+| D-24 | (2026-11-14) Review practice: the operator reviews by priority filtering in BCR (ignores `.git` and other non-review-worthy content; Gate 0 = Specification only; Gate 2 = implementation plus the operator's real-life testing). Claude's checks are automated pre-tests, never acceptance; convergence reads only content-relevant changes (skip dates, whitespace, formatting). DEFERRED: Claude adds a ranked Gate 2 review guide to the Walkthrough (operator agreed in principle; postponed so Antigravity is not overloaded with a review cycle). |
+| D-21 | (2026-11-14) Data authority: SQLite tables (`data/proposals/proposals.db`, `data/tools/tools.db`) are authoritative; the JSON files they replace are transition fallback only and will be removed; `.sql` dumps are produced at push, not synchronously. Claude must not rely on the JSON files. Answers Q-03. |
+| D-19 | (2026-11-14) Terminology option C: per CRP, Claude's convergence steps go into a Claude section of that CRP's `Implementation_Plan.md`, confirmation evidence into its `Walkthrough.md`; WORKPLAN stays the cross-CRP charter, SESSION_HANDOFF the resume pointer. |
 
 ## 5. Verified Platform Facts
 
 - Junction followed; unconditional rules load at session start.
-- Path-scoped rules load on Read/Write/Edit of a matching file, also in subfolders; patterns are relative to `D:\Git_Repositories` (`**/*.go`, `LCM_Inventory/**/*.go` work; `../...` and absolute paths do not). A rule file Claude has already read is not injected again.
-- LCM DO: `LCM_Inventory\DoT\do.exe` reaches the daemon on 127.0.0.1:9876 from Claude's shell; elevation per tool from `config/tool_catalog.json` `Admin`.
+- Path-scoped rules load on Read/Write/Edit of a matching file, also in subfolders; patterns relative to `D:\Git_Repositories` (`**/*.go` works; `../...` and absolute paths do not). A rule file already read is not injected again.
+- LCM DO: `LCM_Inventory\DoT\do.exe` reaches the daemon on 127.0.0.1:9876 from Claude's shell; elevation per tool from `tools.admin` in `LCM_Inventory/data/tools/tools.db` (JSON catalog transition fallback only).
+- `LCM_Inventory/config.json` does not exist; repository elevation data is in `LCM_Inventory/data/inventory.json`.
 
-## 6. Seed Findings (already in the operator's CRP)
-
-| ID | Finding |
-|:---|:---|
-| C1 | RULE-CTX-006 requires the agent to run `GoodMorning -Auto`; LEARNED_ADVICE says only the operator runs it; script names differ. |
-| C2 | RULE-REV-007 gives `+10.0.0` for patch, minor and major alike. |
-| C3 | RULE-LCM-004 requires a second junction review session; RULE-REV-008 retires dual sessions. |
-| C4 | Two lifecycle vocabularies (state table vs 7 sync points); LCM-007/014/016 still use the older terms. |
-| C5 | Rules name `proposals.json` as ledger; LEARNED_ADVICE names `Proposals.db`. |
-| C6 | Rule count stated as 17 / 18, 21 files exist; stray "iew." in LCM-016. |
-
-## 7. Open Questions (ask when the matching rule is mapped)
+## 6. Open Questions
 
 | ID | Question |
 |:---|:---|
-| Q-01 | May Claude (or a hook) run GoodMorning, or is it strictly the operator's? |
-| Q-02 | Are Claude's built-in Glob/Grep acceptable, or must discovery always use `es.exe` / `Search-Everything.ps1`? |
-| Q-03 | Which proposal ledger is authoritative today: `proposals.json` or `proposals.db`? |
-| Q-04 | May Claude write to the shared `.agents/LEARNED_ADVICE.md` (`/learn`), or stay in the separate Claude scheme (D-11)? (FINDINGS) |
-| Q-05 | Where is the per-repository LCM configuration today (`<Repo>/LCM_Inventory/config.json` exists nowhere)? (FINDINGS F-10) |
-| Q-06 | ANSWERED 2026-11-13: a release does not change the patch digit at reset; the patch digit changes on completion (commit). (D-14) |
-| Q-07 | ANSWERED 2026-11-13: a question-phrased request means the AI sees a need to answer with solution paths, with or without suggestions - answer, do not act. (F-08) |
+| Q-01 | ANSWERED by RULE-CTX-006 @2bebbaa: GoodMorning is operator-exclusive. |
+| Q-02 | ANSWERED 2026-11-14 (D-20): external tools via DO. |
+| Q-03 | ANSWERED 2026-11-14 (D-21): `proposals.db` authoritative, JSON fallback only. |
+| Q-04 | ANSWERED 2026-11-14 (D-20): yes, Claude writes learned advice. |
+| Q-05 | ANSWERED 2026-11-14 (D-20): no per-repository LCM configuration. |
+| Q-06 | ANSWERED 2026-11-13 (D-14). |
+| Q-07 | ANSWERED 2026-11-13: question-phrased requests are answered with solution paths, no action. |
 
-Q-01 and Q-03 are addressed by CRP-326 items 1 and 5 once the operator accepts them.
+## 7. Parked Documentation Observations (phase 3)
 
-## 8. Parked Documentation Observations (not judged; phase 3)
-
-- Daemon reports v10.0.1 / 65 MB; CRP-320 documents v10.2.0 / 6.77 MB.
-- Docs mix `Cmd/` and `DoT/`; LCM_AI Architecture still names `AGENTS.md` and `LcmDesktopDaemon.ps1`.
-- Elevation mechanism named three ways: `Start-ScriptProcessElevated.ps1`, `lcm do` + `LcmDesktopDaemon.ps1`, `do.exe` (CRP-320 retires the PowerShell daemon and `Invoke-PrivilegedTool`).
-- LCM_AI Requirements: `CR-yyyyMMdd_HHmmss.md` in `Docs/Methods/Proposals/` vs actual `CRP-nnn` bundles in `docs/Proposals/`.
-- `proposals.json` called single source while `proposals.db` exists.
+- Daemon reported v10.0.1 / 65 MB on 2026-11-13; CRP-320 documents v10.2.0 / 6.77 MB.
+- Docs mix `Cmd/` and `DoT/`; LCM_AI Architecture names `AGENTS.md` and `LcmDesktopDaemon.ps1`.
+- Elevation mechanism named three ways in docs (see also F-23).
+- LCM_AI Requirements: `CR-yyyyMMdd_HHmmss.md` in `Docs/Methods/Proposals/` vs actual `CRP-nnn` bundles.
 - Precedence (LCM-REQ-002) ranks repository-local executable behavior above the rules.
-- LCM_AI Requirements names LCM 10.0.1 in a 10.2.5 document.
+- CRP-326 bundle still on disk although `Status: Pushed` (RULE-LCM-020.3 purge).
+- CRP-326 `Specification.md`: LF line endings.

@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-14 17:40:34 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-14 22:36:41 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -46,7 +46,7 @@ Path: .agents/rules/RuleAuthority.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 22:25:00
 
 ---
 
@@ -59,8 +59,9 @@ Date: 2026-11-14 14:40:00
 - **Multi-Host Adapter Standard**: Specialized host-adapter environments (specifically **Claude Code** in `.claude/`, **Antigravity** in `.agents/`, **Gemini** in `GEMINI.md`, **VS Code** in `.vscode/`, and **Cursor** in `.cursor/`) are recognized as sanctioned, read-only projections of the canonical rule hub, provided each adapter:
   1. Derives from and explicitly references an authoritative `LCM_AI` Git commit baseline.
   2. Retains 1:1 mapping with canonical rule identifiers (`RULE-*`, `INV/*`).
-  3. Confines host-specific operational mechanisms or constraints (e.g. path-scoping, automated hooks) to explicit adapter annotations without altering the underlying normative governance mandates.
-  4. Is verified against rule drift via canonical rule health checks (`Test-LCMRuleHealth.ps1`).
+  3. Confines host-specific operational mechanisms or constraints (e.g. path-scoping, automated hooks, editor API mechanics) to explicit adapter annotations without altering the underlying normative governance mandates. Canonical rules state the host-neutral architectural intent; host implementations map that intent to their runtime tools.
+  4. Is verified against rule drift via host adapter drift checks (planned for centralized automation in `LCM_Inventory/tools/Test-LCMRuleHealth.ps1`; currently validated via adapter-specific drift checks), auditing file inventories, baseline commit parity, and rule code coverage across registered host adapters.
+  5. Adheres to the Host-Neutral Session Continuity Architecture (`RULE-LCM-030`) using workspace-level state files (`.agents/ACTIVE_SESSION.md`, `.agents/ACTIVE_CONTEXT.md`, `.agents/LEARNED_ADVICE.md`); host-native memory stores pointers only, and disk files are the sole authority.
 
 ---
 
@@ -110,7 +111,7 @@ Path: .agents/rules/InvariantRules.md
 Authors: Rolf  
 Version: 10.3.0
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -133,18 +134,25 @@ Date: 2026-11-14 14:40:00
 - **structure**: Clear hierarchical markdown sections, bulleted lists, and typed code blocks.
 - **no-assumptions**: State unknown facts rather than guessing; never invent facts or speculate.
 - **zero-assumption-testing**: The AI assistant `MUST NOT` assume or claim that code, scripts, configurations, or proposals are valid, functional, or ready without actively running mechanical tests, compilation, or parser verification. Relying on visual inspection alone or declaring ready without executing test verification is strictly prohibited.
-- **mandatory-pre-handoff-syntax-gate**: Every created or modified script, module, or configuration file (`*.ps1`, `*.psm1`, `*.py`, `*.go`, `*.json`, `*.cmd`) `MUST` pass automated syntax parsing, type checking, or compilation (`ParseInput` for PowerShell, `py_compile` for Python, `go vet`/`go build` for Go, `ConvertFrom-Json` for JSON) before concluding a turn, proposing review, or claiming completion. Zero syntax errors or parse warnings are tolerated.
-- **no-verbosity**: Minimal, direct, and non-repetitive communication; zero conversational padding or pleasantries.
-- **zero-conversational-padding**: Prohibit conversational filler, greetings, pleasantries, or preamble/postamble framing.
+- **mandatory-pre-handoff-syntax-gate**: Every created or modified script, module, or configuration file MUST pass automated syntax parsing, type checking, or compilation before concluding a turn, proposing review, or claiming completion:
+  - PowerShell (`*.ps1`, `*.psm1`): `[System.Management.Automation.Language.Parser]::ParseInput`
+  - PowerShell Data (`*.psd1`): `Import-PowerShellDataFile`
+  - Python (`*.py`): `python -m py_compile`
+  - Go (`*.go`): `go vet` or `go build`
+  - JSON (`*.json`): `ConvertFrom-Json`
+  - Windows CMD / Batch (`*.cmd`, `*.bat`): Structural encoding, `@echo off`, and ASCII verification.
+  - Markup & Documentation (`*.md`, `*.html`, `*.css`, `*.yaml`): Structure, UTF-8 No-BOM encoding, and YAML frontmatter validation.
+  Zero syntax errors or parse warnings are tolerated.
+- **no-verbosity-and-zero-padding**: Minimal, direct, and non-repetitive communication; zero conversational padding, greetings, pleasantries, or preamble/postamble framing.
 - **explicit-reasoning**: Provide clear, deterministic technical rationale for all actions, architecture, and diagnostics.
-- **english-default-language**: English invariant for all code, comments, documentation, and commit messages.
+- **english-default-language**: English invariant for all code, comments, documentation, and commit messages (governed authoritatively by [`LanguagePolicy.md`](file:///d:/Git_Repositories/.agents/rules/LanguagePolicy.md)).
 - **timestamp-header-rule**: Mandatory response output header on every assistant response in the exact format:
   `YYYYMMDD_HHMM "<short-task-description>"`
-  Permanent, automated mechanism inherited across all sessions. **Macro Retirement**: Legacy `@tsr` is permanently dropped and retired across all platforms and host adapters (no longer required due to VSCode changes). Datetime format and precision invariants remain strictly enforced.
+  Permanent, automated mechanism inherited across all sessions. **Macro Retirement**: Legacy `@tsr` is permanently dropped and retired across all platforms and host adapters. **Host Exception Provision**: Claude Code operates under an explicit operator waiver (2026-11-13 decision) exempting its responses from emitting this chat header. Datetime format and precision invariants remain strictly enforced.
 - **tool-and-log-timestamp-precision**: Tool execution timestamps, generated log file names, and internal log entries `MUST` include at least second-level precision (`ss`) (e.g. `yyyyMMdd_HHmmss` or `yyyy-MM-dd HH:mm:ss[.fff]`). The minute-level format (`YYYYMMDD_HHMM`) applies strictly and exclusively to the assistant chat response header, never to tools or logs.
 - **comment-preservation**: Comments and documentation are first-class assets equivalent to executable code across ALL file formats (`*.ps1`, `*.psm1`, `*.js`, `*.ts`, `*.py`, `*.json`, `*.md`, `*.html`, `*.css`, `*.cmd`, etc.). No redesign, refactoring, code formatting, auto-repair, or optimization may silently delete, strip, or truncate comments, docstrings, or explanatory remarks. Editing comments to update or correct them is permitted; wholesale stripping or deletion of comments is strictly prohibited. For JSON configurations, comment properties (e.g. `_comment`, `//`, `description`, `notes`) must be preserved across serialization and editing.
 - **no-backtick-line-continuations**: Script generation must not use backticks (`` ` ``) for line continuation; use splatting, pipeline wrapping, or parenthesized expressions instead.
-- **universal-header-modification-timestamp-invariant**: Under all circumstances, whenever ANY governed file—whether source code (`*.ps1`, `*.psm1`, `*.py`, `*.go`, `*.js`, `*.cmd`, `*.bat`), configuration (`*.json`, `*.yaml`), or documentation (`*.md`, `*.html`)—is created, revised, or modified, any header date/timestamp metadata field (`Date:`, `LastModified:`, `meta.date`, etc.) `MUST` be updated to the exact current timestamp (`YYYY-MM-DD HH:mm:ss` or `YYYY-MM-DD`). Leaving stale timestamps upon modifying any asset is strictly prohibited across the entire workspace.
+- **universal-header-modification-timestamp-invariant**: Under all circumstances, whenever ANY governed file—whether source code (`*.ps1`, `*.psm1`, `*.py`, `*.go`, `*.js`, `*.cmd`, `*.bat`), configuration (`*.json`, `*.yaml`), or documentation (`*.md`, `*.html`)—is created, revised, or modified, any header date/timestamp metadata field (`Date:`, `LastModified:`, `meta.date`, etc.) `MUST` be updated to the current date or timestamp (`YYYY-MM-DD HH:mm:ss` for specifications/policies, `YYYY-MM-DD` for code/script headers). Leaving stale timestamps upon modifying any asset is strictly prohibited across the entire workspace.
 - **single-commit-version-increment-invariant**: Whenever a component (script, module, document, or configuration file) is modified under a CRP, BUG, or FIX, its version number `MUST` only be incremented **ONCE** across the entire editing cycle leading up to its associated `git commit` (strictly bound to commit, not `push`). Intermediate edits, turns, or iterations prior to committing `MUST NOT` repeatedly increment the version number. Standard SemVer arithmetic applies:
   - Version Bump (Major: `+1.0.0`): Resets the second and third digits to `0` across all repository components (e.g. `10.2.5` → `11.0.0`).
   - Release Bump (Minor: `+0.1.0`): Applied at formal release boundaries. Release rules **DO NOT** reset the patch digit to `0`; the last digit follows component change state only.
@@ -172,7 +180,7 @@ Path: .agents/rules/ElevationPolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.2.0
 Status: Authoritative Invariant Rule  
-Date: 2026-11-09
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -187,15 +195,15 @@ To maintain predictability, prevent hanging automated runners, and enforce docum
 ## 2. Normative Elevation Rules
 
 ### `RULE-ELEV-001` (Mandatory Elevation Metadata)
-Every repository governed under LCM `MUST` declare an explicit `execution_context` block inside its `LCM_Inventory/config.json`:
+Repository-level elevation requirements are declared authoritatively via an `Elevation: Administrator` or `Elevation: User` line in the target repository's root `AGENTS.md` (or top-level manifest; absent defaults to `User`). The automated audit pipeline (`Invoke-LCM_Audit.ps1` / `Create-LCM_Baseline.ps1`) aggregates these declarations into `LCM_Inventory/data/inventory.json` (`ElevationRequired: true|false`). Tool-level elevation requirements are tracked authoritatively in the `tools.admin` column of `data/tools/tools.db` (`config/tool_catalog.json` serves strictly as a transitional fallback):
 ```json
-"execution_context": {
-  "elevation_required": true,
-  "minimum_privilege": "Administrator",
-  "reason": "Requires low-level access to bcdedit, fltmc volumes, and storage IOCTLs"
+{
+  "ElevationRequired": true,
+  "MinimumPrivilege": "Administrator",
+  "ElevationReason": "Requires low-level access to bcdedit, fltmc volumes, and storage IOCTLs"
 }
 ```
-* If the repository does not require elevation, `elevation_required` `MUST` be set to `false`, `minimum_privilege` to `"User"`, and `reason` to `"Standard user execution"`.
+* If the repository does not require elevation, `ElevationRequired` `MUST` be `false`, `MinimumPrivilege` `"User"`, and `ElevationReason` `"Standard user execution"`.
 
 ### `RULE-ELEV-002` (Guarded Self-Elevation in Source Code)
 Any script within `src/` or `Source/` that implements interactive self-elevation (`Start-Process pwsh -Verb RunAs`) `MUST` guard the elevation call with non-interactive detection:
@@ -204,11 +212,11 @@ Any script within `src/` or `Source/` that implements interactive self-elevation
 3. `MUST NOT` block headless CI/CD agents, IDE test adapters, or background runners on modal GUI UAC prompts.
 
 ### `RULE-ELEV-003` (Privileged Code Declaration & Anti-Drift)
-Any code in `src/` or `Source/` utilizing privileged Windows commands (`bcdedit`, `fltmc`, `fsutil`, `Get-Partition`, `DiskPart`, `Add-BitLockerKeyProtector`, or `Verb RunAs`) `MUST` have `elevation_required: true` declared in `LCM_Inventory/config.json`.
-* The quality gate `Assert-RepoElevationConsistency` `MUST` fail if undeclared privileged code is detected in a repository configured with `elevation_required: false`.
+Any code in `src/` or `Source/` utilizing privileged Windows commands (`bcdedit`, `fltmc`, `fsutil`, `Get-Partition`, `DiskPart`, `Add-BitLockerKeyProtector`, or `Verb RunAs`) `MUST` have `Elevation: Administrator` declared in its `AGENTS.md` (reflected in `inventory.json` as `ElevationRequired: true`, and in `data/tools/tools.db` as `tools.admin: 1` for individual tools).
+* The quality gate `Assert-RepoElevationConsistency` validates source code against `AGENTS.md` and `MUST` fail if undeclared privileged code is detected in a repository lacking this declaration.
 
 ### `RULE-ELEV-004` (Automated Elevated Test Runner)
-Every repository with `elevation_required: true` `MUST` provide a standardized elevated test runner (`tools/Invoke-ElevatedTest.ps1`):
+Every repository with `ElevationRequired: true` in `LCM_Inventory/data/inventory.json` `MUST` provide a standardized elevated test runner (`tools/Invoke-ElevatedTest.ps1`):
 1. Automatically executes Pester tests in-process when the current session is already elevated.
 2. When called from a standard user session, dispatches an elevated worker process (`Start-Process -Verb RunAs`), captures the test run, and writes structured JSON test evidence (`out/test_results.json`).
 3. Quality gates `MUST` certify test passage based on the generated test evidence.
@@ -227,21 +235,21 @@ When an interactive script or launcher delegates execution to an elevated consol
    - The elevated worker `MUST` output a clear completion notice upon finishing indicating that the window has been intentionally kept open for operator inspection.
 
 ### `RULE-ELEV-006` (Automated Privilege-Aware Tool Execution & Elevation Interception)
-Ensure that any tool, script, or shorthand command requiring administrative privileges is never executed directly within a standard un-elevated user context. Instead, enforce automatic discovery and routing through the standardized CLI interceptor (`LCM_Inventory/tools/Invoke-PrivilegedTool.ps1`), the `do` Unified Tool Gateway (`LCM_Inventory/DoT/do.cmd <command> [-elevated] [-sync]` / `do.exe`), or the background desktop daemon (`http://127.0.0.1:9876/execute`).
+Ensure that any tool, script, or shorthand command requiring administrative privileges is never executed directly within a standard un-elevated user context. Instead, enforce automatic discovery and routing through the `do` Unified Tool Gateway (`LCM_Inventory\DoT\do.exe "<command>" [-elevated] [-sync]` or trampoline `do.cmd`), communicating with the background desktop daemon (`http://127.0.0.1:9876/execute`). Legacy runners (`Invoke-PrivilegedTool.ps1`, `Invoke-InteractiveDesktop.ps1`) are permanently retired.
 
 Before executing any tool, script, or shorthand command, the AI agent or CLI launcher `MUST` perform the following validation sequence:
 1. **Catalog & Schema Lookup**:
-   - Query the authoritative tool catalog (`LCM_Inventory/config/tool_catalog.json` / `WorkspaceInventory`) to resolve the target tool's metadata record.
-   - Inspect whether the execution profile defines `"Admin": true` (or equivalent elevation requirement flag).
+   - Query the authoritative tool catalog (`LCM_Inventory/data/tools/tools.db`, via discovery tools such as `Show-ToolIntents.ps1`; `config/tool_catalog.json` serves strictly as a transitional fallback) to resolve the target tool's metadata record.
+   - Inspect whether the execution profile defines `"tools.admin": 1` (or `"Admin": true`).
 2. **Context & Privilege Verification**:
    - Check whether the current runtime shell session holds elevated administrative rights (e.g. `([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)`).
 3. **Execution Routing & Interception**:
-   - **Standard Execution**: If the tool does **not** require admin rights (`"Admin": false` or unset), execute it directly in the current session.
-   - **Elevated Interception & DO Gateway**: If `"Admin": true` and the current session is running under a standard un-elevated user context (or within an agent background shell), **do not** execute raw `pwsh` or `Start-Process -Verb RunAs` directly, as this causes silent non-interactive UAC deadlocks. Dispatched calls `MUST` route via the `do` Unified Tool Gateway or privileged interceptor:
+   - **Standard Execution**: If the tool does **not** require admin rights (`tools.admin == 0` or unset), execute it directly in the current session.
+   - **Elevated Interception & DO Gateway**: If `tools.admin == 1` and the current session is running under a standard un-elevated user context (or within an agent background shell), **do not** execute raw `pwsh` or `Start-Process -Verb RunAs` directly, as this causes silent non-interactive UAC deadlocks. Dispatched calls `MUST` route via the `do` Unified Tool Gateway:
      ```cmd
-     LCM_Inventory\DoT\do.cmd "<command>" -elevated -sync
+     LCM_Inventory\DoT\do.exe "<command>" -elevated -sync
      ```
-   - **Automated Dispatch Pipeline**: `do.exe`, `Invoke-PrivilegedTool.ps1`, and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to `Invoke-InteractiveDesktop.ps1 -Elevated` if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
+   - **Automated Dispatch Pipeline**: `do.exe` and generated `.cmd` trampolines inspect the Session 1 Desktop Daemon on port 9876 and dispatch via `POST /execute` (`{ "command": "...", "elevated": true, "noExit": true }`), falling back to direct elevated process dispatch if the daemon is offline. Console windows launched via elevation `MUST` include `-NoExit` / `/k` per `RULE-ELEV-005`.
 
 ---
 
@@ -259,20 +267,24 @@ Whenever a tool, orchestrator, or workflow script (caller) invokes, relies upon,
 
 # File: LanguagePolicy.md
 
-Module: LanguagePolicy
-Purpose: Authoritative rule enforcing English language usage across all workspace documentation, file names, and code.
-Path: .agents/rules/LanguagePolicy.md
-Authors: Rolf
-Version: 10.2.0
-Changelog:
-- 2026-10-13: Initial persistent rule for English language invariant across all documentation, file names, code, and comments.
+Module: LanguagePolicy  
+Purpose: Authoritative rule enforcing English language usage across all workspace documentation, file names, and code.  
+Path: .agents/rules/LanguagePolicy.md  
+Authors: Rolf, LCM_AI Governance  
+Version: 10.3.0  
+Status: Authoritative Invariant Rule  
+Date: 2026-11-14 21:40:00  
 
-LANGUAGE-POLICY-RULES
-- english-always: Use English language always for all documentation, file names, code, comments, change proposals, and commit messages.
-- foreign-language-exception: Non-English languages are permitted only when explicitly working on targeted foreign language localization or translation tasks.
-- english-filenames: All file and directory names must use English, ASCII-only naming.
-- documentation-language: All markdown (.md) documents, headers, and specifications must be written in English.
-- code-comments: All source code comments and docstrings must be written in English.
+---
+
+## 1. Core Language Rules
+
+### LANGUAGE-POLICY-RULES
+- **english-always** (`RULE-LANG-001`): Use English language always for all documentation, file names, code, comments, change proposals, and commit messages.
+- **foreign-language-exception** (`RULE-LANG-002`): Non-English languages are permitted only when explicitly working on targeted foreign language localization or translation tasks.
+- **english-filenames** (`RULE-LANG-003`): All file and directory names must use English, ASCII-only naming.
+- **documentation-language** (`RULE-LANG-004`): All markdown (`.md`) documents, headers, and specifications must be written in English.
+- **code-comments** (`RULE-LANG-005`): All source code comments and docstrings must be written in English.
 
 ---
 
@@ -288,7 +300,7 @@ Path: .agents/rules/RepositoryContextPolicy.md
 Authors: Rolf, LCM_AI  
 Version: 10.3.0
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 22:00:00
 
 ---
 
@@ -302,9 +314,9 @@ At the start of every interaction or when switching focus, the agent `MUST` auto
 
 ### `RULE-CTX-002` (Fast-Tier Repository Context Priming)
 When active work begins on a specific repository (e.g. `VolumeInventory`, `BootEntryManager`, `HaSSD06`, `BackgroundModifier`), the agent `MUST` prime its working context in a single targeted tier by reading:
-1. `LCM_Inventory/config.json` and `LCM_Inventory/data/inventory.json` (for target repository elevation requirements, governance version, and classification).
+1. `LCM_Inventory/data/inventory.json` and canonical governance rules (common governance resides in `.agents/rules/` and subsystem specifics in repo `docs/`; repository elevation requirements, governance version, and classification are audited in `inventory.json`).
 2. `<TargetRepo>/README.md` (for module purpose, exported functions/atoms, and prerequisites).
-3. Any open Change Requests / proposals in `<TargetRepo>/docs/Proposals/` (or active task files).
+3. Any open Change Requests / proposals in `LCM_Inventory/docs/Proposals/` (or active proposal bundle per `RULE-SUB-008`).
 
 > [!NOTE]
 > **Repository Onboarding Status:**  
@@ -321,19 +333,21 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 
 ### `RULE-CTX-005` (Learned Advice)
 1. **Binding Status**: At the start of a session the agent `MUST` read `.agents/ACTIVE_CONTEXT.md` and `.agents/LEARNED_ADVICE.md`. Entries under **Accepted** are binding; entries under **Candidates** are guidance only.
-2. **Top-Insertion Ordering**: New learned advice entries and candidates `MUST` always be added at the top of the relevant section (newest first).
-3. **Non-Removal Invariant**: Unless an advice entry was actively corrected via a formal proposal (`requires crp-nnn`) and properly set into function as an enforceable rule, quality gate, or reliable contract, it `MUST NOT` be removed. Removal can happen in the middle of a section only when accompanied by explicit CRP citation.
-4. **AI Observance & Non-Ignorance Invariant**: The insights in `LEARNED_ADVICE.md` `MUST` be actively taken up and followed by the AI. If an entry is ever ignored for a specific action, the AI `MUST` provide an explicit comment stating that it is being ignored and explaining why.
-5. **Intake Flow**: When the operator writes `/learn <text>` the agent `MUST` add the text as a candidate (`Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI name>`), without changing anything else. An agent `MAY` also propose a candidate on its own when it learns something durable; it `MUST` tell the operator.
-6. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
-7. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
+2. **Multi-Host Authorship & Contribution**: All sanctioned AI hosts (Antigravity, Claude Code) `MAY` and `SHOULD` contribute durable insights. Authorship follows the workspace standard: the operator is always named first (`Authors: Rolf, <AI-Host>`); an AI host adds its identifier (ahead of another AI host) only if it creates or modifies the candidate.
+3. **Top-Insertion Ordering**: New learned advice entries and candidates `MUST` always be added at the top of the relevant section (newest first).
+4. **Non-Removal Invariant**: Unless an advice entry was actively corrected via a formal proposal (`requires crp-nnn`) and properly set into function as an enforceable rule, quality gate, or reliable contract, it `MUST NOT` be removed. Removal can happen in the middle of a section only when accompanied by explicit CRP citation.
+5. **AI Observance & Non-Ignorance Invariant**: The insights in `LEARNED_ADVICE.md` `MUST` be actively taken up and followed by the AI. If an entry is ever ignored for a specific action, the AI `MUST` provide an explicit comment stating that it is being ignored and explaining why.
+6. **Intake Flow**: When the operator writes `/learn <text>` the agent `MUST` add the text as a candidate (`Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI name>`), without changing anything else. An agent `MAY` also propose a candidate on its own when it learns something durable; it `MUST` tell the operator.
+7. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
+8. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
 
 ### `RULE-CTX-006` (GoodMorning Session Start — Operator Exclusivity)
 1. **Operator Exclusivity**: `Invoke-LCM_GoodMorning.ps1` is an operator-executed command and `MUST NEVER` be launched automatically by an AI assistant as an envelope to obtain a baseline or perform multi-repo research.
-2. **AI Read-Only Resumption Protocol**: At session start, the AI assistant's role is strictly read-only:
+2. **Multi-Host Attention Aggregation**: `Invoke-LCM_GoodMorning.ps1` aggregates session status, time gaps, repository drift, and pending attention items across all registered AI hosts (Antigravity, Claude Code) into a unified report.
+3. **AI Read-Only Resumption Protocol**: At session start, the AI assistant's role is strictly read-only:
    - Read `.agents/ACTIVE_SESSION.md`, `.agents/ACTIVE_CONTEXT.md`, and `.agents/LEARNED_ADVICE.md`.
    - Adhere to the Session Quiescence and GoodMorning Resumption Response Protocol per `RULE-LCM-030`.
-   - State that active context and binding learned advice have been verified, identify any stated attention items or stale entries, and await explicit operator direction.
+   - State that active context and binding learned advice have been verified, identify any stated attention items or stale entries across all registered hosts, and await explicit operator direction.
 
 ---
 
@@ -349,7 +363,7 @@ Path: .agents/rules/ProposalReviewFlowPolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:05:00
+Date: 2026-11-14 22:00:00
 
 ---
 
@@ -358,7 +372,7 @@ Date: 2026-11-14 14:05:00
 ### RULE-LCM-001: Proposal-First Intent Invariant
 When working in LCM mode (`active`), all user ideas, questions, and exploratory discussions `MUST` be treated as **Proposals only** (State = `suggested`).
 - The AI agent `MUST NOT` execute file modifications, code rewrites, or commits immediately upon receiving an initial idea or question.
-- When discussion yields a conclusive path of action, register the Change Request / Proposal with State `suggested` in `LCM_Inventory\data\proposals\proposals.json`.
+- When discussion yields a conclusive path of action, register the Change Request / Proposal with State `suggested` in the authoritative proposals ledger (`LCM_Inventory\data\proposals\proposals.db`) via governed tools (`Update-Proposal.ps1`, `Invoke-ProposalAction.ps1`, `Sync-LcmProposalsDb.ps1`; `proposals.json` serves strictly as a transitional fallback).
 - Every structural proposal or BUG MUST include the Gate 0 Contract required by `RULE-GOAL-002` before it crosses the planning boundary. A reported symptom supplies intake evidence; it does not replace target-state definition.
 
 ### RULE-LCM-002: Batch Execution, Control Commands & Flow Switch Activation
@@ -459,30 +473,30 @@ evidence remain immutable.
    the review identity matches that CRP revision.
 
 Proposals transition through the defined lifecycle via deterministic operator commands:
-- **`Proceed` / `Proceed <ID>`**: **Single-step status increment**. Deterministically advances matching proposal(s) forward by exactly one discrete Sync Point along the flat lifecycle continuum (`Suggested` $\rightarrow$ `Scoped` $\rightarrow$ `Decided` $\rightarrow$ `In_Progress` $\rightarrow$ `Verified` $\rightarrow$ `Committed` $\rightarrow$ `Published`).
-- **`do <all, #n, #n-#m> Proposals`**: **Sets flow switches!** Specifically activates the **`-DOIT` switch** (`always-proceed = $true`), bypassing Gate 1 planning pauses and executing continuously through `In_Progress` and verification until the downstream Review Decision checkpoint (Gate 2) is reached per `RULE-EFF-004`.
-- **`hold <all, #n, #n-#m> Proposals`**: Sets the **`HELD` disposition** with a mandatory reason, suspending active work at its current Sync Point. Pauses all active flow switches. (Supersedes legacy `defer`).
-- **`resume <all, #n, #n-#m> Proposals`**: **Reactivation action** that clears the `HELD` disposition and restores the proposal to active flow at its suspended Sync Point. Resume is an operator action, NOT a milestone or status.
-- **`COMPLETE` / `COMPLETE ALL`**: Records a completed visual review, creates local commits, and advances the reviewed proposal to `Committed`. It never pushes to a remote.
-- **`PUBLISH`**: Publishes only a preflighted cohort of `Committed` proposals and `LCM_Inventory` to their remotes in lockstep (`Committed` $\rightarrow$ `Published`). `PUSH` remains a backward-compatible command alias. Suggested, scoped, in-progress, and uncommitted items are strictly excluded.
-- **`cancel <all, #n, #n-#m>`**: **Administrative ticket withdrawal at Gate 1**. Indicates the proposal is dropped, infeasible, or superseded during intake, scoping, or planning ratification. Zero working-tree modifications, zero code reverts, and zero rule modifications occur. The proposal transitions to terminal disposition `Cancelled` and all active flow switches are unconditionally turned **OFF**.
-- **`reject <all, #n, #n-#m>`**: **Implementation rejection at Gate 2**. Indicates the physical implementation or review failed visual inspection, automated verification, or operator acceptance during the `Verified` review checkpoint. Actively rolls back and undoes working-tree modifications introduced by the proposal (for batches/cohorts, reverts all proposals in the cohort back to the clean pre-CRP baseline). The proposal transitions to terminal disposition `Rejected` and all active flow switches are unconditionally turned **OFF**.
+- **`Proceed` / `Proceed <ID>`**: **Single-step status increment**. Deterministically advances matching proposal(s) forward by exactly one discrete state along the flat lifecycle continuum (`suggested` $\rightarrow$ `in_progress` $\rightarrow$ `verified` $\rightarrow$ `in_review` $\rightarrow$ `completed` $\rightarrow$ `pushed`).
+- **`do <all, #n, #n-#m> Proposals`**: **Sets flow switches!** Specifically activates the **`-DOIT` switch** (`always-proceed = $true`), bypassing Gate 1 planning pauses and executing continuously through `in_progress` and verification until the downstream Review Decision checkpoint (Gate 2) is reached per `RULE-EFF-004`.
+- **`hold <all, #n, #n-#m> Proposals`**: Sets the **`held` disposition** with a mandatory reason, suspending active work at its current state. Pauses all active flow switches. (Supersedes legacy `defer`).
+- **`continue <all, #n, #n-#m> Proposals`**: **Reactivation action** that clears the `held` disposition and restores the proposal to active flow at its suspended state (`resume` remains supported as an alias). Continue is an operator action, NOT a milestone or status.
+- **`COMPLETE` / `COMPLETE ALL`**: Records a completed visual review, creates local commits, and advances the reviewed proposal to `completed`. It never pushes to a remote.
+- **`PUBLISH`**: Publishes only a preflighted cohort of `completed` proposals and `LCM_Inventory` to their remotes in lockstep (`completed` $\rightarrow$ `pushed`). `PUSH` remains a backward-compatible command alias. Suggested, in-progress, verified, and uncommitted items are strictly excluded.
+- **`withdraw <all, #n, #n-#m>`**: **Administrative ticket withdrawal at Gate 1**. Indicates the proposal is dropped, infeasible, or superseded during intake, scoping, or planning ratification. Zero working-tree modifications, zero code reverts, and zero rule modifications occur. The proposal transitions to terminal disposition `withdrawn` (`cancelled` supported as legacy alias) and all active flow switches are unconditionally turned **OFF**.
+- **`reject <all, #n, #n-#m>`**: **Implementation rejection at Gate 2**. Indicates the physical implementation or review failed visual inspection, automated verification, or operator acceptance during the `verified` / `in_review` checkpoint. Actively rolls back and undoes working-tree modifications introduced by the proposal (for batches/cohorts, reverts all proposals in the cohort back to the clean pre-CRP baseline). The proposal transitions to terminal disposition `rejected` and all active flow switches are unconditionally turned **OFF**.
 - **`give open Proposals`**: Returns numbered list of active proposals (`#n`).
 - **`give repos under review`**: Displays repositories with uncommitted changes, their BC5 review status, and commit readiness.
 
 ### RULE-LCM-003: Review Granularity Controls
 The review frequency is governed by `review_granularity` in `LCM_Inventory`:
-- **`coarse` (Default)**: Executes all proposals in the batch, runs automated quality gates, then presents a **single BC5 review stop** for the combined changes across the repository before commit.
-- **`tight`**: Implements each proposal incrementally with intermediate test runs and a **dedicated BC5 review stop per proposal**.
+- **`tight` (Default)**: Implements each proposal incrementally with intermediate test runs and a **dedicated BC5 review stop per proposal**. In accordance with `RULE-DEC-005.4`, remote pushes unconditionally reset review granularity to `tight`.
+- **`coarse`**: Executes all proposals in the batch, runs automated quality gates, then presents a **single BC5 review stop** for the combined changes across the repository before commit.
 - **Idempotent Single-Window Review Invariant**: A review stop `MUST NOT` open a duplicate window or redundant tab if the comparison or proposal is already open or currently being reviewed. In Beyond Compare 5, re-invoking review for an open comparison must simply refresh the existing session/tab in place and bring it to focus; opening two windows for the same comparison is strictly prohibited.
 - Can be set via `set review granularity <coarse|tight>` or inline `do #1-#3 Proposals --tight`.
 
 ### RULE-LCM-004: Visual Diff Review & Exemption Scope
-- **Governed Repositories & Root Container**: Every governed repository and the Root Container (`D:\Git_Repositories`) `MUST` undergo visual diff review via `Invoke-BeyondCompareReview.ps1 <RepoName>` before commit, subject to authorized exceptions in `RULE-REV-001`.
+- **Governed Repositories & Root Container**: Every governed repository and the Root Container (`D:\Git_Repositories`) `MUST` undergo visual diff review via `BCR.cmd` / `Invoke-MacriumBcrReview.ps1` before commit, subject to authorized exceptions in `RULE-REV-001`.
 - **Single-Session Junction Review**: In accordance with `RULE-REV-008`, dual-session review is retired. Beyond Compare traverses NTFS directory junctions inline within a single review session via `<FollowSymLinks Value="True"/>`, ensuring changes across source code and junction-backed governance rules remain inspectable in one unified comparison.
 - **Privileged Subsystem Data Exemption vs. Tool Scrutiny**:
   - **Dynamic Configuration & Ledger Data Exemption (`RULE-EFF-001`)**: Ledger data, review staging receipts, baseline manifests, telemetry logs, generated artifacts, routine test output, and scratch generation outputs located in `LCM_Inventory` (`data/`, `logs/`, `scratch/`) are auto-accepted mechanical evidence and exempt from visual diff review stops. An operator may request an unfiltered BCR peek at exempt paths; resulting advice is non-blocking.
-  - **Executable Tools & Documentation Scrutiny**: All permanent scripts, PowerShell modules, test suites, and architectural documentation located in `LCM_Inventory` (`tools/`, `modules/`, `docs/`, `tests/`, `Cmd/`) are first-class governed LCM software assets and `MUST` undergo visual diff review via `Invoke-BeyondCompareReview.ps1 LCM_Inventory` prior to commit.
+  - **Executable Tools & Documentation Scrutiny**: All permanent scripts, PowerShell modules, test suites, and architectural documentation located in `LCM_Inventory` (`tools/`, `modules/`, `docs/`, `tests/`, `Cmd/`) are first-class governed LCM software assets and `MUST` undergo visual diff review via `BCR.cmd` / `Invoke-MacriumBcrReview.ps1` prior to commit.
 
 ### RULE-LCM-005: Dual-Commit and Push Synchronization Invariant
 1. Whenever code changes in a target repository are accepted and committed, `LCM_Inventory` `MUST ALWAYS` be updated (updating proposal state to `completed`, recording review evidence) and **committed immediately**.
@@ -505,27 +519,27 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 ### RULE-LCM-007: Flat Lifecycle Continuum, Sync Points, Dispositions & CM Plan Archive Invariant
 1. **Single-Dimensional "Flat" Status Continuum**:
    - Status is strictly single-dimensional. Multi-dimensional status architectures (such as conflicting `progress_state` vs `state` where internal state stalled on `approved` while physical progress moved secretly) are prohibited.
-   - External status binds the internal state directly at **7 canonical Sync Points (Milestones)**. When identical, the single canonical name `MUST` be used across all rules, tools, and UI displays:
-     `Suggested` $\rightarrow$ `Scoped` $\rightarrow$ `Decided` $\rightarrow$ `In_Progress` $\rightarrow$ `Verified` $\rightarrow$ `Committed` $\rightarrow$ `Published`.
-2. **Canonical Sync Points (Milestones)**:
-   - **`Suggested` (0)**: Initial proposal registration / intake. Proposal bundle scaffolded in `docs/Proposals/`; Gate 1 planning pause.
-   - **`Scoped` (1)**: Proposal bound to target repository, primary app (`App: #`), and constituent manifest.
-   - **`Decided` (2)**: Architecture, requirements, and plan ratified (`Approved` disposition); Gate 1 passed.
-   - **`In_Progress` (3)**: Active implementation underway; continuous code modifications and unit tests executing.
-   - **`Verified` (4)**: Implementation complete; minimal / automated tests passed; Gate 2 visual diff review stop dispatched.
-   - **`Committed` (5)**: Gate 2 visual review accepted (`Approved` disposition); review receipt filed in `reviews/`; local Git commit created.
-   - **`Published` (6)**: Walkthrough archived in CM; lockstep preflight verified; remotes synchronized (`Published` preferred over `Pushed`).
+   - External status binds the internal state directly to the authoritative flat lifecycle states:
+     `suggested` $\rightarrow$ `in_progress` $\rightarrow$ `verified` $\rightarrow$ `in_review` $\rightarrow$ `completed` $\rightarrow$ `pushed` (with exceptional and terminal states `held`, `withdrawn`, `rejected`, `superseded`).
+   - The 7 legacy Sync Points (`Suggested` $\rightarrow$ `Scoped` $\rightarrow$ `Decided` $\rightarrow$ `In_Progress` $\rightarrow$ `Verified` $\rightarrow$ `Committed` $\rightarrow$ `Published`) are retained strictly as a historical lineage mapping.
+2. **Authoritative Flat Lifecycle States**:
+   - **`suggested`**: Initial proposal registration / intake. Proposal bundle scaffolded in `docs/Proposals/`; Gate 1 planning pause.
+   - **`in_progress`**: Active implementation underway; continuous code modifications and unit tests executing.
+   - **`verified`**: Implementation complete; minimal / automated tests passed; Gate 2 visual diff review stop ready.
+   - **`in_review`**: Gate 2 visual diff review stop dispatched via BCR; awaiting operator review inspection.
+   - **`completed`**: Gate 2 visual review accepted; review receipt filed in `reviews/`; local Git commit created.
+   - **`pushed`**: Walkthrough archived in CM; lockstep preflight verified; remotes synchronized (`pushed` / `published`).
 3. **Dispositions vs. Status**:
    Dispositions and Plan State are not part of any CM-flow rule as separate dimensions, but are conditions or markers resulting from status and actions:
    - **`BUG`**: A disposition (not a substitute term for CRP). When assigned to a proposal, it sets flow switches to force flow exceptions—specifically activating the **`-DOIT` switch** (`always-proceed = $true`), bypassing Gate 1 planning pauses, while halting at Gate 2 visual review (`RULE-LCM-008`).
-   - **`HELD`**: An exceptional disposition suspending a proposal at its current Sync Point. There is NO `defer` action or status anymore—it is simply `HELD`. When `HELD`, active flow switches are paused. Cleared by the `resume` action.
-   - **`Approved`**: A disposition recorded at sync points (specifically at `Decided` for Gate 1 plan approval, and `Committed` for Gate 2 review acceptance).
-   - **`Completed`**: Disposition indicating completed review and commit prior to or at `Published`.
-   - **`Cancelled`**: Terminal administrative disposition at Gate 1 indicating ticket withdrawal (proposal dropped, infeasible, or superseded during intake, scoping, or planning ratification). Involves **zero code reverts**, zero working-tree modifications, and zero rule modifications. Reaching `Cancelled` unconditionally turns **OFF** all active flow switches.
-   - **`Rejected`**: Terminal implementation disposition at Gate 2 indicating rejection of physical modifications during visual diff review (`Verified` checkpoint). Actively triggers **rollback and removal of uncommitted working-tree modifications** introduced by the proposal back to the clean pre-CRP baseline (or full cohort rollback for batches). Reaching `Rejected` unconditionally turns **OFF** all active flow switches.
+   - **`held`**: An exceptional disposition suspending a proposal at its current state. There is NO `defer` action or status anymore—it is simply `held`. When `held`, active flow switches are paused. Cleared by the `continue` action (with `resume` as alias).
+   - **`approved`**: A disposition recorded at milestones (specifically at Gate 1 plan approval, and Gate 2 review acceptance).
+   - **`completed`**: Disposition indicating completed review and commit prior to or at `pushed`.
+   - **`withdrawn`**: Terminal administrative disposition at Gate 1 indicating ticket withdrawal (proposal dropped, infeasible, or superseded during intake, scoping, or planning ratification). Involves **zero code reverts**, zero working-tree modifications, and zero rule modifications. Reaching `withdrawn` unconditionally turns **OFF** all active flow switches (`cancelled` supported as legacy alias).
+   - **`rejected`**: Terminal implementation disposition at Gate 2 indicating rejection of physical modifications during visual diff review (`verified` / `in_review` checkpoint). Actively triggers **rollback and removal of uncommitted working-tree modifications** introduced by the proposal back to the clean pre-CRP baseline (or full cohort rollback for batches). Reaching `rejected` unconditionally turns **OFF** all active flow switches.
 4. **Governed Flow Switches**:
-   Flow switches modify execution behavior and velocity across sync points:
-   - **`-DOIT`** (`always-proceed = $true`): Activated by `do` command or `BUG` disposition. Bypasses Gate 1 planning pause and executes continuously through `In_Progress` to `Verified`.
+   Flow switches modify execution behavior and velocity across lifecycle states:
+   - **`-DOIT`** (`always-proceed = $true`): Activated by `do` command or `BUG` disposition. Bypasses Gate 1 planning pause and executes continuously through `in_progress` to `verified`.
    - **`-Force`**: Authorizes only the Gate 2 visual-review exception under strict emergency criteria (`RULE-REV-001`).
    - **`-Immediately`**: A distinct, temporary quality-check deferral for an exact recovery cohort containing at least one `BUG-<id>`. It requires an operator-recorded reason describing a severity condition, repair deadlock, loop, race condition, or inability to self-remedy. It does not waive exact identity or Gate 2 review, and ends at the BCR/Gate 2 handoff.
    - **`-MinimalTests`**: Single-cycle execution switch restricting test DAG to fast regression checks (`RULE-LCM-023`).
@@ -534,26 +548,26 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - **`Testing OFF`**: Deferred deep testing switch suppressing heavy cascades during interactive development (`RULE-LCM-006`).
    - **`ADMINMODE`**: A per-tool design criterion recording whether a tool requires elevation. Setting a tool's Admin value off during redesign marks elevation as no longer required but does not remove any existing auto-elevation code; the redesign must remove obsolete elevation behavior and validate the result. It does not alter lifecycle transitions, testing obligations, review requirements, or rule-change authorization checks.
 5. **Mandatory CM Plan & Walkthrough Archival**:
-   - All Markdown implementation plans and execution walkthroughs `MUST` be persistently archived in the governed CM repository under:
-     - `LCM_Inventory/data/proposals/plans/Proposal-{ID:03d}_{CR_ID}_Plan.md`
-     - `LCM_Inventory/data/proposals/plans/Proposal-{ID:03d}_{CR_ID}_Walkthrough.md`
-   - Explicit relative links `plan_path` and `walkthrough_path` `MUST` be recorded in `proposals.json`.
+   - All Markdown implementation plans and execution walkthroughs `MUST` be persistently archived in the proposal bundle directory under:
+     - `LCM_Inventory/docs/Proposals/CRP-{ID:03d}-[Slug]/Implementation_Plan.md`
+     - `LCM_Inventory/docs/Proposals/CRP-{ID:03d}-[Slug]/Walkthrough.md`
+   - Explicit relative links `plan_path` and `walkthrough_path` `MUST` be recorded in the authoritative proposal ledger (`proposals.db`; transitional fallback `proposals.json`).
 6. **Authoritative Flat Lifecycle Matrix & State Diagram**:
 
    #### A. Canonical Flat Lifecycle Matrix
 
-   | Sync Point (Milestone) | Canonical Status Name | Operator Action | Dispositions at Sync Point | Active Flow Switches | CM Side Effect & Invariant |
-   |:---|:---|:---|:---|:---|:---|
-   | **0. Suggested** | `Suggested` | `suggest` | `BUG` (sets `-DOIT`) | Default | Bundle scaffolded in `docs/Proposals/`; Gate 1 pause. |
-   | **1. Scoped** | `Scoped` | `scope` | — | Default | Bound to origin repo, primary app (`App: #`), and constituent manifest. |
-   | **2. Decided** | `Decided` | `approve` / `Proceed` | `Approved` | Default | Gate 1 passed; architecture and plan ratified. |
-   | **3. In_Progress** | `In_Progress` | `start` / `do` (sets `-DOIT`) | — | `-DOIT` (if `do`/`BUG`) | Active code modification; unit tests executing. |
-   | **4. Verified** | `Verified` | `verify` / `bcr` | — | `-MinimalTests` (optional) | Implementation complete; tests pass; Gate 2 BC5 review dispatched. |
-   | **5. Committed** | `Committed` | `reviewed` / `commit` / `COMPLETE` | `Approved`, `Completed` | `-Force` (if authorized) | Review accepted; receipt in `reviews/`; local Git commit created. |
-   | **6. Published** | `Published` | `publish` / `push` | `Completed` | Auto-Reset (`ON`) | Walkthrough archived; lockstep preflight passed; remotes pushed. |
-   | **[Condition] Held** | Current Sync Point | `hold` | `HELD` | Paused | Work suspended; reason recorded in CM ledger. Cleared by `resume`. |
-   | **[Terminal] Cancelled** | Discarded (Gate 1) | `cancel` | `Cancelled` | Turned OFF | Administrative withdrawal at Gate 1; zero working-tree modifications; zero code reverts. |
-   | **[Terminal] Rejected** | Discarded (Gate 2) | `reject` | `Rejected` | Turned OFF | Implementation rejection at Gate 2; working-tree modifications actively rolled back to pre-CRP baseline. |
+   | Canonical State | Operator Action | Dispositions at State | Active Flow Switches | CM Side Effect & Invariant |
+   |:---|:---|:---|:---|:---|
+   | **suggested** | `suggest` | `BUG` (sets `-DOIT`) | Default | Bundle scaffolded in `docs/Proposals/`; Gate 1 pause. |
+   | **in_progress** | `start` / `do` (sets `-DOIT`) | — | `-DOIT` (if `do`/`BUG`) | Active code modification; unit tests executing. |
+   | **verified** | `verify` / `bcr` | — | `-MinimalTests` (optional) | Implementation complete; tests pass; Gate 2 BC5 review ready. |
+   | **in_review** | `bcr` / review open | — | Default | Gate 2 BC5 review active in Beyond Compare; awaiting operator disposition. |
+   | **completed** | `reviewed` / `commit` / `COMPLETE` | `approved`, `completed` | `-Force` (if authorized) | Review accepted; receipt in `reviews/`; local Git commit created. |
+   | **pushed** | `publish` / `push` | `completed` | Auto-Reset (`ON`) | Walkthrough archived; lockstep preflight passed; remotes pushed. |
+   | **[Condition] held** | `hold` | `held` | Paused | Work suspended; reason recorded in CM ledger. Cleared by `continue` (`resume`). |
+   | **[Terminal] withdrawn** | `withdraw` (`cancel`) | `withdrawn` | Turned OFF | Administrative withdrawal at Gate 1; zero working-tree modifications; zero code reverts. |
+   | **[Terminal] rejected** | `reject` | `rejected` | Turned OFF | Implementation rejection at Gate 2; working-tree modifications actively rolled back to pre-CRP baseline. |
+   | **[Terminal] superseded** | `supersede` | `superseded` | Turned OFF | Replaced by a successor proposal; historical link preserved. |
 
    #### B. Canonical Flat Lifecycle State Diagram
 
@@ -606,8 +620,8 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 1. **Flow Exception via `BUG` Disposition**: When a proposal is assigned the `BUG` disposition (whether reported by the operator or self-discovered during test execution), it sets flow switches to force flow exceptions. Specifically, it automatically activates the **`-DOIT` switch** (`always-proceed = $true`).
    - The agent scaffolds the proposal bundle (`docs/Proposals/BUG-<nnn>-[Slug]/`) and immediately executes code modifications, script adjustments, and unit verification tests continuously without pausing for a Gate 1 planning approval.
 2. **Review Decision Non-Circumvention Baseline & Authorized Exceptions**:
-   - By default, even a critical or urgent proposal with disposition `BUG` halts at the Review Decision checkpoint (Gate 2) upon reaching Sync Point `Verified`.
-   - Once the fix is verified in the working tree and logged in `Walkthrough.md`, the agent dispatches the visual review session (`Invoke-BeyondCompareReview.ps1`) and awaits operator review disposition.
+   - By default, even a critical or urgent proposal with disposition `BUG` halts at the Review Decision checkpoint (Gate 2) upon reaching state `verified`.
+   - Once the fix is verified in the working tree and logged in `Walkthrough.md`, the agent dispatches the visual review session (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`) and awaits operator review disposition.
    - **Authorized Gating Exceptions (`RULE-REV-001`)**: Review gate confirmation may be bypassed only if:
      1. The user explicitly instructs (`IMMEDIATELY`, `FORCE`) to advance directly into implementation or commit.
      2. A critical system bug impedes the intended flow and leads to an unavoidable loop/recursion that the user cannot avoid or fix, bound strictly by the 2-attempt loop breaker (`RULE-LCM-017`).
@@ -618,14 +632,19 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    `docs/Proposals/CRP-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`.
    - `nnn`: Universal monotonic sequence integer zero-padded to at least 3 digits (e.g. `018`, `119`), matching the proposal ledger `id` 1:1.
    - `[Slug]`: Descriptive kebab-case intent description.
-2. **Mandatory Header Metadata**: Every CRP specification `MUST` include explicit metadata fields:
-   - `Target Scope`: Explicit repository or subsystem boundary.
-   - `Affected Version Range`: Semantic version or range.
-   - `Impacted Repositories`: Array of modified repositories.
+2. **Mandatory Header & YAML Metadata**: Every CRP specification `MUST` include standardized metadata matching `RULE-LCM-012.3`:
+   - `CRP-ID`: Sequential unique identifier (e.g. `CRP-331`).
+   - `Title`: Concise descriptive title.
+   - `Scope`: Target repository or subsystem boundary.
+   - `Version`: Target release baseline or affected version range.
+   - `Affected-Repos`: Array of modified repositories.
+   - `Status`: Current lifecycle state (`suggested`, `in_progress`, `verified`, `in_review`, `completed`, `pushed`, etc.).
+   - `Priority`: Integer priority (0–10).
+   - `App-ID`: Active App identifier when applicable (`App: #`).
 3. **Legacy Flat File Fallback**: Historical CRPs (e.g. `CRP-001` through `CRP-017`) authored as flat `.md` files remain valid and governed under `RULE-LCM-020` Mode 3 (Legacy Fallback).
 
 ### RULE-LCM-010: Mandatory Self-Discovered Bug Registration Invariant
-1. **Mandatory Self-Discovery Reporting**: Whenever the AI agent discovers a bug, syntax defect, unhandled runtime exception, parser failure, or regression in a permanent tool, platform script, shared module, or web UI during development, testing, or tool execution (including deferred deep testing failures per `RULE-LCM-006`), the AI agent `MUST` formally register a Bug Report in `LCM_Inventory/data/proposals/proposals.json` and scaffold the accompanying proposal bundle.
+1. **Mandatory Self-Discovery Reporting**: Whenever the AI agent discovers a bug, syntax defect, unhandled runtime exception, parser failure, or regression in a permanent tool, platform script, shared module, or web UI during development, testing, or tool execution (including deferred deep testing failures per `RULE-LCM-006`), the AI agent `MUST` formally register a Bug Report in `LCM_Inventory/data/proposals/proposals.db` (via governed tools; `proposals.json` serves as transitional fallback) and scaffold the accompanying proposal bundle.
 2. **Immediate Remediation in `DOIT` Mode**: The self-discovered bug transitions directly into `DOIT` mode to diagnose and resolve the failure, but remains bound by the Review Decision Non-Circumvention Invariant (`RULE-LCM-008`).
 3. **Prohibition of Silent In-Place Hotfixing**: The AI agent `MUST NOT` silently patch defects in permanent tools without registering a formal BUG entry in the Configuration Management ledger.
 
@@ -645,7 +664,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-012: Mandatory Scope-and-Version Explicit CRP Specification Generation Invariant
 1. **Mandatory Standalone Specification**: Whenever proposing, designing, or implementing new features, tools, workflows, architectural enhancements, or governance policies, the AI agent `MUST` author a formal, standalone Scope-and-Version Explicit Change Request Proposal specification (`Specification.md`) within its proposal bundle in `LCM_Inventory/docs/Proposals/` before or alongside ledger registration.
-2. **Prohibition of Orphan Feature Proposals**: Proposing or executing features or tool modifications without an authoritative, permanent proposal bundle in `LCM_Inventory/docs/Proposals/` is strictly prohibited. Every non-bug feature proposal in `proposals.json` `MUST` link to a valid `bundle_id` matching an existing CRP bundle.
+2. **Prohibition of Orphan Feature Proposals**: Proposing or executing features or tool modifications without an authoritative, permanent proposal bundle in `LCM_Inventory/docs/Proposals/` is strictly prohibited. Every non-bug feature proposal in `proposals.db` `MUST` link to a valid `bundle_id` matching an existing CRP bundle.
 3. **Silent Specification YAML Synthesis & Insertion Invariant**:
    - A missing `Specification.md` file or missing ` ```yaml ` frontmatter fence `MUST NOT` cause fatal transition failure during proposal lifecycle operations (`advance`, `do`, `verify`, `accept`).
    - Tooling (`ProposalSpecificationState.psm1`) `MUST` automatically scaffold the proposal bundle directory if absent, synthesize the standardized ` ```yaml ` frontmatter fence populated from authoritative proposal ledger metadata (`CRP-ID`, `Title`, `Scope`, `Status`, `Plan-State`, `Progress-State`, `Priority`, `App-ID`, etc.), and silently inject the block directly below the H1 heading.
@@ -659,7 +678,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-014: Dual-Gate Architecture & CRP Planning Gate Invariant
 1. **CRP Birth in SUGGESTED State**: For any non-bug Change Request Proposal (`CRP`), the proposal `MUST` birth in the **`SUGGESTED`** state under the Normal Review Cycle.
-2. **Gate 1 Planning Halt**: The AI agent `MUST` scaffold the Proposal Bundle directory, register the entry in `proposals.json`, present the plan, and `UNCONDITIONALLY HALT`. No source code, permanent script, configuration, or test file may be modified, created, or deleted while at Gate 1, unless explicitly instructed (`IMMEDIATELY`, `FORCE`) by the operator per `RULE-REV-001`.
+2. **Gate 1 Planning Halt**: The AI agent `MUST` scaffold the Proposal Bundle directory, register the entry in `proposals.db` (with transitional fallback `proposals.json`), present the plan, and `UNCONDITIONALLY HALT`. No source code, permanent script, configuration, or test file may be modified, created, or deleted while at Gate 1, unless explicitly instructed (`IMMEDIATELY`, `FORCE`) by the operator per `RULE-REV-001`.
 3. **Gate 1 Activation Triggers**:
    - **`Proceed`**: Advances state from `SUGGESTED` $\rightarrow$ `IN_PROGRESS` in the Normal Review Cycle (interactive checkpoints if open questions or design alternatives exist).
    - **`do` / `do <ID>`**: Advances state to `IN_PROGRESS` and activates **`DOIT` Mode** (`always-proceed = $true`), executing planned modifications continuously until the Review Decision checkpoint is reached per `RULE-EFF-004`.
@@ -677,8 +696,8 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 ### RULE-LCM-016: Deterministic Lifecycle Command Invariants
 1. **`Proceed` / `Proceed <ID>`**:
    - Deterministic single-status pulse: advances the target proposal forward by exactly **one discrete state**.
-   - Gate 1: `SUGGESTED` $\rightarrow$ `IN_PROGRESS`.
-   - Review Decision: `REVIEW` $\rightarrow$ `COMMITTED` (satisfies review, records audit disposition, increments SemVer, and commits to local Git).
+   - Gate 1: `suggested` $\rightarrow$ `in_progress`.
+   - Review Decision: `in_review` $\rightarrow$ `completed` (satisfies review, records audit disposition, increments SemVer, and commits to local Git).
 2. **`do <ID>` / `do <batch>`**:
    - Activates **`DOIT` Mode** (`always-proceed = $true`), running all planned tool operations continuously from Gate 1 to the Review Decision checkpoint.
 3. **`COMPLETE <CRP-ID|BUG-ID|repository|cohort>` / `COMPLETE ALL`**:
@@ -712,7 +731,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-019: Active App Context Inheritance & Automated Tripartite Synthesis on COMPLETE
 1. **Active Context Inheritance (`Workon:`)**:
-   - When an active App context is set via `Workon: A<#>` (e.g. `Workon: A1`), all subsequent Change Request Proposals (`crp: ...`), Bug Reports (`bug: ...`), and tasks generated during this focus `MUST` automatically inherit the active `app_id` (e.g. `"App: 1"`) in `proposals.json`.
+   - When an active App context is set via `Workon: A<#>` (e.g. `Workon: A1`), all subsequent Change Request Proposals (`crp: ...`), Bug Reports (`bug: ...`), and tasks generated during this focus `MUST` automatically inherit the active `app_id` (e.g. `"App: 1"`) in the proposals ledger (`proposals.db`; transitional fallback `proposals.json`).
    - When set to `Workon: Architecture` or cleared (`Workon: Base`), proposals are recorded with `app_id: $null` (foundational system scope).
 2. **Automated Tripartite Synthesis upon `COMPLETE`**:
    - The `COMPLETE <id>` command serves as the authoritative local lifecycle trigger that concludes an App increment.
@@ -737,7 +756,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - During proposal authoring, implementation planning, active coding, and review gating, the proposal bundle directory lives in the local repository working tree and is directly queryable by developers, CLI tools, and the CM Control Hub.
 3. **Post-Push Working Tree Purge Invariant**:
    - Upon `Invoke-LCM_Push.ps1` (or push workflow execution):
-     - The target repository head commit SHA `MUST` be captured and recorded in `proposals.json` (`commit_sha: "<SHA>"`).
+     - The target repository head commit SHA `MUST` be captured and recorded in the proposals ledger (`proposals.db`; transitional fallback `proposals.json`) (`commit_sha: "<SHA>"`).
      - The remote GitHub tree link `MUST` be generated and recorded (`github_url: "<URL>"`).
      - The completed local proposal bundle directory `MUST` be purged from the working tree, ensuring 0 dead or redundant proposal directories remain in the working tree.
 4. **Dual-Mode Document Retrieval Protocol (`Get-LcmProposalDocument`)**:
@@ -771,7 +790,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - Heavy test cascades (elevated integration suites, Session 0 harnesses, deep subsystem DAGs) are skipped during the single active proposal or declared batch execution.
    - Upon completion of the target item's readiness check, review submission, or turn conclusion, testing scope unconditionally auto-resets to standard full verification (`full`). Minimal testing `MUST NOT` persist as an ambient workspace state.
 2. **Authoritative State Field Representation**:
-   - When an item is verified and completed under `-MinimalTests`, its authoritative **`state`** (not status) attribute in `LCM_Inventory/data/proposals/proposals.json` `MUST` explicitly record `"state": "completed [minimal-tests]"`, with metadata attribute `"test_scope": "minimal"`.
+   - When an item is verified and completed under `-MinimalTests`, its authoritative **`state`** (not status) attribute in `LCM_Inventory/data/proposals/proposals.db` `MUST` explicitly record `"state": "completed"`, with metadata attribute `"test_scope": "minimal"` (`proposals.json` transitional fallback).
    - The CM Control Hub and status displays render this state with distinct indicator chips (`COMPLETED ⚠️ MINIMAL`) to provide transparent operator visibility into verification depth.
 3. **Audit Ledger & Review Evidence**:
    - Every activation of Minimal Tests `MUST` record an entry in `LCM_Inventory/logs/cm_activity.log` and capture `"test_scope": "minimal"` in the generated review receipt (`LCM_Inventory/data/reviews/review_*.json`).
@@ -779,8 +798,8 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 ---
 
 ### RULE-LCM-024: Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant
-1. **Pre-Handoff Verification Gate**: Before advancing any proposal to `Verified`, proposing Gate 2 visual review, or handing the turn back to the operator:
-   - The AI agent `MUST` validate every created or modified script, module, or configuration file using its language's native AST parser or compiler (`[System.Management.Automation.Language.Parser]::ParseInput()` for PowerShell, `python -m py_compile` for Python, `ConvertFrom-Json` for JSON). Zero syntax errors or parse warnings are tolerated.
+1. **Pre-Handoff Verification Gate**: Before advancing any proposal to `verified`, proposing Gate 2 visual review, or handing the turn back to the operator:
+   - The AI agent `MUST` validate every created or modified script, module, or configuration file using its language's native AST parser, compiler, or structural validator per the `mandatory-pre-handoff-syntax-gate` in `InvariantRules.md` (PowerShell `ParseInput`, Python `py_compile`, Go `go vet`/`go build`, JSON `ConvertFrom-Json`). Zero syntax errors or parse warnings are tolerated.
    - The AI agent `MUST` execute the relevant unit test suites (Pester, pytest, or readiness scripts).
 2. **Zero-Assumption Testing Invariant**:
    - The AI agent `MUST NOT` skip tests or assert that code is valid, ready, or functional based on visual inspection alone.
@@ -822,28 +841,43 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-028: Question Response & Anti-Overreaction Invariant
 1. **Inquiry vs. Instruction Distinction**: When the operator poses a question, it `MUST NOT` cause the AI to do anything except answer.
-2. **Prohibition of Implicit Action on Query**: An inquiry—whether exploratory, technical, critical, explanatory (e.g. *"X does not justify Y"*), or rhetorical—is an inquiry for explanation, alignment, or clarification. It `MUST NEVER` be treated as an implicit command to alter code, revert changes, delete files, abandon ongoing tasks, or execute workspace mutations.
-3. **Requirement for Explicit Direction**: State mutations, code modifications, rollbacks, and file reversions `MUST ONLY` be executed when accompanied by an explicit, affirmative instruction (e.g. *"Are you kidding? Fix/correct this like that...!"*).
+2. **Prohibition of Implicit Action on Query**: An inquiry—whether exploratory, technical, critical, explanatory (e.g. *"X does not justify Y"*), rhetorical, or phrased as a question (e.g. *"Can you fix X?"*, *"Should we scan Y first?"*)—is an inquiry for explanation, alignment, or clarification. It `MUST NEVER` be treated as an implicit command to alter code, revert changes, delete files, abandon ongoing tasks, or execute workspace mutations.
+3. **Requirement for Explicit Direction**: State mutations, code modifications, rollbacks, and file reversions `MUST ONLY` be executed when accompanied by an explicit, affirmative instruction per the `question-response-invariant` in `InvariantRules.md`.
 
 ---
 
 ### RULE-LCM-029: Boundary Ambiguity & Alternatives Invariant
-1. **Mandatory Pause on Ambiguous Boundaries**: Wherever the operational boundary, scope, or resolution path is not explicit or given by the goal contract, the AI agent `MUST` halt autonomous execution immediately.
+1. **Mandatory Pause on Ambiguous Boundaries**: Wherever the operational boundary, scope, or resolution path is not explicit or given by the goal contract, the AI agent `MUST` halt autonomous execution immediately per the `boundary-ambiguity-alternatives-invariant` in `InvariantRules.md`.
 2. **Presentation of Alternatives**: The AI agent `MUST` present clear, concrete alternatives (with their respective trade-offs) and **WAIT FOR CONFIRMATION** before modifying any workspace files or advancing lifecycle state.
 3. **Prohibition of Speculative Extrapolation**: The AI agent `MUST NOT` guess, speculate, or unilaterally assume a boundary (whether leaning toward sweeping maximalist execution or complete abandonment). The operational boundary remains frozen until explicitly confirmed by the operator.
 
 ---
 
 ### RULE-LCM-030: Session Quiescence & GoodNight / GoodMorning Protocol Invariant
-1. **Quiescent State Invariant**:
+1. **Host-Neutral Session Continuity Architecture**:
+   - The workspace maintains a single, host-neutral session continuity layer in repository files under `.agents/`:
+     - **Charter and Decisions (Long-Lived)**: Anchored in `.agents/ACTIVE_CONTEXT.md` (and host workplans).
+     - **Session State & Next-Step Handoff (Per-Session)**: Standardized schema in `.agents/ACTIVE_SESSION.md`, tracking workspace status, global timestamps, and per-host session blocks (Antigravity, Claude, etc.).
+     - **Learned Advice (Binding / Guidance)**: Unified entries in `.agents/LEARNED_ADVICE.md`.
+     - **Per-CRP Evidence**: Confined strictly to proposal bundles (`docs/Proposals/CRP-nnn/`).
+   - **Host-Native Memory Pointers**: Host-private memory systems (Claude auto-memory, Antigravity project context) `MUST` store pointers only. Disk files are the sole authoritative truth.
+   - **Independent Host Execution**: Each AI host performs its own session handoff against this layer. A host writes only its own session section in `.agents/ACTIVE_SESSION.md` and candidate advice in `.agents/LEARNED_ADVICE.md`; it `MUST NOT` execute or alter another host's internal tools or private adapter state.
+   - **Non-Concurrent Operation**: Concurrent host execution in the same workspace is prohibited; the operator coordinates turns. One-sided modifications `MUST` be announced. Physical data stored on disk wins every contest.
+
+2. **Quiescent State Invariant**:
    - Following the execution of an end-of-day sequence (`GoodNight`, `goodnight`, `SaveAll`), the workspace enters a **Quiescent State**.
    - While in a Quiescent State, if an automated or synthetic turn is triggered (such as platform context compaction, background message, or schedule wakeup) without a new, explicit `<USER_REQUEST>` from the operator, the AI agent `MUST REMAIN SILENT`. It `MUST NOT` proactively emit greetings, status summaries, or initiate unprompted workflows.
-2. **GoodNight Terminal Message Protocol**:
+
+3. **GoodNight Terminal Message Protocol**:
    - The final output line/message of a GoodNight sequence `MUST` display the completion timestamp:
      `🌙 Good Night completed at YYYY-MM-DD HH:mm:ss. Session is Quiescent.`
-3. **GoodMorning Resumption Response Protocol**:
+   - Under technical ASCII mode (`technical`), plain text `[GOODNIGHT] Good Night completed at YYYY-MM-DD HH:mm:ss. Session is Quiescent.` substitutes for the emoji prefix.
+
+4. **GoodMorning Resumption Response Protocol**:
    - When the operator initiates the next session with a morning greeting or command (`GoodMorning`, `goodmorning`, `ShowTools`, etc.), the **FIRST MESSAGE RESPONSE** from the AI agent `MUST` explicitly state the resumption and reference the preceding GoodNight timestamp:
      `☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h).`
+   - Under technical ASCII mode (`technical`), plain text `[GOODMORNING] Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h).` substitutes for the emoji prefix.
+   - The response `MUST` reflect per-host activity recorded in `.agents/ACTIVE_SESSION.md` and state any identified attention items.
 
 ---
 
@@ -861,6 +895,10 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - **Stage 1 (Recognized Status)**: Upon intake into an active CRP, the advice entry is annotated as `[RECOGNIZED: CRP-XXX]`. It remains 100% active, binding, and enforceable. It `MUST NEVER` be marked `done` or deleted during implementation.
    - **Stage 2 (Guaranteed Retirement)**: Deletion from `LEARNED_ADVICE.md` is unlocked `ONLY` when the CRP's goals—specifically including the issue governed by the learned advice—are **guaranteed to be met** by the test harness (e.g. passing Pester test, automated readiness gate, or formal policy codification in `.agents/rules/`).
    - Only upon verified passage of the guarantee at `verify` / `in_review` / `complete` is the advice entry safely purged from `LEARNED_ADVICE.md`.
+4. **Information Removal Restriction**:
+   - Information in continuity files (`ACTIVE_CONTEXT.md`, `LEARNED_ADVICE.md`, `ACTIVE_SESSION.md`) `MUST NOT` be removed speculatively or without cause. Removal is authorized strictly under two conditions:
+     - Explicit manual deletion by the operator.
+     - Automated retirement upon verified completion and acceptance of a formal proposal (CRP/BUG).
 
 ---
 
@@ -884,6 +922,14 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ---
 
+### RULE-LCM-034: LCM Inventory Centralization for Governed Proposals Invariant
+1. **Exclusive Repository Host**: In accordance with `RULE-SUB-008`, all proposals (CRPs, BUGs) targeting or regarding any governed `LCM_*` repository (`LCM_AI`, `LCM_Inventory`, `LCM_Shared`, `LCM_Supervision`, `LCM_Tools`) `MUST` be authored, registered, and stored exclusively in `LCM_Inventory` (`LCM_Inventory/docs/Proposals/` and `LCM_Inventory/data/proposals/`).
+2. **Prohibition of Proposal Directories in Child Repositories**: Child `LCM_*` repositories `MUST NOT` contain a `docs/Proposals/` or `Proposals/` directory. Proposal bundles shall never be created in or committed to `LCM_AI`, `LCM_Shared`, `LCM_Supervision`, or other governed child repositories.
+3. **Normal Documentation Separation**: Standard repository documentation (such as `docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`, `install/Installation.md`, `README.md`, or component runbooks) remains within the respective child repository; proposal bundles never do.
+4. **DoT and Scratch Exclusivity**: No `LCM_*` repository other than `LCM_Inventory` may host `DoT/` runtime engines or `scratch/` directories. All workspace DoT runtime engines and scratch staging spaces are strictly centralized in `LCM_Inventory`.
+
+---
+
 <a id="reviewcommitgovernancepolicymd"></a>
 ## Rule #7: ReviewCommitGovernancePolicy.md
 > **Category**: 2. Proposal, Review & Commit Lifecycle | **Canonical Source**: `.agents/rules/ReviewCommitGovernancePolicy.md`
@@ -896,15 +942,15 @@ Path: .agents/rules/ReviewCommitGovernancePolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 21:40:00
 
 ---
 
 ## 1. Governance Rules
 
 ### RULE-REV-001: Mandatory Review-Gated Commits & Gate 2 Non-Circumvention Invariant
-1. **Mandatory Visual Review Gate (Gate 2)**: Every Git commit action for source code, configuration, tools, modules, or structural assets (`*.ps1`, `*.psm1`, `.vscode/settings.json`, `LCM_Inventory/*`, `docs/*`) in any LCM-governed repository requires a prior validated review disposition (`COMPLETED` or `COMPLETED_WITH_EDITS`) produced via the formal Beyond Compare 5 visual review gate (`Invoke-BeyondCompareReview.ps1`), with transparent junction traversal via `FollowSymLinks` (`RULE-REV-008`). The gate may resolve an exact CRP/BUG, a repository, or a declared cohort; it must reject only unresolved or ambiguous scope.
-2. **Strict Gate 2 Non-Circumvention Baseline**: Beyond Compare visual diff review is non-circumventable for code/tools/specs across all items by default. Even critical, urgent, or internally generated BUGs normally execute in `DOIT` mode (`always-proceed = $true`) without a Gate 1 planning pause, but halt at Gate 2 for operator review before reaching `COMMITTED`.
+1. **Mandatory Visual Review Gate (Gate 2)**: Every Git commit action for source code, configuration, tools, modules, or structural assets (`*.ps1`, `*.psm1`, `.vscode/settings.json`, `LCM_Inventory/*`, `docs/*`) in any LCM-governed repository requires a prior validated review disposition (`completed` or `completed_with_edits`) produced via the formal Beyond Compare 5 visual review gate (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`), with transparent junction traversal via `FollowSymLinks` (`RULE-REV-008`). The gate may resolve an exact CRP/BUG, a repository, or a declared cohort; it must reject only unresolved or ambiguous scope.
+2. **Strict Gate 2 Non-Circumvention Baseline**: Beyond Compare visual diff review is non-circumventable for code/tools/specs across all items by default. Even critical, urgent, or internally generated BUGs normally execute in `DOIT` mode (`always-proceed = $true`) without a Gate 1 planning pause, but halt at Gate 2 for operator review before reaching `completed`.
 3. **Authorized Exceptions to Gating**:
    There are two (2) authorized exceptions to this rule:
    1. **Explicit Operator Directive (`IMMEDIATELY`, `FORCE`)**: The user can explicitly INSTRUCT (`IMMEDIATELY`, `FORCE`) to bypass review confirmation and advance directly into the Implementation Phase / review commit without confirming the visual review.
@@ -922,11 +968,11 @@ Date: 2026-11-14 14:40:00
 When a review outcome is recorded as `Completed with Edits` (or `Completed with Change`):
 1. The modified codebase `MUST` execute and satisfy all repository quality gates (`Test-RepoReadiness.ps1`).
 2. The modifications `MUST NOT` introduce rule violations, regression errors, or broken dependencies.
-3. Upon satisfying all quality gates, the state `SHALL` be classified as fully `COMPLETED` and committed to Git.
-4. When `-MinimalTests` is engaged under operator instruction or automated loop circumvention, the readiness gate executes fast-tier syntax and structure validation while bypassing heavy integration cascades; the resulting commit is recorded as `completed [minimal-tests]` with `"test_scope": "minimal"` per `RULE-LCM-023`.
+3. Upon satisfying all quality gates, the state `SHALL` be classified as fully `completed` and committed to Git.
+4. When `-MinimalTests` is engaged under operator instruction or automated loop circumvention, the readiness gate executes fast-tier syntax and structure validation while bypassing heavy integration cascades; the resulting commit is recorded as `completed` with `"test_scope": "minimal"` per `RULE-LCM-023`.
 
-### RULE-REV-003: Override & Force Authority for Rejected/Deferred States
-If a review outcome is `REJECTED` or `DEFERRED`:
+### RULE-REV-003: Override & Force Authority for Rejected/Held States
+If a review outcome is `rejected` or `held`:
 1. Automated commit and push pipelines `MUST` halt immediately.
 2. Committing or pushing changes in a rejected or deferred state `IS FORBIDDEN` unless explicitly commanded by the user with a forced override instruction (e.g., `-Force` parameter or unambiguous explicit override prompt).
 
@@ -934,20 +980,20 @@ If a review outcome is `REJECTED` or `DEFERRED`:
 The review-gating rules (`RULE-REV-001` through `RULE-REV-003`) take strict precedence over any general "all commands are permitted" or automated background execution policies in effect across the workspace.
 
 ### RULE-REV-005: Universal Audit & Change Request Traceability
-Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferred`) `MUST` be recorded with an immutable timestamp, reviewer identity, repository HEAD SHA, and notes into:
+Every review disposition (`completed`, `completed_with_edits`, `rejected`, `held`) `MUST` be recorded with an immutable timestamp, reviewer identity, repository HEAD SHA, and notes into:
 1. `LCM_Inventory/logs/cm_activity.log` (Append-only CM audit ledger).
 2. `LCM_Inventory/data/reviews/REVIEW-<Repo>-<Timestamp>.json` (Structured review evidence).
 3. The active Change Request (CR) record in `LCM_Inventory/data/change_requests.json` and mirrored proposal Markdown files when modifying governed baselines.
 4. The accepted Gate 0 Contract and the verification evidence for its exit criteria when the change is structural.
 
 ### RULE-REV-006: Mandatory Review Stop & Lifecycle Step Invariant
-1. **Mandatory Review Stop**: Whenever an agent carries out a CRP or code modification reaching the visual review stage (Gate 2), the agent `MUST` launch `Invoke-BeyondCompareReview.ps1` and **immediately terminate the current response turn without making additional tool calls**.
+1. **Mandatory Review Stop**: Whenever an agent carries out a CRP or code modification reaching the visual review stage (Gate 2), the agent `MUST` launch `BCR.cmd` / `Invoke-MacriumBcrReview.ps1` and **immediately terminate the current response turn without making additional tool calls**.
 2. **`Proceed` at Gate 2**: Upon operator submission of **`Proceed`** (or `Proceed <ID>`) after review inspection:
-   - The proposal advances by exactly one status pulse: `REVIEW` $\rightarrow$ **`COMMITTED`**.
+   - The proposal advances by exactly one status pulse: `in_review` $\rightarrow$ **`completed`**.
    - The local Git commit is created with the required SemVer increment per `RULE-REV-007`.
 3. **`PUSH` (Publication Trigger)**:
    - `PUSH` is the only lifecycle command that may invoke a remote push.
-   - It pushes only a fully preflighted cohort of `COMPLETED` proposals and `LCM_Inventory` in lockstep.
+   - It pushes only a fully preflighted cohort of `completed` proposals and `LCM_Inventory` in lockstep.
    - Uncommitted proposals remain strictly in their local state.
    - Enforces the Push Auto-Reset Invariant: both `LCM Mode` and `Testing Mode` unconditionally revert to `ON`.
 
@@ -964,13 +1010,15 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
      - `LCM_Inventory/data/inventory.json` repository record.
    - Commit messages and review receipts `MUST` record the resulting semantic version (e.g. `feat(cm): ... [10.0.0]`).
 3. **LCM_Inventory Operational Data Exemption**:
-   - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
+   - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.db`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
    - Semantic version increments for `LCM_Inventory` apply strictly when source code (`tools/*.ps1`, `modules/*.psm1`), specifications (`docs/*.md`), or governance policies are modified.
 
 ### RULE-REV-008: Transparent Single-Session Directory Junction Review (FollowSymLinks)
 1. **Transparent Directory Junction Traversal**: Beyond Compare 5 review sessions `MUST` configure `<FollowSymLinks Value="True"/>` in `BCSessions.xml`, enabling Beyond Compare to traverse NTFS directory junctions (such as `.agents\rules`) inline within the primary review session.
 2. **Unified Single-Window Invariant**: Dual-session Beyond Compare review dispatch is retired. All repository review comparisons execute in a single Beyond Compare window without opening a separate junction review instance.
-3. **Composite Local Baseline Identity**: The left pane `MUST` be exported from the target repository's explicitly resolved local `BaseCommit`; it `MUST NOT` implicitly resolve, fetch, or substitute a remote reference. Where that commit exposes a junction-backed path, the scratch tree `MUST` replace the junction with a committed rules snapshot selected in this order: the target `BaseCommit`; the local committed junction-authority snapshot at or immediately before the target commit timestamp; the nearest target-history ancestor whose Git tree contains the junction path; then the local committed `HEAD` of the live junction authority. The selected source repository, relative path, SHA, and selection source `MUST` be recorded alongside the target SHA. A target-history snapshot that predates the target commit by a later authority snapshot `MUST NOT` be selected.
+3. **Baseline Model Hierarchy & Composite Local Baseline Identity**:
+   - **Primary Model**: In accordance with `RULE-REV-014`, the authoritative primary baseline comparison for all reviews across the workspace is **BCR** (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`), which evaluates the live workspace root (`D:\Git_Repositories`) against the workspace root on the mounted Macrium Reflect backup drive (`<MountedDrive>:\Git_Repositories`) using the operator-owned `_LCM` Beyond Compare profile.
+   - **Fallback Model (Headless / Non-Macrium)**: Where Macrium Reflect image mounting is physically unavailable (e.g. headless CI/CD runner per `RULE-REV-001.6`), the left pane `MUST` be exported from the target repository's explicitly resolved local `BaseCommit`; it `MUST NOT` implicitly resolve, fetch, or substitute a remote reference. Where that commit exposes a junction-backed path, the scratch tree `MUST` replace the junction with a committed rules snapshot selected in this order: the target `BaseCommit`; the local committed junction-authority snapshot at or immediately before the target commit timestamp; the nearest target-history ancestor whose Git tree contains the junction path; then the local committed `HEAD` of the live junction authority. The selected source repository, relative path, SHA, and selection source `MUST` be recorded alongside the target SHA. A target-history snapshot that predates the target commit by a later authority snapshot `MUST NOT` be selected.
 4. **Historical Junction Semantics**: The baseline `MUST` contain only files present in the selected committed rules snapshot. A file visible through the live junction but absent from every available committed snapshot `MUST` remain absent on the left and appear as a live-only addition on the right; the launcher `MUST NOT copy` mutable working-tree authority content into a historical baseline.
 5. **Identity and Cache Clarity**: The baseline cache identity and pane title `MUST` display the target local SHA, selected rules source, and selected rules SHA. A launcher `MUST NOT` invent or fall back to an unrelated version label when a real version artifact is unavailable.
 6. **Exclusion Filter Alignment**: Review exclusion filter lists `MUST NOT` filter out `-.agents\rules\`, ensuring all governance rule diffs remain directly inspectable in the primary review pane.
@@ -983,7 +1031,7 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 ---
 
 ### RULE-REV-010: Zero-Assumption Pre-Review Gate Verification Invariant
-1. **Mandatory Mechanical Verification Before Review**: Before any proposal or change set is presented for Gate 2 visual review or commit gating, all modified or created files `MUST` have undergone mandatory mechanical syntax parsing (PowerShell AST parser, Python compile, JSON validation) and unit test execution (Pester).
+1. **Mandatory Mechanical Verification Before Review**: Before any proposal or change set is presented for Gate 2 visual review or commit gating, all modified or created files `MUST` have undergone mandatory mechanical syntax parsing per the `mandatory-pre-handoff-syntax-gate` in `InvariantRules.md` (PowerShell AST parser, Python compile, Go vet/build, JSON validation) and unit test execution (Pester).
 2. **Prohibition of Unverified Readiness Claims**: An AI agent or developer `MUST NEVER` launch a Beyond Compare review session, claim review readiness, or solicit operator review disposition based on visual inspection alone without prior execution evidence recorded in `Walkthrough.md`.
 
 ### RULE-REV-011: ADMINMODE Rule-Change Authorization Invariant
@@ -1036,7 +1084,7 @@ Path: .agents/rules/MethodEfficiencyPolicy.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.2.1
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -1067,11 +1115,11 @@ Changes strictly modifying tool-generated evidence, audit databases, dashboard s
 Modifications to the mechanical artifacts listed in `RULE-EFF-001` **MUST NEVER** trigger automated test runs, readiness test cascades, or validation cycles. These files are outputs/evidence of prior verification, not executable source code.
 
 ### RULE-EFF-003 (Machine-Only Mutation Authority)
-Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-LCM_Audit.ps1`, `Create-LCM_Baseline.ps1`, `Invoke-LCMUpdate.ps1`).
+Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-LCM_Audit.ps1`, `Create-LCM_Baseline.ps1`).
 
 ### RULE-EFF-004 (DOIT Mode & Autonomous Execution Velocity Standard)
 1. **DOIT Mode Execution**: When a proposal is in **`DOIT` Mode** (`always-proceed = $true`) — which occurs automatically upon `BUG` birth or when explicitly triggered on a `CRP` via the `do` command — AI pair-programming agents `SHALL` execute tool operations, script commands, and file edits directly under `always-proceed` and `allow` policies without introducing interactive chat planning pauses or per-tool confirmation prompts.
-2. **Universal Gate 2 Review Boundary**: Execution velocity under `DOIT` mode proceeds continuously until the downstream Gate 2 Review stage (`RR.ps1` / `Invoke-BeyondCompareReview.ps1`) is reached per `RULE-REV-001`. Even critical, urgent, or internally generated BUGs `MUST NOT` circumvent Gate 2 review.
+2. **Universal Gate 2 Review Boundary**: Execution velocity under `DOIT` mode proceeds continuously until the downstream Gate 2 Review stage (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`) is reached per `RULE-REV-001` and `RULE-REV-014`. Even critical, urgent, or internally generated BUGs `MUST NOT` circumvent Gate 2 review.
 3. **Normal Cycle Alignment**: For CRPs progressing under the Normal Review Cycle via `Proceed`, agents implement approved changes with interactive checkpoints whenever open questions, architectural alternatives, or user choices are encountered.
 4. **Goal-First Efficiency**: Direct execution starts only after the active work has a Gate 0 Contract. This prevents repeated symptom-level loops; it does not add redundant tests or waive any existing gate.
 
@@ -1093,8 +1141,8 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 
 ---
 ### RULE-EFF-008: Canonical Tool Discovery Standard
-- Agents inspecting, modifying, or querying workspace tools or platform commands **must** query `LCM_Inventory/tools/tool_catalog.json` first as the **authoritative single source of truth** before any filesystem traversal.
-- Agents are **strictly prohibited** from executing broad, unindexed grep searches across `.psm1`, `.ps1`, or `.cmd` files to locate tool signatures or parameters when `tool_catalog.json` can satisfy the query.
+- Agents inspecting, modifying, or querying workspace tools or platform commands **must** query the authoritative tool catalog (`LCM_Inventory/data/tools/tools.db`, via discovery tools such as `Show-ToolIntents.ps1`; `config/tool_catalog.json` serves strictly as a transitional fallback) as the **authoritative single source of truth** before any filesystem traversal.
+- Agents are **strictly prohibited** from executing broad, unindexed grep searches across `.psm1`, `.ps1`, or `.cmd` files to locate tool signatures or parameters when the tool catalog can satisfy the query.
 
 ---
 
@@ -1133,9 +1181,9 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 - **Optional BCR Peek**: Exempt artifacts may be shown in an explicitly unfiltered BCR session on
   request. Any observation is advisory only and does not convert the exempt artifact into a
   mandatory review candidate.
-- **Agent Execution Policy**: Agents must operate in direct execution mode; interactive approval loops in chat UI are superseded by the RR pipeline.
+- **Agent Execution Policy**: Under `DOIT` mode, agents must operate in direct execution mode; outside `DOIT`, Gate 1 planning pauses (`RULE-LCM-014`) and Gate 0 target-state pauses (`RULE-GOAL-002`) remain binding until operator direction is received.
 - **Search Enforcement (RULE-EFF-007)**: All agents and tooling must use `es.exe` (directly or through `Search-Everything.ps1`) for file-system searches; `rg.exe` is the fallback content-search tool when the Everything content index is unavailable.
-- **Tool Discovery Enforcement (RULE-EFF-008)**: `tool_catalog.json` is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
+- **Tool Discovery Enforcement (RULE-EFF-008)**: The authoritative SQLite tool catalog (`data/tools/tools.db`, via discovery tools such as `Show-ToolIntents.ps1`; `config/tool_catalog.json` serves strictly as transitional fallback) is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
 - **Path Safety Enforcement (RULE-ENV-003)**: All path constructions must be grounded via `$PSScriptRoot`, registered trampolines, or explicit pre-flight resolution; speculative traversal is prohibited.
 - **Diagnostic Triage Enforcement (RULE-EFF-010)**: AI assistants must execute 5-stage triage on daemon or execution failures and halt immediately at Stage 5 upon detecting architectural or state mismatches.
 
@@ -1153,7 +1201,7 @@ Path: .agents/rules/PowerShellStandardsPolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -1295,17 +1343,17 @@ All PowerShell scripts, automation tools, and diagnostic reporters that launch i
 1. **Interactive Session Isolation Awareness**:
    Never assume script execution is running inside the interactive desktop. When executed from background agent sessions, IDE workers, or automated task runners (Session 0), raw `Start-Process` invocations are isolated and completely invisible on the user's physical screen.
 2. **Mandatory Desktop Dispatch Routing**:
-   Inspect whether `Invoke-InteractiveDesktop.ps1` exists in the workspace (`D:\Git_Repositories\LCM_Tools\Invoke-InteractiveDesktop.ps1` or `$toolsDir`). If present, GUI execution `MUST` be routed through `Invoke-InteractiveDesktop.ps1` using:
+   Desktop GUI execution `MUST` be routed through the DO gateway (`LCM_Inventory\DoT\do.exe` / `do.cmd`) communicating with the background Session 1 Desktop Daemon on port 9876:
    ```powershell
-   $dispatcher = Join-Path $toolsDir "Invoke-InteractiveDesktop.ps1"
-   if (Test-Path $dispatcher) {
-     & pwsh -File $dispatcher -FilePath "explorer.exe" -ArgumentList "`"$htmlPath`"" | Out-Null
+   $doExe = "D:\Git_Repositories\LCM_Inventory\DoT\do.exe"
+   if (Test-Path $doExe) {
+     & $doExe "explorer.exe `"$htmlPath`"" | Out-Null
    } else {
      Start-Process $htmlPath
    }
    ```
 3. **Privileged GUI Elevation**:
-   When launching tools requiring administrative elevation in the interactive session, pass `-Elevated` to `Invoke-InteractiveDesktop.ps1` rather than relying on in-process `Start-Process -Verb RunAs`.
+   When launching tools requiring administrative elevation in the interactive session, route through `do.exe "<command>" -elevated` rather than relying on in-process `Start-Process -Verb RunAs`.
 4. **Applies Universally To**:
    - HTML Dashboards (`TOOLS_VIEWER.html`, `INVENTORY_VIEWER.html`, `CMD_FOLDER_ANALYSIS.html`)
    - File Explorers (`explorer.exe /select,"<Path>"`)
@@ -1517,6 +1565,8 @@ Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
 Version: 10.2.1
+Status: Authoritative Invariant Rule
+Date: 2026-11-14 21:40:00
 Changelog:
 - 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.
 - 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.
@@ -1564,7 +1614,7 @@ Path: .agents/rules/PythonRules.md
 Authors: Rolf, LCM_AI Engine  
 Version: 10.2.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -1583,6 +1633,7 @@ Date: 2026-10-13
   2. **Safe Serialization**: When injecting Python data into JavaScript or HTML context, always serialize via `json.dumps()` (e.g., `const DATA = {json.dumps(obj)};`) rather than ad-hoc string formatting.
   3. **No Embedded Backtick Ambiguity**: When constructing dynamic paths or strings in generated JavaScript, use standard JavaScript string concatenation (`tabName + '_suffix.html'`) rather than backtick template literals (` `${tabName}_...` `) to avoid escape-stripping defects across string generation pipelines.
   4. **Ahead-of-Occurrence Verification**: Python scripts that generate web artifacts (HTML, JS, JSON) must perform pre-emission syntax validation (e.g. `json.loads()` on JSON payloads, or verifying no unexpanded Python expressions `{...}` remain in the emitted text).
+- **python-indentation-standard** (`RULE-PY-009`): All Python source files MUST use 4 spaces per indentation level in accordance with PEP 8. In accordance with the Language Deference Hierarchy (`InvariantRules.md`), this Python language standard takes strict precedence over the workspace-wide 2-space default indentation.
 
 ---
 
@@ -1604,7 +1655,7 @@ Path: .agents/rules/CMDRules.md
 Authors: Rolf  
 Version: 10.2.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -1632,7 +1683,7 @@ Path: .agents/rules/JsonRules.md
 Authors: Rolf  
 Version: 10.2.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -1661,7 +1712,7 @@ Path: .agents/rules/DocumentationStandardsPolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -1713,7 +1764,7 @@ Every LCM-governed repository `MUST` maintain three distinct core specifications
    - **Immediately below frontmatter**: The standardized DOX metadata header block per Section 1.
 
 ### RULE-DOC-003.1: Goal-First Proposal Contract Governance
-Proposal and specification contracts are governed authoritatively by `GoalFirstDesignPolicy.md` (`RULE-GOAL-001` through `RULE-GOAL-005`). Tripartite documentation and proposal specifications MUST maintain complete traceability to the accepted Gate 0 target state. Ordinary evidently scoped work inherits the default Non-Goal: **Cause no havoc: ask rather than invent or infer, and avoid unnecessary complexity.** This requirement complements, and does not replace, tripartite documentation or lifecycle review gates.
+Proposal and specification contracts are governed authoritatively by `GoalFirstDesignPolicy.md` (`RULE-GOAL-001` through `RULE-GOAL-005`). Tripartite documentation and proposal specifications MUST maintain complete traceability to the accepted Gate 0 target state. Ordinary evidently scoped work inherits the binding core invariant: **Cause no havoc: ask rather than invent or infer, and avoid unnecessary complexity.** This requirement complements, and does not replace, tripartite documentation or lifecycle review gates.
 
 ---
 
@@ -1738,12 +1789,14 @@ Every LCM-governed repository that deploys or installs operational payloads `MUS
 
 ### RULE-DOC-005: LCM Major Version Alignment Invariant (`M.Y.Z`)
 Whenever a new major LCM version $M$ (e.g. advancing from `9.x.x` to `10.0.0`) is established and pushed:
-1. **Major Parity**: All contained modules, specification documents, scripts, and configuration manifests `MUST` have their version updated such that their **Major** version component matches $M$.
-2. **Subversion Preservation**: Subversions (**Minor** $Y$ and **Patch** $Z$) `MUST NOT` be reset or wiped by pre-push major version actions; their relative evolution history and component-level differentiation are strictly preserved.
+1. **Major Parity & Standard SemVer Reset**: In accordance with `RULE-REV-007` and standard SemVer arithmetic, advancing to a new major version ($+1.0.0$) resets minor ($Y$) and patch ($Z$) digits to `0` across all contained modules, specification documents, scripts, and configuration manifests ($10.2.5 \rightarrow 11.0.0$).
+2. **Release & Push Arithmetic**:
+   - **Minor Release Bumps**: Release increments ($+0.1.0$) increment the minor version while preserving the current patch level.
+   - **GoodNight Push Bumps**: Automated GoodNight push increments ($+0.0.1$) apply strictly to components that actually changed.
 3. **Transformation Formula**: If a module or spec has version $X.Y.Z$ and the new LCM major version is $M$, the new version becomes:
-   $$\text{NewVersion} = M.Y.Z$$
-   *(Example: A module at version `9.2.1` when major version 10 is established becomes `10.2.1`).*
-4. **Baseline Synchronization**: All explicit global baseline references in configuration files (`LCM_Inventory/config.json`, `.vscode/settings.json`, `.github/agents/Config.json`), agent profiles, and DOX headers `MUST` reference the current active LCM baseline.
+   $$\text{NewVersion} = M.0.0$$
+   *(Example: A module or spec at version `10.2.5` when major version 11 is established becomes `11.0.0`).*
+4. **Baseline Synchronization**: All explicit global baseline references in configuration files (`.vscode/settings.json`, `.github/agents/Config.json`), agent profiles, and DOX headers `MUST` reference the current active LCM baseline. Common governance resides authoritatively in `.agents/rules/` and subsystem-specific configurations in repository `docs/`.
 
 ---
 
@@ -1849,7 +1902,7 @@ Path: .agents/rules/SubsystemGovernancePolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.2.0
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -1864,7 +1917,7 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 ## 2. Invariant Rules
 
 ### RULE-SUB-001: Subsystem Classification & Documentation Conformance
-1. A repository classified as `subsystem` in `LCM_Inventory/config.json` `MUST` fully implement standard LCM **Tripartite Documentation** (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`) and the universal runbook (`install/Installation.md`).
+1. A repository classified as `subsystem` in `data/inventory.json` `MUST` fully implement standard LCM **Tripartite Documentation** (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`) and the universal runbook (`install/Installation.md`).
 2. The root `LCM_Inventory` tracks Subsystems at the macro Git level, while delegating internal part tracking to the Subsystem's dedicated inventory engine.
 
 ### RULE-SUB-002: Dedicated Subsystem Inventory Engine & Auto-Acceptance Invariant
@@ -1873,7 +1926,7 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 3. **Direct Carry-Over from LCM (`RULE-EFF-001`)**: Routine Subsystem telemetry collection, entity dumps, and dashboard rendering constitute mechanical evidence and are **automatically accepted**. Telemetry synchronization runs `SHALL NOT` force manual review gates or block workflows on interactive diff sessions.
 
 ### RULE-SUB-003: Host-Side Hardware Safety Interlocks (Offline / Pre-Boot)
-1. Any host script performing physical disk operations (flashing images, disk cloning, partition restructuring) `MUST NEVER` target arbitrary disk indices (e.g., `Disk 2`) without validating explicit **Hardware Serial Numbers** and **Model Descriptors** declared in `LCM_Inventory/config.json`.
+1. Any host script performing physical disk operations (flashing images, disk cloning, partition restructuring) `MUST NEVER` target arbitrary disk indices (e.g., `Disk 2`) without validating explicit **Hardware Serial Numbers** and **Model Descriptors** declared in the subsystem's requirements specification (`docs/Requirements.md`).
 2. Host tools `MUST` execute `Assert-DiskTargetSafety` to guarantee that active Windows `Boot`, `System`, or `PageFile` volumes are **never** targeted.
 3. Destructive disk operations require high-integrity Administrator elevation and explicit operator confirmation.
 
@@ -1914,18 +1967,29 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 
 ---
 
+### RULE-SUB-008: LCM Inventory Exclusivity & Proposal Directory Invariant
+1. **Primary LCM Domain Centralization**: All proposals (CRPs, BUGs) regarding governed `LCM_*` repositories in the `Git_Repositories` workspace (`LCM_AI`, `LCM_Inventory`, `LCM_Shared`, `LCM_Supervision`, `LCM_Tools`) `MUST` reside exclusively within `LCM_Inventory` (`LCM_Inventory/docs/Proposals/` and `LCM_Inventory/data/proposals/`).
+2. **Child Proposal Directory Prohibition**: No `LCM_*` repository other than `LCM_Inventory` `SHALL` maintain a `docs/Proposals/` or `Proposals/` directory. Normal repository documentation (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`, `README.md`, or component runbooks) remains in the respective child repository; proposal bundles `MUST NEVER` be placed in child `LCM_*` repositories.
+3. **DoT and Scratch Directory Prohibition**: Governed `LCM_*` repositories other than `LCM_Inventory` `MUST NOT` contain `DoT/` or `scratch/` directories. All workspace DoT runtime engines and scratch staging spaces are strictly centralized in `LCM_Inventory`.
+4. **Disjunct Subsystem Exemption**: Subsystems outside the core `LCM_*` governance domain (e.g. `HaSSD06` with `HaSSD06_Inventory`, or `SystemConfiguration`) represent autonomous runtime domains and `MAY` maintain their own private inventory and proposal stores per `RULE-SUB-002`.
+
+---
+
 <a id="macro-definitionsmd"></a>
 ## Rule #16: macro-definitions.md
 > **Category**: 4. Documentation & Subsystem Architecture | **Canonical Source**: `.agents/rules/macro-definitions.md`
 
-# macro-definitions.md
-# version: 10.2.3
-# date: 2026-11-11 15:30:00
+# File: macro-definitions.md
 
-# MACRO-DEFINITIONS-METADATA
-# scope: durable-memory
-# location: .agents/rules/macro-definitions.md
-# update-policy: manual
+Module: macro-definitions  
+Purpose: Defines operator and agent command macros, bare-word syntax standards, execution routing, and parameter mappings across the workspace.  
+Path: .agents/rules/macro-definitions.md  
+Authors: Rolf, LCM_AI Governance  
+Version: 10.3.0  
+Status: Authoritative Invariant Rule  
+Date: 2026-11-14 21:40:00  
+
+---
 
 ## Syntax Convention: Antigravity IDE Bare-Word Standard
 In the Antigravity IDE environment, typing the `@` character triggers the IDE's interactive context-attachment popup (`@Files`, `@Docs`, `@Git`). Therefore, bare-word command invocations (`ToolExplorer`, `ShowTools`, `tools`, `ar`, `bcr`, `COMPLETE`, `PUBLISH`, `DO <#>`, etc.) are the primary and preferred syntax. The `@` prefix remains supported as a backward-compatible alias.
@@ -1939,6 +2003,7 @@ MACRO: technical
   - no emojis
   - no unicode
   - explicit structures only
+  - precedence: when technical mode is active, plain ASCII tags ([GOODNIGHT], [GOODMORNING]) substitute for protocol emojis in RULE-LCM-030.
 
 MACRO: user
 - description: normal user-facing mode
@@ -2065,7 +2130,7 @@ MACRO: BCR
   - the dispatcher records a cohort-resolution receipt before launch. `in_progress` members are reported as pending verification, `verified` members are review-ready, and `in_review` members refresh rather than duplicate a review session.
   - omitted or broadened scope requires an interactive confirmation. A scope that exceeds configured proposal or repository limits, has incompatible baselines, or has unresolved overlap/conflict evidence requires explicit operator selection; non-interactive or cancelled resolution fails closed.
   - only review-ready `verified` members may transition to `in_review`, and only after their review handoff succeeds.
-  - the dispatcher executes `Invoke-BeyondCompareReview.ps1` against the resolved baseline and preserves the configured coarse or tight review granularity.
+  - the dispatcher executes `BCR.cmd` (`Invoke-MacriumBcrReview.ps1`) against the resolved baseline and preserves the configured coarse or tight review granularity.
   - an optional baseline commit is accepted only when it matches the resolved review scope.
   - generated artifacts, scratch, data, logs, and routine test output require no review, but `BCR` may peek at them unfiltered and report non-blocking advice.
 
@@ -2079,14 +2144,14 @@ MACRO: cohort
   - `create` uses the first selected proposal as the prime member; `add` and `remove` update the open cohort; `close` ends it without altering member lifecycle state.
   - a prime member cannot be removed; close the cohort instead. Cross-repository creation or membership changes require explicit confirmation and produce per-repository BCR baselines.
 
-MACRO: ReOpen
-- description: restore a held CRP, BUG, or declared cohort
-- syntax: reopen <CRP-ID|BUG-ID> | ReOpen <CRP-ID|BUG-ID> | cohort reopen [COH-nnn]
-- aliases: reopen, ReOpen, CONTINUE
+MACRO: continue
+- description: restore a held CRP, BUG, or declared cohort to active lifecycle flow
+- syntax: continue <CRP-ID|BUG-ID> | reopen <CRP-ID|BUG-ID> | cohort reopen [COH-nnn]
+- aliases: continue, CONTINUE, reopen, ReOpen, resume
 - rules:
-  - a held CRP or BUG restores its recorded `resume_state`; it re-enters OPEN only when that restored state is active.
+  - a held CRP or BUG restores its recorded `resume_state` (clearing `held` disposition).
   - `cohort reopen` restores a held declared cohort only when no cohort is open; it does not change any member lifecycle state.
-  - `CONTINUE` remains a backward-compatible alias for `ReOpen`.
+  - `reopen`, `ReOpen`, and `resume` remain backward-compatible aliases for `continue`.
 
 MACRO: COMPLETE
 - description: submit a completed review result for an exact CRP/BUG, repository, declared cohort, or all eligible cohorts, then commit locally
@@ -2297,8 +2362,8 @@ MACRO: ShowPathPS
 
 <!-- MANAGED-SHOW-MACROS-END -->
 
-MACRO: tsr (Legacy / Automated)
-- note: Superseded by persistent TimestampHeaderRule codified in InvariantRules.md. Automated on every turn; manual macro invocation is deprecated.
+MACRO: tsr (Retired)
+- note: Permanently retired workspace-wide. Superseded by persistent TimestampHeaderRule codified in InvariantRules.md and RULE-DOC-010.
 
 MACRO: ar
 - description: generate retrospective execution trace and error triage diagnostics report analogous to BC5-Resolution-Analysis.md
@@ -2335,13 +2400,13 @@ All 21 canonical governance policies are organized into three functional tiers u
 |:---|:---|:---|:---|:---|
 | **[RuleAuthority.md](file:///.agents/rules/RuleAuthority.md)** | `RULE-AUTH-001` - `004` | **Governance Hierarchy** | Core Governance | Single physical source of truth (`LCM_AI\.agents\rules\`), multi-host adapter standard (Antigravity, Claude, Gemini, VS Code, Cursor), matrix synchronization, and Tri-Tier Rule Architecture (`RULE-AUTH-004`). |
 | **[GoalFirstDesignPolicy.md](file:///.agents/rules/GoalFirstDesignPolicy.md)** | `RULE-GOAL-001` - `005` | **Goal-First Design** | Workspace-wide | Gate 0 target-state contracts, default no-havoc Non-Goal for ordinary evident work, explicit contracts for structural scope, traceability, and safeguard preservation. |
-| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `032` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`), Question Response & Anti-Overreaction Invariant (`RULE-LCM-028`), Boundary Ambiguity & Alternatives Invariant (`RULE-LCM-029`), Session Quiescence & GoodNight / GoodMorning Protocol Invariant (`RULE-LCM-030`), Context Absorption, Reverse-Ticket Invariant & Guaranteed Learned-Advice Retirement (`RULE-LCM-031`), and Fix Completeness, Defect-Driven Rule Reconciliation & Operator Disclosure Invariant (`RULE-LCM-032`). |
+| **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `034` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`), Question Response & Anti-Overreaction Invariant (`RULE-LCM-028`), Boundary Ambiguity & Alternatives Invariant (`RULE-LCM-029`), Session Quiescence & GoodNight / GoodMorning Protocol Invariant (`RULE-LCM-030`), Context Absorption, Reverse-Ticket Invariant & Guaranteed Learned-Advice Retirement (`RULE-LCM-031`), Fix Completeness, Defect-Driven Rule Reconciliation & Operator Disclosure Invariant (`RULE-LCM-032`), Diagnostic Triage Protocol (`RULE-LCM-033`), and LCM Inventory Centralization for Governed Proposals Invariant (`RULE-LCM-034`). |
 | **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `014` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), standard SemVer arithmetic (`+1.0.0` Major, `+0.1.0` Minor, `+0.0.1` Patch on commit completion per `RULE-REV-007`), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`), ADMINMODE rule change authorization (`RULE-REV-011`), Review Tool Window Non-Interference, Title Neutrality, Baseline Currency & Baseline Re-Creation Prohibition Invariant (`RULE-REV-012`), Baseline Modification Detection & Interactive Dismount Choice Guardrail (`RULE-REV-013`), and Prohibition of Ad-Hoc / Git-Based BCompare Invocations & Exclusivity of BCR Invariant (`RULE-REV-014`). |
 | **[AnalysisGovernancePolicy.md](file:///.agents/rules/AnalysisGovernancePolicy.md)** | `RULE-ANA-001` - `006` | **Analysis Governance** | Workspace & Gemini Sessions | Intent wake words (`ANALYZE` / `IMPLEMENT`), read-only tool lock, provenance tagging (`[VERIFIED]`, `[GAP]`), search radius fence ($\le 2$), Circuit Breaker protocol (`[ANALYSIS RESUMED]`), and runtime state transparency. |
 | **[DecisionCascadeGovernancePolicy.md](file:///.agents/rules/DecisionCascadeGovernancePolicy.md)** | `RULE-DEC-001` - `005` | **Decision Cascade & Docs** | Workspace-wide & Child Repos | System-1/System-2 Decision Cascade architecture, Sub-85% Low-Confidence Operator Triage Invariant (`RULE-DEC-002`), Standalone Gate 2A Documentation Checkpoint (`RULE-DEC-003`), automated Gate 2A bypass conditions for low-significance changes and minimal-tests cycles (`RULE-DEC-004`), and Pre-Push Clean State & Relief Switch Reset Invariant (`RULE-DEC-005`). |
 | **[RepositoryContextPolicy.md](file:///.agents/rules/RepositoryContextPolicy.md)** | `RULE-CTX-001` - `006` | **Context Scoping** | Child Repositories | Strict repository boundary separation, deterministic relative path resolution, global configuration reading (`LCM_Inventory/config.json`), and GoodMorning Operator Exclusivity (`RULE-CTX-006`). |
 | **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `007` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, automated privilege-aware execution/elevation interception, and caller admin dependency disclosure & anti-staleness invariant. |
-| **[SubsystemGovernancePolicy.md](file:///.agents/rules/SubsystemGovernancePolicy.md)** | `RULE-SUB-001` - `007` | **Subsystem Architecture** | Subsystem Repositories | Disjunct domains, dedicated subsystem inventories, JIT ephemeral tokens, host safety hardware interlocks, log segregation, Update-Gate & CRP bundling, central registry non-mutation invariant. |
+| **[SubsystemGovernancePolicy.md](file:///.agents/rules/SubsystemGovernancePolicy.md)** | `RULE-SUB-001` - `008` | **Subsystem Architecture** | Subsystem Repositories | Disjunct domains, dedicated subsystem inventories, JIT ephemeral tokens, host safety hardware interlocks, log segregation, Update-Gate & CRP bundling, central registry non-mutation invariant, and LCM Inventory Exclusivity & Proposal Directory Invariant (`RULE-SUB-008`). |
 | **[macro-definitions.md](file:///.agents/rules/macro-definitions.md)** | `MACRO-DEFS` | **Operator Macros** | Interactive Shell | Antigravity IDE bare-word standard (`ToolExplorer`, `ShowTools`, `tools`, `ar`, `bcr`, `COMPLETE`, `PUSH`), persistent `TimestampHeaderRule` (legacy `@tsr` retired), `@RULEAUTH`, `@ml`. |
 
 ### 1.2 Solution Quality & Documentation Invariants (`quality/` — Universal Invariants)
@@ -2349,7 +2414,7 @@ All 21 canonical governance policies are organized into three functional tiers u
 | Rule File | Rule Identifiers | Domain | Scope | Core Invariant |
 |:---|:---|:---|:---|:---|
 | **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Question Response Invariant, Boundary Ambiguity & Alternatives Invariant, determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, Comment & Documentation Preservation Invariant, Universal Header Modification Timestamp Invariant, Single-Commit Version Increment Invariant, and Language Deference Hierarchy (generic formatting yields to language rules). |
-| **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |
+| **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY`, `RULE-LANG-001` - `005` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |
 | **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `012` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance, Comment & Documentation Preservation Invariant (`RULE-DOC-009`), Mandatory Modification Timestamp Update Invariant (`RULE-DOC-010`), Implementation Choices, Rationale & Caveats Synchronization Invariant (`RULE-DOC-011`), and Data Design Specification Standard (`RULE-DOC-012`). |
 | **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `009`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing, and Anti-Code-Reading & Direct Goal Execution Invariant (`RULE-EFF-009`). |
 

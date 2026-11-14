@@ -11,7 +11,7 @@ Path: .agents/rules/RuleAuthority.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 22:25:00
 
 ---
 
@@ -24,8 +24,9 @@ Date: 2026-11-14 14:40:00
 - **Multi-Host Adapter Standard**: Specialized host-adapter environments (specifically **Claude Code** in `.claude/`, **Antigravity** in `.agents/`, **Gemini** in `GEMINI.md`, **VS Code** in `.vscode/`, and **Cursor** in `.cursor/`) are recognized as sanctioned, read-only projections of the canonical rule hub, provided each adapter:
   1. Derives from and explicitly references an authoritative `LCM_AI` Git commit baseline.
   2. Retains 1:1 mapping with canonical rule identifiers (`RULE-*`, `INV/*`).
-  3. Confines host-specific operational mechanisms or constraints (e.g. path-scoping, automated hooks) to explicit adapter annotations without altering the underlying normative governance mandates.
-  4. Is verified against rule drift via canonical rule health checks (`Test-LCMRuleHealth.ps1`).
+  3. Confines host-specific operational mechanisms or constraints (e.g. path-scoping, automated hooks, editor API mechanics) to explicit adapter annotations without altering the underlying normative governance mandates. Canonical rules state the host-neutral architectural intent; host implementations map that intent to their runtime tools.
+  4. Is verified against rule drift via host adapter drift checks (planned for centralized automation in `LCM_Inventory/tools/Test-LCMRuleHealth.ps1`; currently validated via adapter-specific drift checks), auditing file inventories, baseline commit parity, and rule code coverage across registered host adapters.
+  5. Adheres to the Host-Neutral Session Continuity Architecture (`RULE-LCM-030`) using workspace-level state files (`.agents/ACTIVE_SESSION.md`, `.agents/ACTIVE_CONTEXT.md`, `.agents/LEARNED_ADVICE.md`); host-native memory stores pointers only, and disk files are the sole authority.
 
 ---
 

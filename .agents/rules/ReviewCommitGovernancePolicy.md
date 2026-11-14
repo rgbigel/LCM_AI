@@ -11,15 +11,15 @@ Path: .agents/rules/ReviewCommitGovernancePolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-14 14:40:00
+Date: 2026-11-14 21:40:00
 
 ---
 
 ## 1. Governance Rules
 
 ### RULE-REV-001: Mandatory Review-Gated Commits & Gate 2 Non-Circumvention Invariant
-1. **Mandatory Visual Review Gate (Gate 2)**: Every Git commit action for source code, configuration, tools, modules, or structural assets (`*.ps1`, `*.psm1`, `.vscode/settings.json`, `LCM_Inventory/*`, `docs/*`) in any LCM-governed repository requires a prior validated review disposition (`COMPLETED` or `COMPLETED_WITH_EDITS`) produced via the formal Beyond Compare 5 visual review gate (`Invoke-BeyondCompareReview.ps1`), with transparent junction traversal via `FollowSymLinks` (`RULE-REV-008`). The gate may resolve an exact CRP/BUG, a repository, or a declared cohort; it must reject only unresolved or ambiguous scope.
-2. **Strict Gate 2 Non-Circumvention Baseline**: Beyond Compare visual diff review is non-circumventable for code/tools/specs across all items by default. Even critical, urgent, or internally generated BUGs normally execute in `DOIT` mode (`always-proceed = $true`) without a Gate 1 planning pause, but halt at Gate 2 for operator review before reaching `COMMITTED`.
+1. **Mandatory Visual Review Gate (Gate 2)**: Every Git commit action for source code, configuration, tools, modules, or structural assets (`*.ps1`, `*.psm1`, `.vscode/settings.json`, `LCM_Inventory/*`, `docs/*`) in any LCM-governed repository requires a prior validated review disposition (`completed` or `completed_with_edits`) produced via the formal Beyond Compare 5 visual review gate (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`), with transparent junction traversal via `FollowSymLinks` (`RULE-REV-008`). The gate may resolve an exact CRP/BUG, a repository, or a declared cohort; it must reject only unresolved or ambiguous scope.
+2. **Strict Gate 2 Non-Circumvention Baseline**: Beyond Compare visual diff review is non-circumventable for code/tools/specs across all items by default. Even critical, urgent, or internally generated BUGs normally execute in `DOIT` mode (`always-proceed = $true`) without a Gate 1 planning pause, but halt at Gate 2 for operator review before reaching `completed`.
 3. **Authorized Exceptions to Gating**:
    There are two (2) authorized exceptions to this rule:
    1. **Explicit Operator Directive (`IMMEDIATELY`, `FORCE`)**: The user can explicitly INSTRUCT (`IMMEDIATELY`, `FORCE`) to bypass review confirmation and advance directly into the Implementation Phase / review commit without confirming the visual review.
@@ -37,11 +37,11 @@ Date: 2026-11-14 14:40:00
 When a review outcome is recorded as `Completed with Edits` (or `Completed with Change`):
 1. The modified codebase `MUST` execute and satisfy all repository quality gates (`Test-RepoReadiness.ps1`).
 2. The modifications `MUST NOT` introduce rule violations, regression errors, or broken dependencies.
-3. Upon satisfying all quality gates, the state `SHALL` be classified as fully `COMPLETED` and committed to Git.
-4. When `-MinimalTests` is engaged under operator instruction or automated loop circumvention, the readiness gate executes fast-tier syntax and structure validation while bypassing heavy integration cascades; the resulting commit is recorded as `completed [minimal-tests]` with `"test_scope": "minimal"` per `RULE-LCM-023`.
+3. Upon satisfying all quality gates, the state `SHALL` be classified as fully `completed` and committed to Git.
+4. When `-MinimalTests` is engaged under operator instruction or automated loop circumvention, the readiness gate executes fast-tier syntax and structure validation while bypassing heavy integration cascades; the resulting commit is recorded as `completed` with `"test_scope": "minimal"` per `RULE-LCM-023`.
 
-### RULE-REV-003: Override & Force Authority for Rejected/Deferred States
-If a review outcome is `REJECTED` or `DEFERRED`:
+### RULE-REV-003: Override & Force Authority for Rejected/Held States
+If a review outcome is `rejected` or `held`:
 1. Automated commit and push pipelines `MUST` halt immediately.
 2. Committing or pushing changes in a rejected or deferred state `IS FORBIDDEN` unless explicitly commanded by the user with a forced override instruction (e.g., `-Force` parameter or unambiguous explicit override prompt).
 
@@ -49,20 +49,20 @@ If a review outcome is `REJECTED` or `DEFERRED`:
 The review-gating rules (`RULE-REV-001` through `RULE-REV-003`) take strict precedence over any general "all commands are permitted" or automated background execution policies in effect across the workspace.
 
 ### RULE-REV-005: Universal Audit & Change Request Traceability
-Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferred`) `MUST` be recorded with an immutable timestamp, reviewer identity, repository HEAD SHA, and notes into:
+Every review disposition (`completed`, `completed_with_edits`, `rejected`, `held`) `MUST` be recorded with an immutable timestamp, reviewer identity, repository HEAD SHA, and notes into:
 1. `LCM_Inventory/logs/cm_activity.log` (Append-only CM audit ledger).
 2. `LCM_Inventory/data/reviews/REVIEW-<Repo>-<Timestamp>.json` (Structured review evidence).
 3. The active Change Request (CR) record in `LCM_Inventory/data/change_requests.json` and mirrored proposal Markdown files when modifying governed baselines.
 4. The accepted Gate 0 Contract and the verification evidence for its exit criteria when the change is structural.
 
 ### RULE-REV-006: Mandatory Review Stop & Lifecycle Step Invariant
-1. **Mandatory Review Stop**: Whenever an agent carries out a CRP or code modification reaching the visual review stage (Gate 2), the agent `MUST` launch `Invoke-BeyondCompareReview.ps1` and **immediately terminate the current response turn without making additional tool calls**.
+1. **Mandatory Review Stop**: Whenever an agent carries out a CRP or code modification reaching the visual review stage (Gate 2), the agent `MUST` launch `BCR.cmd` / `Invoke-MacriumBcrReview.ps1` and **immediately terminate the current response turn without making additional tool calls**.
 2. **`Proceed` at Gate 2**: Upon operator submission of **`Proceed`** (or `Proceed <ID>`) after review inspection:
-   - The proposal advances by exactly one status pulse: `REVIEW` $\rightarrow$ **`COMMITTED`**.
+   - The proposal advances by exactly one status pulse: `in_review` $\rightarrow$ **`completed`**.
    - The local Git commit is created with the required SemVer increment per `RULE-REV-007`.
 3. **`PUSH` (Publication Trigger)**:
    - `PUSH` is the only lifecycle command that may invoke a remote push.
-   - It pushes only a fully preflighted cohort of `COMPLETED` proposals and `LCM_Inventory` in lockstep.
+   - It pushes only a fully preflighted cohort of `completed` proposals and `LCM_Inventory` in lockstep.
    - Uncommitted proposals remain strictly in their local state.
    - Enforces the Push Auto-Reset Invariant: both `LCM Mode` and `Testing Mode` unconditionally revert to `ON`.
 
@@ -79,13 +79,15 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
      - `LCM_Inventory/data/inventory.json` repository record.
    - Commit messages and review receipts `MUST` record the resulting semantic version (e.g. `feat(cm): ... [10.0.0]`).
 3. **LCM_Inventory Operational Data Exemption**:
-   - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
+   - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.db`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
    - Semantic version increments for `LCM_Inventory` apply strictly when source code (`tools/*.ps1`, `modules/*.psm1`), specifications (`docs/*.md`), or governance policies are modified.
 
 ### RULE-REV-008: Transparent Single-Session Directory Junction Review (FollowSymLinks)
 1. **Transparent Directory Junction Traversal**: Beyond Compare 5 review sessions `MUST` configure `<FollowSymLinks Value="True"/>` in `BCSessions.xml`, enabling Beyond Compare to traverse NTFS directory junctions (such as `.agents\rules`) inline within the primary review session.
 2. **Unified Single-Window Invariant**: Dual-session Beyond Compare review dispatch is retired. All repository review comparisons execute in a single Beyond Compare window without opening a separate junction review instance.
-3. **Composite Local Baseline Identity**: The left pane `MUST` be exported from the target repository's explicitly resolved local `BaseCommit`; it `MUST NOT` implicitly resolve, fetch, or substitute a remote reference. Where that commit exposes a junction-backed path, the scratch tree `MUST` replace the junction with a committed rules snapshot selected in this order: the target `BaseCommit`; the local committed junction-authority snapshot at or immediately before the target commit timestamp; the nearest target-history ancestor whose Git tree contains the junction path; then the local committed `HEAD` of the live junction authority. The selected source repository, relative path, SHA, and selection source `MUST` be recorded alongside the target SHA. A target-history snapshot that predates the target commit by a later authority snapshot `MUST NOT` be selected.
+3. **Baseline Model Hierarchy & Composite Local Baseline Identity**:
+   - **Primary Model**: In accordance with `RULE-REV-014`, the authoritative primary baseline comparison for all reviews across the workspace is **BCR** (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`), which evaluates the live workspace root (`D:\Git_Repositories`) against the workspace root on the mounted Macrium Reflect backup drive (`<MountedDrive>:\Git_Repositories`) using the operator-owned `_LCM` Beyond Compare profile.
+   - **Fallback Model (Headless / Non-Macrium)**: Where Macrium Reflect image mounting is physically unavailable (e.g. headless CI/CD runner per `RULE-REV-001.6`), the left pane `MUST` be exported from the target repository's explicitly resolved local `BaseCommit`; it `MUST NOT` implicitly resolve, fetch, or substitute a remote reference. Where that commit exposes a junction-backed path, the scratch tree `MUST` replace the junction with a committed rules snapshot selected in this order: the target `BaseCommit`; the local committed junction-authority snapshot at or immediately before the target commit timestamp; the nearest target-history ancestor whose Git tree contains the junction path; then the local committed `HEAD` of the live junction authority. The selected source repository, relative path, SHA, and selection source `MUST` be recorded alongside the target SHA. A target-history snapshot that predates the target commit by a later authority snapshot `MUST NOT` be selected.
 4. **Historical Junction Semantics**: The baseline `MUST` contain only files present in the selected committed rules snapshot. A file visible through the live junction but absent from every available committed snapshot `MUST` remain absent on the left and appear as a live-only addition on the right; the launcher `MUST NOT copy` mutable working-tree authority content into a historical baseline.
 5. **Identity and Cache Clarity**: The baseline cache identity and pane title `MUST` display the target local SHA, selected rules source, and selected rules SHA. A launcher `MUST NOT` invent or fall back to an unrelated version label when a real version artifact is unavailable.
 6. **Exclusion Filter Alignment**: Review exclusion filter lists `MUST NOT` filter out `-.agents\rules\`, ensuring all governance rule diffs remain directly inspectable in the primary review pane.
@@ -98,7 +100,7 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
 ---
 
 ### RULE-REV-010: Zero-Assumption Pre-Review Gate Verification Invariant
-1. **Mandatory Mechanical Verification Before Review**: Before any proposal or change set is presented for Gate 2 visual review or commit gating, all modified or created files `MUST` have undergone mandatory mechanical syntax parsing (PowerShell AST parser, Python compile, JSON validation) and unit test execution (Pester).
+1. **Mandatory Mechanical Verification Before Review**: Before any proposal or change set is presented for Gate 2 visual review or commit gating, all modified or created files `MUST` have undergone mandatory mechanical syntax parsing per the `mandatory-pre-handoff-syntax-gate` in `InvariantRules.md` (PowerShell AST parser, Python compile, Go vet/build, JSON validation) and unit test execution (Pester).
 2. **Prohibition of Unverified Readiness Claims**: An AI agent or developer `MUST NEVER` launch a Beyond Compare review session, claim review readiness, or solicit operator review disposition based on visual inspection alone without prior execution evidence recorded in `Walkthrough.md`.
 
 ### RULE-REV-011: ADMINMODE Rule-Change Authorization Invariant

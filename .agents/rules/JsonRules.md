@@ -11,7 +11,7 @@ Path: .agents/rules/JsonRules.md
 Authors: Rolf  
 Version: 10.2.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 

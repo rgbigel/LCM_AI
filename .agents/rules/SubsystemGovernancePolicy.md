@@ -11,7 +11,7 @@ Path: .agents/rules/SubsystemGovernancePolicy.md
 Authors: Rolf, LCM_AI Governance  
 Version: 10.2.0
 Status: Authoritative Policy  
-Date: 2026-10-13
+Date: 2026-11-14 21:40:00
 
 ---
 
@@ -26,7 +26,7 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 ## 2. Invariant Rules
 
 ### RULE-SUB-001: Subsystem Classification & Documentation Conformance
-1. A repository classified as `subsystem` in `LCM_Inventory/config.json` `MUST` fully implement standard LCM **Tripartite Documentation** (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`) and the universal runbook (`install/Installation.md`).
+1. A repository classified as `subsystem` in `data/inventory.json` `MUST` fully implement standard LCM **Tripartite Documentation** (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`) and the universal runbook (`install/Installation.md`).
 2. The root `LCM_Inventory` tracks Subsystems at the macro Git level, while delegating internal part tracking to the Subsystem's dedicated inventory engine.
 
 ### RULE-SUB-002: Dedicated Subsystem Inventory Engine & Auto-Acceptance Invariant
@@ -35,7 +35,7 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 3. **Direct Carry-Over from LCM (`RULE-EFF-001`)**: Routine Subsystem telemetry collection, entity dumps, and dashboard rendering constitute mechanical evidence and are **automatically accepted**. Telemetry synchronization runs `SHALL NOT` force manual review gates or block workflows on interactive diff sessions.
 
 ### RULE-SUB-003: Host-Side Hardware Safety Interlocks (Offline / Pre-Boot)
-1. Any host script performing physical disk operations (flashing images, disk cloning, partition restructuring) `MUST NEVER` target arbitrary disk indices (e.g., `Disk 2`) without validating explicit **Hardware Serial Numbers** and **Model Descriptors** declared in `LCM_Inventory/config.json`.
+1. Any host script performing physical disk operations (flashing images, disk cloning, partition restructuring) `MUST NEVER` target arbitrary disk indices (e.g., `Disk 2`) without validating explicit **Hardware Serial Numbers** and **Model Descriptors** declared in the subsystem's requirements specification (`docs/Requirements.md`).
 2. Host tools `MUST` execute `Assert-DiskTargetSafety` to guarantee that active Windows `Boot`, `System`, or `PageFile` volumes are **never** targeted.
 3. Destructive disk operations require high-integrity Administrator elevation and explicit operator confirmation.
 
@@ -77,7 +77,7 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 ---
 
 ### RULE-SUB-008: LCM Inventory Exclusivity & Proposal Directory Invariant
-1. **Primary LCM Domain Centralization**: All proposals (CRPs, BUGs) regarding governed `LCM_*` repositories in the `Git_Repositories` workspace (`LCM_AI`, `LCM_Inventory`, `LCM_Shared`, `LCM_Supervision`, `LCM_SystemConfiguration`, `LCM_Tools`) `MUST` reside exclusively within `LCM_Inventory` (`LCM_Inventory/docs/Proposals/` and `LCM_Inventory/data/proposals/`).
+1. **Primary LCM Domain Centralization**: All proposals (CRPs, BUGs) regarding governed `LCM_*` repositories in the `Git_Repositories` workspace (`LCM_AI`, `LCM_Inventory`, `LCM_Shared`, `LCM_Supervision`, `LCM_Tools`) `MUST` reside exclusively within `LCM_Inventory` (`LCM_Inventory/docs/Proposals/` and `LCM_Inventory/data/proposals/`).
 2. **Child Proposal Directory Prohibition**: No `LCM_*` repository other than `LCM_Inventory` `SHALL` maintain a `docs/Proposals/` or `Proposals/` directory. Normal repository documentation (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`, `README.md`, or component runbooks) remains in the respective child repository; proposal bundles `MUST NEVER` be placed in child `LCM_*` repositories.
 3. **DoT and Scratch Directory Prohibition**: Governed `LCM_*` repositories other than `LCM_Inventory` `MUST NOT` contain `DoT/` or `scratch/` directories. All workspace DoT runtime engines and scratch staging spaces are strictly centralized in `LCM_Inventory`.
 4. **Disjunct Subsystem Exemption**: Subsystems outside the core `LCM_*` governance domain (e.g. `HaSSD06` with `HaSSD06_Inventory`, or `SystemConfiguration`) represent autonomous runtime domains and `MAY` maintain their own private inventory and proposal stores per `RULE-SUB-002`.

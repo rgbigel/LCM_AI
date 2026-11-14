@@ -23,6 +23,9 @@ $ErrorActionPreference = 'Stop'
 
 $scriptDir = Split-Path $PSScriptRoot -Parent
 $toolsDir = Join-Path $scriptDir 'tools'
+if (-not (Test-Path $toolsDir)) {
+  $toolsDir = Join-Path (Split-Path $scriptDir -Parent) 'LCM_Inventory\tools'
+}
 $passedCount = 0
 $failedCount = 0
 

@@ -9,9 +9,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.3
+Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-10 18:47:00
+Date: 2026-11-14 14:05:00
 
 ---
 
@@ -94,6 +94,12 @@ repository, or a declared cohort; Gate 2 begins only when the review launcher ha
 the resolved scope is in `in_review`. `COMPLETE` accepts the same resolved forms and can
 transition only `in_review` work to `completed`. Unresolved or ambiguous scope MUST fail closed.
 
+#### Held State Resume Fallback Invariant
+When an operator or tool executes `resume`, `reopen`, or `continue` on a `held` proposal that lacks prior recorded state history in `state_history` (e.g. freshly registered items held immediately upon intake), `Get-LcmProposalResumeState` MUST fall back to `suggested` (Gate 1). Tooling and engines MUST NOT return an empty resume state or fail closed with invalid blank transitions.
+
+#### Gate 2 Direct Acceptance Auto-Promotion Guardrail
+When an operator directly invokes review acceptance (`accept`, `complete`, or review receipt filing via `Submit-ReviewResult.ps1` / `Invoke-ProposalAction.ps1 -Action accept`) on a proposal currently residing in `in_progress` or `verified`, tooling MUST automatically promote the proposal through necessary intermediate lifecycle states (`in_progress` $\rightarrow$ `verified` $\rightarrow$ `in_review`) before final review commit and receipt generation. This eliminates artificial transition rejection during interactive operator acceptance.
+
 ### Reinstating Delivered CRPs
 
 `reinstate <CRP-ID>` is the only route for reopening a `completed` or `pushed`
@@ -135,7 +141,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-004: Visual Diff Review & Exemption Scope
 - **Governed Repositories & Root Container**: Every governed repository and the Root Container (`D:\Git_Repositories`) `MUST` undergo visual diff review via `Invoke-BeyondCompareReview.ps1 <RepoName>` before commit, subject to authorized exceptions in `RULE-REV-001`.
-- **Dual-Session Junction Review**: For repositories containing NTFS directory junctions (e.g. `.agents` pointing to `LCM_AI\.agents`, or `.agents\rules` pointing to `LCM_AI\.agents\rules`), `Invoke-BeyondCompareReview.ps1` `MUST` automatically dispatch a second Beyond Compare review session targeting the live junction destination on the right pane per `RULE-REV-008`.
+- **Single-Session Junction Review**: In accordance with `RULE-REV-008`, dual-session review is retired. Beyond Compare traverses NTFS directory junctions inline within a single review session via `<FollowSymLinks Value="True"/>`, ensuring changes across source code and junction-backed governance rules remain inspectable in one unified comparison.
 - **Privileged Subsystem Data Exemption vs. Tool Scrutiny**:
   - **Dynamic Configuration & Ledger Data Exemption (`RULE-EFF-001`)**: Ledger data, review staging receipts, baseline manifests, telemetry logs, generated artifacts, routine test output, and scratch generation outputs located in `LCM_Inventory` (`data/`, `logs/`, `scratch/`) are auto-accepted mechanical evidence and exempt from visual diff review stops. An operator may request an unfiltered BCR peek at exempt paths; resulting advice is non-blocking.
   - **Executable Tools & Documentation Scrutiny**: All permanent scripts, PowerShell modules, test suites, and architectural documentation located in `LCM_Inventory` (`tools/`, `modules/`, `docs/`, `tests/`, `Cmd/`) are first-class governed LCM software assets and `MUST` undergo visual diff review via `Invoke-BeyondCompareReview.ps1 LCM_Inventory` prior to commit.
@@ -217,32 +223,45 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    stateDiagram-v2
        direction TB
 
-       [*] --> Suggested: Intake (suggest)
-       Suggested --> Scoped: Scope (bind repo / app)
-       Scoped --> Decided: Decide / Approve Plan (Gate 1 Passed)
-       Decided --> In_Progress: Start / do (sets -DOIT)
-       In_Progress --> Verified: Verify Tests Passed
-       Verified --> Committed: Accept BC5 Review & Commit (Gate 2 Passed)
-       Committed --> Published: Publish / Push to Remote
-       Published --> [*]
+       [*] --> Suggested: Intake (suggest / CRP / BUG)
 
-       %% Exception Flow: HELD Suspension
-       In_Progress --> Held: hold (sets HELD disposition)
-       Scoped --> Held: hold
-       Decided --> Held: hold
-       Held --> In_Progress: resume (clears HELD disposition)
+       %% Gate 1: Intent & Specification Acceptance
+       Suggested --> In_Progress: Advance / Proceed / DO / Accept (Gate 1)
+
+       %% Implementation & Verification
+       In_Progress --> Verified: Advance / Proceed / Verify Tests Pass
+
+       %% Gate 2: Beyond Compare Visual Review
+       Verified --> In_Review: Advance / Proceed / Open Review (BCR)
+
+       %% Gate 2 Acceptance & Completion
+       In_Review --> Completed: Advance / Proceed / Accept Review (Gate 2)
+       Verified --> Completed: Accept Review / Fast Complete (Authorized)
+
+       %% Publication
+       Completed --> Pushed: Publish / Push to Remote (PUSH)
+       Pushed --> [*]
+
+       %% Exception Flow: HELD Suspension & Direct Advance
+       In_Progress --> Held: hold / pause
+       Verified --> Held: hold / pause
+       In_Review --> Held: hold / pause
+       Held --> In_Progress: Advance / resume / reopen
 
        %% Exception Flow: Gate 1 Administrative Withdrawal (Zero Reverts)
-       Suggested --> Cancelled: cancel (Gate 1 withdrawal / zero reverts)
-       Scoped --> Cancelled: cancel (Gate 1 withdrawal / zero reverts)
-       Decided --> Cancelled: cancel (Gate 1 withdrawal / zero reverts)
+       Suggested --> Withdrawn: withdraw / cancel (Zero Reverts)
 
        %% Exception Flow: Gate 2 Implementation Rejection (Rollback to Baseline)
-       Verified --> Rejected: reject (Gate 2 review rejection / rollback to baseline)
-       In_Progress --> Rejected: reject (aborted implementation / rollback to baseline)
+       In_Progress --> Rejected: reject (Rollback to Baseline)
+       Verified --> Rejected: reject (Rollback to Baseline)
+       In_Review --> Rejected: reject (Rollback to Baseline)
 
-       Cancelled --> [*]
+       %% Supersession (Active Successor Linked)
+       Completed --> Superseded: supersede (Successor linked)
+
+       Withdrawn --> [*]
        Rejected --> [*]
+       Superseded --> [*]
    ```
 
 ### RULE-LCM-008: BUG Disposition, DOIT Mode & Review Decision Non-Circumvention Baseline
@@ -289,10 +308,15 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 ### RULE-LCM-012: Mandatory Scope-and-Version Explicit CRP Specification Generation Invariant
 1. **Mandatory Standalone Specification**: Whenever proposing, designing, or implementing new features, tools, workflows, architectural enhancements, or governance policies, the AI agent `MUST` author a formal, standalone Scope-and-Version Explicit Change Request Proposal specification (`Specification.md`) within its proposal bundle in `LCM_Inventory/docs/Proposals/` before or alongside ledger registration.
 2. **Prohibition of Orphan Feature Proposals**: Proposing or executing features or tool modifications without an authoritative, permanent proposal bundle in `LCM_Inventory/docs/Proposals/` is strictly prohibited. Every non-bug feature proposal in `proposals.json` `MUST` link to a valid `bundle_id` matching an existing CRP bundle.
+3. **Silent Specification YAML Synthesis & Insertion Invariant**:
+   - A missing `Specification.md` file or missing ` ```yaml ` frontmatter fence `MUST NOT` cause fatal transition failure during proposal lifecycle operations (`advance`, `do`, `verify`, `accept`).
+   - Tooling (`ProposalSpecificationState.psm1`) `MUST` automatically scaffold the proposal bundle directory if absent, synthesize the standardized ` ```yaml ` frontmatter fence populated from authoritative proposal ledger metadata (`CRP-ID`, `Title`, `Scope`, `Status`, `Plan-State`, `Progress-State`, `Priority`, `App-ID`, etc.), and silently inject the block directly below the H1 heading.
+   - If the YAML block exists but lacks individual required metadata keys, tooling `MUST` silently append the missing key-value pairs derived from ledger properties.
+   - If ambiguous, duplicate, or conflicting YAML keys are detected within `Specification.md` that cannot be deterministically resolved against ledger properties, tooling `MUST` halt execution, present raw diagnostic evidence, and request operator triage.
 
 ### RULE-LCM-013: Mandatory Pre-Push Gemini AI & Knowledge Base Synchronization Invariant
 1. **Mandatory Automated Pre-Push Execution**: Every `PUSH` operation executed via `Invoke-LCM_Push.ps1`, whether multi-repository or targeting a single repository (`-Repositories <repo>`), `MUST` automatically execute the `Update-Gemini.ps1` pipeline prior to pushing commits to remote Git repositories. Direct manual `git push` invocations that bypass `Invoke-LCM_Push.ps1` are prohibited.
-2. **Context & Rules Mirroring Parity**: This guarantees that all 17 canonical LCM rules (`LCM_AI/docs/LCM_Rules_Gemini_Export.md`), plain-text `.txt` mirrors, tool catalogs, and full workspace knowledge base exports (`D:\GDrive\LCM`) are 100% synchronized with the pushed Git baseline at the moment of remote dispatch.
+2. **Context & Rules Mirroring Parity**: This guarantees that all canonical LCM rules (21 files, [`LCM_AI/docs/LCM_Rules_Gemini_Export.md`](file:///d:/Git_Repositories/LCM_AI/docs/LCM_Rules_Gemini_Export.md)), plain-text `.txt` mirrors, tool catalogs, and full workspace knowledge base exports (`D:\GDrive\LCM`) are 100% synchronized with the pushed Git baseline at the moment of remote dispatch.
 3. **Automated Export Commit**: If the `Update-Gemini` pipeline updates the consolidated rules export in `LCM_AI`, those changes `MUST` be staged and committed immediately before dispatching the push to `origin/main`.
 
 ### RULE-LCM-014: Dual-Gate Architecture & CRP Planning Gate Invariant
@@ -330,7 +354,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 4. **`PUSH`**:
    - Pushes only `COMPLETED` proposal repositories in a preflighted cohort with `LCM_Inventory`.
    - A cohort member that is missing, lacks a remote, or is not ahead blocks all remote dispatch.
-   - Enforces the Push Auto-Reset Invariant (`RULE-LCM-006`): resets `LCM Mode` and `Testing Mode` to `ON`.iew.
+   - Enforces the Push Auto-Reset Invariant (`RULE-LCM-006`): resets `LCM Mode` and `Testing Mode` to `ON`.
 
 ### RULE-LCM-017: Autonomous System Exception Boundary & 2-Attempt Loop Breaker
 1. **Autonomous Exception Scope**: As a sole exception to `RULE-LCM-016`, the AI agent is permitted to assume an implicit `PROCEED` to immediately remediate a self-discovered or runtime-generated `BUG` `ONLY IF` all of the following conditions are simultaneously met:
@@ -444,6 +468,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 3. **Atomic Cohort Lifecycle Actions**: A lifecycle action on a cohort `MUST` evaluate every current member before any mutation. If one member is ineligible, the request `MUST` fail with member-specific reasons and leave every member unchanged. A successful request applies the same permitted transition to all members and records the cohort identity in the audit trail.
 4. **Cohort Membership Proposals**: A declared `COH-<prime>` is anchored by its immutable head/prime CRP and may contain that sole head; no minimum number of CRPs applies. Adding or removing non-head members `MUST` preview the complete membership delta and pass all head/prime, open-cohort, identity, and cross-repository validations before mutation. At most one open cohort may exist; Add `MUST` resolve it automatically rather than offer a cohort choice. Creation remains available when an open cohort exists, but creates an inactive cohort; only opening or reopening an inactive cohort is rejected while another cohort is open. Adding when no open cohort exists is rejected. The backend `MUST` recheck this invariant immediately before persistence. Closed cohorts are irrelevant, and inactive does not mean closed. Partial membership changes are prohibited.
 5. **FIX Presentation Boundary**: A Control Hub `FIX` action group may provide a unified operator entry point for review-confirmation exceptions, emergency quality deferrals, retirement, and supersession. `-Force` and `-Immediately` retain their distinct eligibility, reason, exact-identity, review, and termination requirements; a common label `MUST NOT` broaden either mechanism.
+6. **Control Hub Action Parity**: The Control Hub UI (`CM_CONTROL_HUB.html`) `MUST` maintain operational parity with governed CLI lifecycle actions, exposing an explicit **`Complete ITEM`** (🏁) action alongside `Advance`, `Proceed`, and `Accept` across all active execution states (`in_progress`, `verified`, `in_review`) in `lifecycleActionStates`.
 
 ---
 
@@ -498,4 +523,24 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - **Stage 1 (Recognized Status)**: Upon intake into an active CRP, the advice entry is annotated as `[RECOGNIZED: CRP-XXX]`. It remains 100% active, binding, and enforceable. It `MUST NEVER` be marked `done` or deleted during implementation.
    - **Stage 2 (Guaranteed Retirement)**: Deletion from `LEARNED_ADVICE.md` is unlocked `ONLY` when the CRP's goals—specifically including the issue governed by the learned advice—are **guaranteed to be met** by the test harness (e.g. passing Pester test, automated readiness gate, or formal policy codification in `.agents/rules/`).
    - Only upon verified passage of the guarantee at `verify` / `in_review` / `complete` is the advice entry safely purged from `LEARNED_ADVICE.md`.
+
+---
+
+### RULE-LCM-032: Fix Completeness, Defect-Driven Rule Reconciliation & Operator Disclosure Invariant
+1. **Four-Dimensional Fix Completeness Standard**:
+   Whenever an operational failure, defect, or rule fault is remediated across the workspace, the AI agent or engineer `MUST NOT` report or declare the issue as **`FIXED`** without explicitly providing a four-dimensional completeness breakdown:
+   - **(a) Code & Tool Implementation**: Source files, trampolines, modules, or scripts modified, AST-parsed, and compiled clean.
+   - **(b) Automated Test Verification**: Relevant unit tests, Pester test suites, or readiness quality gates executed with a 100% pass rate.
+   - **(c) Governance Policy Codification**: Authoritative rules (`.agents/rules/`), indexes (`AGENTS.md`), and cross-reference matrices synchronized to capture the new invariant or guardrail.
+   - **(d) UI & Operational Surface Parity**: Control Hub (`CM_CONTROL_HUB.html`), CLI commands, and macro surfaces updated to expose the capability.
+2. **Mandatory Rule Reconciliation for Implementation Changes**:
+   Whenever an implementation or tool behavior changes because of rule faults, lifecycle gaps, or operational friction, the governing policy `MUST` be consistently repaired in the same change set.
+3. **Mandatory Operator Disclosure on Incomplete Reconciliation**:
+   If technical, environmental, or permission constraints prevent the immediate completion of any of the four dimensions (e.g. inability to test, deferred rule changes), the AI agent `MUST` explicitly disclose the omission and exact gap to the operator before concluding the turn. Silent or unverified claims of "FIXED" are strictly prohibited.
+
+---
+
+### RULE-LCM-033: Diagnostic Triage Protocol & Architecture Mismatch Escalation Invariant
+1. **Mandatory 5-Stage Triage Protocol**: Whenever an AI agent encounters UI-to-daemon dispatch failures, REST bridge timeouts, or proposal lifecycle transition errors, it `MUST` follow the 5-stage diagnostic triage protocol defined in `RULE-EFF-010` (Context Whodunit $\rightarrow$ Dispatch/Transport $\rightarrow$ Handler Execution $\rightarrow$ Procedural Correctness $\rightarrow$ Architectural Escalation).
+2. **Mandatory Stop on Architecture Mismatches**: Speculative code mutations or recursive loop attempts when facing lifecycle state rejections or daemon transport errors are strictly prohibited. The agent must yield control immediately after Attempt 2 with full diagnostic telemetry.
 

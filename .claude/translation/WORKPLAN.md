@@ -6,7 +6,7 @@ Path: LCM_AI/.claude/translation/WORKPLAN.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.2.5
 Status: Draft  
-Date: 2026-11-13 21:34:53
+Date: 2026-11-13 21:39:39
 
 ---
 
@@ -87,6 +87,10 @@ Translation fidelity: condensed normative MUST / MUST NOT statements with source
 | Q-03 | Which proposal ledger is authoritative today: `proposals.json` or `proposals.db`? |
 | Q-04 | May Claude write to the shared `.agents/LEARNED_ADVICE.md` (`/learn`), or stay in the separate Claude scheme (D-11)? (FINDINGS) |
 | Q-05 | Where is the per-repository LCM configuration today (`<Repo>/LCM_Inventory/config.json` exists nowhere)? (FINDINGS F-10) |
+| Q-06 | ANSWERED 2026-11-13: a release does not change the patch digit at reset; the patch digit changes on completion (commit). (D-14) |
+| Q-07 | ANSWERED 2026-11-13: a question-phrased request means the AI sees a need to answer with solution paths, with or without suggestions - answer, do not act. (F-08) |
+
+Q-01 and Q-03 are addressed by CRP-326 items 1 and 5 once the operator accepts them.
 
 ## 8. Parked Documentation Observations (not judged; phase 3)
 

@@ -9,9 +9,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.4
+Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-11 15:30:00
+Date: 2026-11-14 14:40:00
 
 ---
 
@@ -67,10 +67,10 @@ Every review disposition (`Completed`, `CompletedWithEdits`, `Rejected`, `Deferr
    - Enforces the Push Auto-Reset Invariant: both `LCM Mode` and `Testing Mode` unconditionally revert to `ON`.
 
 ### RULE-REV-007: Mandatory Automatic Semantic Version Increment per Change Invariant
-1. **Universal Version Increment Invariant**: Every change, proposal, or bug fix committed to any LCM-governed repository `MUST` increment that repository's semantic version before or during review commit:
-   - **Patch Increment (`+10.0.0`)**: Standard default for all bug fixes, refinements, single-purpose enhancements, and incremental proposal completions.
-   - **Minor Increment (`+10.0.0`)**: For substantive new feature sets, new tools, new sub-frameworks, or major multi-component proposals.
-   - **Major Increment (`+10.0.0`)**: For global platform architectural transitions, governed by `RULE-DOC-005`.
+1. **Universal Version Increment Invariant**: Every change, proposal, or bug fix committed to any LCM-governed repository `MUST` increment that repository's semantic version before or during review commit according to standard SemVer arithmetic:
+   - **Version Bump (Major: `+1.0.0`)**: Applied for global platform architectural transitions governed by `RULE-DOC-005`, resetting both the second (minor) and third (patch) digits to `0` across all repository components (e.g. `10.2.5` → `11.0.0`).
+   - **Release Bump (Minor: `+0.1.0`)**: Applied at formal release boundaries. Release rules **DO NOT** reset the patch digit to `0`; the last digit follows component change state only.
+   - **GoodNight Push / Commit (Patch: `+0.0.1`)**: Applied on commit completion strictly for components that physically changed; unchanged components keep their existing patch digit. Clean state is required at release, not at GoodNight pushes.
 2. **Synchronized Artifact Updates**:
    - The incremented version `MUST` be updated in:
      - DOX metadata headers of modified scripts and modules (`Version: M.Y.Z`).

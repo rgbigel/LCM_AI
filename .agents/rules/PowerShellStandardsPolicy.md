@@ -9,9 +9,9 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.2
+Version: 10.3.0
 Status: Authoritative Policy  
-Date: 2026-11-09 20:05:00
+Date: 2026-11-14 14:40:00
 
 ---
 
@@ -348,6 +348,19 @@ In PowerShell equality comparisons (`-eq`, `-ne`), `$null` `MUST ALWAYS` be posi
    If an operation genuinely requires operator confirmation (such as destructive disk operations, irreversible volume alterations, or data pruning), that confirmation `MUST` be implemented explicitly in the script's code flow (e.g., via `Read-Host`, explicit prompt logic, or dedicated `-Force` switch parameters), where all prompts, user choices, and outcomes are visibly logged and exceptions are caught via `try { ... } catch { ... }`.
 4. **Opportunistic Remediation on Acceptance**:
    Whenever any existing script is edited, refactored, or reviewed under a proposal, any lingering `SupportsShouldProcess` or `ConfirmImpact` declarations `MUST` be removed as part of the standard pre-acceptance quality check.
+
+---
+
+### RULE-PS-025: Model-Atom-Controller (MAC) Modular Implementation Invariant
+1. **Architectural Triad Separation**:
+   PowerShell tool suites and command workflows across the workspace `MUST` adhere to the Model-Atom-Controller (MAC) architectural pattern:
+   - **Model (`*State.psm1`, `*Data.psm1`)**: Encapsulates state persistence, data contracts, and schema invariants (e.g. SQLite DB access, JSON ledgers). Models execute zero UI rendering and zero workflow orchestration.
+   - **Atom (`*Atoms.psm1`, `LCM_Shared/`)**: Reusable, single-purpose, highly cohesive functions that perform isolated operations (e.g. string formatting, AST parsing, token extraction, single system queries). Atoms must be pure or idempotent, stateless, and independently unit-testable.
+   - **Controller / Dispatcher (`Invoke-*.ps1`, `Show-*.ps1`)**: Orchestrates atoms, evaluates flow switches, and coordinates execution flow between models, views, and external daemons. Controllers contain workflow logic but must not re-implement low-level atom routines.
+2. **Code Segment Bounding**:
+   Individual functions and atom bodies `MUST NOT` exceed bounded cognitive complexity. Monolithic script files exceeding 500 lines `MUST` externalize discrete functional blocks into cohesive modular atoms.
+3. **Mandatory Pester Unit Test Coverage**:
+   Every newly created or refactored Atom module `MUST` be accompanied by a dedicated Pester v5 unit test suite (`tests/*Atoms.Tests.ps1`) verifying both nominal execution and error boundary conditions.
 
 
 

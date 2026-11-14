@@ -90,6 +90,17 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 
 ---
 
+### RULE-EFF-010: Diagnostic Triage Protocol & UI-to-Daemon Execution Mismatch Escalation Invariant
+1. **Mandatory 5-Stage Diagnostic Sequence**: When an AI agent encounters command execution failures, daemon connection errors, or UI-to-daemon lifecycle discrepancies, it MUST execute the following 5-stage triage protocol sequentially before proposing or modifying any code:
+   - **Stage 1 — Context Whodunit**: Resolve active repository scope, target item classification (`CRP` vs `COH`), caller identity, and administrative elevation state. Verify that the command is executing in the correct repository context.
+   - **Stage 2 — Dispatch & Transport**: Inspect Port 9876 REST daemon socket connectivity, HTTP status codes, timeout thresholds, and payload serialization before investigating tool code.
+   - **Stage 3 — Handler Execution**: Inspect process invocation, parameter validation, exit codes, and distinguish standard error (`stderr`) streams from business warnings or diagnostic output.
+   - **Stage 4 — Procedural & Lifecycle Correctness**: Cross-check whether the attempted action is legally admissible under current state machine transition rules (`Test-LcmProposalLifecycleTransition`, Gate 1/Gate 2 requirements).
+   - **Stage 5 — Architectural Escalation**: If the error stems from an architectural mismatch, policy contradiction, or invalid lifecycle state, the agent **MUST NOT** attempt speculative code repairs or enter loop states. The agent **MUST** stop, surface the structured 5-stage diagnostic receipt to the operator, and request architectural clarification.
+2. **Prohibition of Speculative Looping**: In accordance with `RULE-LCM-017` (2-attempt loop breaker), entering recursive trial-and-error edits when a daemon action fails is strictly prohibited. The agent must yield control immediately after Attempt 2 with full diagnostic telemetry.
+
+---
+
 ## 3. Enforcement & Governance Integration
 
 - **Readiness Runners**: `Test-RepoReadiness.ps1` and `Test-WorkspaceReadiness.ps1` treat changes in log directories and `out/` as non-invalidating evidence and enforce short-circuiting on failure.
@@ -101,6 +112,7 @@ Reserved for future use. See RULE-EFF-004 for current agent execution policy.
 - **Search Enforcement (RULE-EFF-007)**: All agents and tooling must use `es.exe` (directly or through `Search-Everything.ps1`) for file-system searches; `rg.exe` is the fallback content-search tool when the Everything content index is unavailable.
 - **Tool Discovery Enforcement (RULE-EFF-008)**: `tool_catalog.json` is the first-query target for all tool and command discovery; broad unindexed filesystem scans are prohibited.
 - **Path Safety Enforcement (RULE-ENV-003)**: All path constructions must be grounded via `$PSScriptRoot`, registered trampolines, or explicit pre-flight resolution; speculative traversal is prohibited.
+- **Diagnostic Triage Enforcement (RULE-EFF-010)**: AI assistants must execute 5-stage triage on daemon or execution failures and halt immediately at Stage 5 upon detecting architectural or state mismatches.
 
 
 

@@ -9,9 +9,9 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 10.2.0
+Version: 10.3.0
 Status: Authoritative Invariant Rule  
-Date: 2026-10-13
+Date: 2026-11-14 14:40:00
 
 ---
 
@@ -21,26 +21,26 @@ Date: 2026-10-13
 At the start of every interaction or when switching focus, the agent `MUST` automatically identify the target repository from:
 1. The currently active document / cursor file path in the IDE metadata.
 2. Explicitly referenced repository paths in the user request.
-3. If working at workspace root (`D:\Git_Repositories\`), the global context in [.agents/ACTIVE_CONTEXT.md](file:///d:/Git_Repositories/.agents/ACTIVE_CONTEXT.md) defines baseline scope.
+3. Fallback for headless environments or absent IDE cursor metadata: Inspect the active proposal context (`docs/Proposals/`) or default to workspace root (`D:\Git_Repositories\`) guided by [.agents/ACTIVE_CONTEXT.md](file:///d:/Git_Repositories/.agents/ACTIVE_CONTEXT.md).
 
 ### `RULE-CTX-002` (Fast-Tier Repository Context Priming)
 When active work begins on a specific repository (e.g. `VolumeInventory`, `BootEntryManager`, `HaSSD06`, `BackgroundModifier`), the agent `MUST` prime its working context in a single targeted tier by reading:
-1. `<TargetRepo>/LCM_Inventory/config.json` (for elevation requirements, governance version, and repository classification).
+1. `LCM_Inventory/config.json` and `LCM_Inventory/data/inventory.json` (for target repository elevation requirements, governance version, and classification).
 2. `<TargetRepo>/README.md` (for module purpose, exported functions/atoms, and prerequisites).
 3. Any open Change Requests / proposals in `<TargetRepo>/docs/Proposals/` (or active task files).
 
 > [!NOTE]
-> **Unonboarded Candidate Fallback:**  
-> If `LCM_Inventory/config.json` is missing from an inspected target directory, the agent `SHALL` classify the repository as an `unonboarded-candidate` and reference the LCM onboarding workflow (`Invoke-LCMOnboardRepo.ps1`) rather than failing or running broad recursive scans.
+> **Repository Onboarding Status:**  
+> Automatic per-repository onboarding via `Invoke-LCMOnboardRepo.ps1` is planned and governed under `CRP-298`; unonboarded repositories are classified as candidates without triggering broad recursive scans.
 
 ### `RULE-CTX-003` (Zero Redundant Scan Invariant)
 The agent `MUST NOT` run multi-step recursive discovery scans (`list_dir`, broad grep) across the entire workspace when operating within the scope of an identified repository.
 
 ### `RULE-CTX-004` (Methodology Awareness)
 The agent `MUST` remain aware of the global LCM triad at all times:
-* **`LCM_AI`**: Governs release baselines (10.0.0), templates, and quality gates.
+* **`LCM_AI`**: Governs release baselines (governed by [`.agents/version.json`](file:///d:/Git_Repositories/.agents/version.json)), templates, and quality gates.
 * **`LCM_Inventory`**: Configuration Management engine, audit ledger, and cross-repo CR indexing.
-* **`LCM_Shared`**: Reusable functional PowerShell atom library (`Logging`, `VolumeAtoms`, `BcdAtoms`).
+* **`LCM_Shared`**: Reusable functional atom library (`Logging`, `VolumeAtoms`, `BcdAtoms`, Python helpers).
 
 ### `RULE-CTX-005` (Learned Advice)
 1. **Binding Status**: At the start of a session the agent `MUST` read `.agents/ACTIVE_CONTEXT.md` and `.agents/LEARNED_ADVICE.md`. Entries under **Accepted** are binding; entries under **Candidates** are guidance only.
@@ -51,10 +51,11 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 6. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
 7. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
 
-### `RULE-CTX-006` (GoodMorning Session Start)
-1. At the start of every session the agent `MUST` run `Invoke-LCM_GoodMorning.ps1 -Auto`. It is silent (one line) when less than 7 hours have passed since the last activity; a longer gap implies a good morning and produces the full read-only report.
-2. When the report lists attention items (work in between, version disagreement, stale context, pending candidates, guardrail findings) the agent `MUST` tell the operator in its first reply, before any other work.
-3. The agent `MUST` also state that it has read `ACTIVE_CONTEXT.md` and `LEARNED_ADVICE.md`, can follow them, and name anything unclear, contradictory or stale. It `MUST NOT` rely on parts of `ACTIVE_CONTEXT.md` that the report marks as stale.
-4. GoodMorning is read-only; it `MUST NOT` be used to change, commit or publish anything.
+### `RULE-CTX-006` (GoodMorning Session Start — Operator Exclusivity)
+1. **Operator Exclusivity**: `Invoke-LCM_GoodMorning.ps1` is an operator-executed command and `MUST NEVER` be launched automatically by an AI assistant as an envelope to obtain a baseline or perform multi-repo research.
+2. **AI Read-Only Resumption Protocol**: At session start, the AI assistant's role is strictly read-only:
+   - Read `.agents/ACTIVE_SESSION.md`, `.agents/ACTIVE_CONTEXT.md`, and `.agents/LEARNED_ADVICE.md`.
+   - Adhere to the Session Quiescence and GoodMorning Resumption Response Protocol per `RULE-LCM-030`.
+   - State that active context and binding learned advice have been verified, identify any stated attention items or stale entries, and await explicit operator direction.
 
 

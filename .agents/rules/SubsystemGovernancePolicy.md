@@ -74,6 +74,14 @@ While Subsystems inherit standard LCM **documentation and quality gate rules**, 
 2. **External Write Prohibition**: Tooling, scripts, and MCP agents executing on the host PC `MUST NOT` attempt to mutate, overwrite, clean, or inject records into the Subsystem's internal central registry from the outside (whether via direct `.storage/` file writes or WebSocket mutation endpoints like `config/device_registry/update`).
 3. **Observation-Only Protocol**: LCM Configuration Management tools `SHALL` operate strictly as read-only observers and reconcilers. Even if internal registry records contain historical errors, duplicate hardware identifiers, or inconsistent naming, corrections `MUST` be performed exclusively within the official Subsystem UI by the human operator.
 
+---
+
+### RULE-SUB-008: LCM Inventory Exclusivity & Proposal Directory Invariant
+1. **Primary LCM Domain Centralization**: All proposals (CRPs, BUGs) regarding governed `LCM_*` repositories in the `Git_Repositories` workspace (`LCM_AI`, `LCM_Inventory`, `LCM_Shared`, `LCM_Supervision`, `LCM_SystemConfiguration`, `LCM_Tools`) `MUST` reside exclusively within `LCM_Inventory` (`LCM_Inventory/docs/Proposals/` and `LCM_Inventory/data/proposals/`).
+2. **Child Proposal Directory Prohibition**: No `LCM_*` repository other than `LCM_Inventory` `SHALL` maintain a `docs/Proposals/` or `Proposals/` directory. Normal repository documentation (`docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`, `README.md`, or component runbooks) remains in the respective child repository; proposal bundles `MUST NEVER` be placed in child `LCM_*` repositories.
+3. **DoT and Scratch Directory Prohibition**: Governed `LCM_*` repositories other than `LCM_Inventory` `MUST NOT` contain `DoT/` or `scratch/` directories. All workspace DoT runtime engines and scratch staging spaces are strictly centralized in `LCM_Inventory`.
+4. **Disjunct Subsystem Exemption**: Subsystems outside the core `LCM_*` governance domain (e.g. `HaSSD06` with `HaSSD06_Inventory`, or `SystemConfiguration`) represent autonomous runtime domains and `MAY` maintain their own private inventory and proposal stores per `RULE-SUB-002`.
+
 
 
 

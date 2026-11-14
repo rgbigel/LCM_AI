@@ -544,3 +544,11 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 1. **Mandatory 5-Stage Triage Protocol**: Whenever an AI agent encounters UI-to-daemon dispatch failures, REST bridge timeouts, or proposal lifecycle transition errors, it `MUST` follow the 5-stage diagnostic triage protocol defined in `RULE-EFF-010` (Context Whodunit $\rightarrow$ Dispatch/Transport $\rightarrow$ Handler Execution $\rightarrow$ Procedural Correctness $\rightarrow$ Architectural Escalation).
 2. **Mandatory Stop on Architecture Mismatches**: Speculative code mutations or recursive loop attempts when facing lifecycle state rejections or daemon transport errors are strictly prohibited. The agent must yield control immediately after Attempt 2 with full diagnostic telemetry.
 
+---
+
+### RULE-LCM-034: LCM Inventory Centralization for Governed Proposals Invariant
+1. **Exclusive Repository Host**: All proposals (CRPs, BUGs) targeting or regarding any governed `LCM_*` repository (`LCM_AI`, `LCM_Inventory`, `LCM_Shared`, `LCM_Supervision`, `LCM_SystemConfiguration`, `LCM_Tools`) `MUST` be authored, registered, and stored exclusively in `LCM_Inventory` (`LCM_Inventory/docs/Proposals/` and `LCM_Inventory/data/proposals/`).
+2. **Prohibition of Proposal Directories in Child Repositories**: Child `LCM_*` repositories `MUST NOT` contain a `docs/Proposals/` or `Proposals/` directory. Proposal bundles shall never be created in or committed to `LCM_AI`, `LCM_Shared`, `LCM_Supervision`, or other governed child repositories.
+3. **Normal Documentation Separation**: Standard repository documentation (such as `docs/Architecture.md`, `docs/Requirements.md`, `docs/Implementation.md`, `install/Installation.md`, `README.md`, or component runbooks) remains within the respective child repository; proposal bundles never do.
+4. **DoT and Scratch Exclusivity**: No `LCM_*` repository other than `LCM_Inventory` may host `DoT/` runtime engines or `scratch/` directories. All workspace DoT runtime engines and scratch staging spaces are strictly centralized in `LCM_Inventory`.
+

@@ -8,6 +8,8 @@
 # Logs & Temporary Files
 logs/
 scratch/
+docs/Proposals/
+DoT/
 data/readiness/
 *.log
 *.tmp

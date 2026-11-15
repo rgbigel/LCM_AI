@@ -6,7 +6,7 @@ Path: LCM_AI/.claude/translation/NOTE-LineEndings.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
 Status: Draft  
-Date: 2026-11-14 22:26:07
+Date: 2026-11-15 15:17:03
 
 ---
 
@@ -84,3 +84,10 @@ Option **B** (LF everywhere, CRLF only for `*.cmd` / `*.bat`): it matches what G
 1. Option A, B or C.
 2. If B: convert existing files in one commit now, or let files convert as they are touched (mixed period).
 3. Confirm the BCR `_LCM` profile ignores line-ending differences before any conversion.
+
+## 9. Decision (2026-11-15)
+
+- Operator: **Option A** - CRLF everywhere, no mixed setup. Claude's recommendation B is rejected.
+- Cause of LF on disk clarified: not GitHub; Git converts only at commit and checkout; LF comes from whole-file writes of hosts/tools after checkout.
+- Enforcement: CRP-332 (`LCM_Inventory/docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement/Specification.md`), for Antigravity.
+- LF found in third-party writes: Claude converts to CRLF without involving the operator.

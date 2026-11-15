@@ -12,10 +12,10 @@ Date: 2026-11-14 22:00:00
 
 ## 1. Workspace State
 
-- **Last Updated**: 2026-11-14 22:37:12
-- **Status**: Quiescent (GoodNight completed at 2026-11-14 22:37:12)
-- **GoodNight Timestamp**: 2026-11-14 22:37:12
-- **Resumption Timestamp**: 2026-11-14 21:55:52
+- **Last Updated**: 2026-11-15 14:31:07
+- **Status**: In_Progress
+- **GoodNight Timestamp**: 2026-11-14 22:37:21
+- **Resumption Timestamp**: 2026-11-15 14:31:07
 - **LCM Version**: 10.6.4
 - **Active Cohort**: `CRP-331`
 - **Commits**:
@@ -29,24 +29,27 @@ Date: 2026-11-14 22:00:00
 ## 2. Multi-Host Session Registry
 
 ### Host: Antigravity (Gemini)
-- **Status**: Quiescent (GoodNight completed at 2026-11-14 22:37:12)
+- **Status**: Quiescent (good-night 2026-11-14 22:37:21)
 - **Conversation ID**: `777d3833-90fc-46ed-abe9-3ede0d9320a1`
-- **Last Activity**: 2026-11-14 22:36:13
+- **Last Activity**: 2026-11-14 22:37:21
 - **Current Task**: CRP-331 Batch 1-3 & residual harmonizations completed and verified.
 - **Next Step**: Awaiting operator Gate 2 review and cohort completion.
 - **Attention Items**: None
 
 ### Host: Claude Code
-- **Status**: Quiescent (GoodNight completed at 2026-11-14 22:37:12)
-- **Session ID**: `3c16a548-e597-4d96-afad-b16b323472be`
-- **Last Activity**: 2026-11-14 22:33:48
-- **Current Task**: CRP-331 fully converged incl. final reconciliation (Walkthrough sections 3, 5, 8, 10); no open points from Claude.
-- **Next Step**: 2026-11-15: operator Gate 2 review of CRP-331 (BCR against the new F: baseline, live testing). After the commit: re-pin the Claude baseline to the new LCM_AI commit and refresh `translation/CANONICAL_HASHES.md`.
-- **Open Operator Decisions**: line-ending policy A/B/C (`LCM_AI/.claude/translation/NOTE-LineEndings.md`); deferred Gate 2 review guide (D-24).
-- **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan, D-01..D-27); commands `/goodmorning`, `/goodnight`.
+- **Status**: Active (paused: operator reviewing and at lunch, 2026-11-15)
+- **Session ID**: `b2a8bd89-4972-41c2-8e67-602be7ddabdd`
+- **Last Activity**: 2026-11-15 17:47:30
+- **Current Task**: Operator assignment 2026-11-15 (while away): documentation books. DONE: Book 1 `LCM_AI/.claude/books/How-I-Understand-LCM-Methodology.md` (LCM_AI docs) and Book 2 `LCM_AI/.claude/books/How-I-Understand-LCM-Inventory.md` (LCM_Inventory docs, LCM parts only). Docs only; code review is the next stage. Still at Gate 2: CRP-331..336; CRP-337 suggested (evidence extended from Book 2).
+- **Next Step**: Operator reads Books 1 and 2 and decides (a) the versioning model before the +0.1.0 push (Book 1 plot thread 2), (b) the rule home (Book 2 thread 1). Then: code review stage (operator to start), Gate 2 of CRP-331..336. After CRP-331 commit: re-pin Claude baseline + refresh `CANONICAL_HASHES.md`.
+- **Open Operator Decisions**: deferred Gate 2 review guide (D-24). Line endings decided 2026-11-15: CRLF (D-28, CRP-332).
+- **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan, D-01..D-29); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
   - This block is maintained by Claude from 2026-11-14 22:17 (operator decision F-52 A); `LCM_AI/.claude/translation/SESSION_HANDOFF.md` is now a pointer here.
   - Never write to LCM INBOX (D-15).
+  - For Antigravity (2026-11-15): Claude registered CRP-332 (Workspace CRLF Line-Ending Enforcement, operator Option A) in `proposals.db` via `New-LCM_Proposal` (id 332, `suggested`, priority 5); bundle `LCM_Inventory/docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement/` (Specification by Claude; plan and walkthrough are tool placeholders for Antigravity). Per D-29 the host writing a bundle registers it. Also registered by Claude (operator instruction): CRP-333 (Sync-LcmProposalsDb help switch, RULE-PS-010) and CRP-334 (New-LCM_Proposal Specification template currency), both `suggested`.
+  - New for Claude sessions: `/sessionlog` converts the Claude transcript (`LCM_AI/.claude/tools/ConvertTo-LcmTranscript.ps1`) and runs the shared `AnalyzeFailures` / `ShowFailureAnalysis` (shared tools unchanged). Claude PostToolUse CRLF hook (`LCM_AI/.claude/settings.json`).
+  - For Antigravity (2026-11-15): BUG-336 - never run `ProposalManager.Tests.ps1` from a version before the fix (it wrote into the live ledger). `Test-LcmProposalsDb.Tests.ps1` still hydrates the live DB by design (operator decision pending). DO daemon binary replaced 16:54 (CRP-335); rollback copy `LCM_Inventory/scratch/do-before-crp335.exe`; build artifacts in `LCM_Inventory/scratch/` must not be committed.
 
 ---
 

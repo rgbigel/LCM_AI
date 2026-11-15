@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "pwsh -NoProfile -File \"D:\\Git_Repositories\\.claude\\hooks\\Invoke-ClaudeCrlfHook.ps1\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -3,16 +3,16 @@
 Module: .claude/rules/quality/MethodEfficiencyPolicy.md  
 Purpose: Claude adapter projection of MethodEfficiencyPolicy (mechanical artifacts, zero test cascades, DOIT velocity, gate short-circuiting, search dispatch, tool discovery, anti-code-reading, path safety, diagnostic triage).  
 Path: LCM_AI/.claude/rules/quality/MethodEfficiencyPolicy.md  
-Source: .agents/rules/MethodEfficiencyPolicy.md v10.2.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted)  
+Source: .agents/rules/MethodEfficiencyPolicy.md v10.2.2 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-349 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
 Status: Draft  
-Date: 2026-11-14 22:07:25
+Date: 2026-11-17 15:05:31
 
 ---
 
 - **RULE-EFF-001** Auto-accepted mechanical artifacts (no review gate): `**/data/artifacts/**`, `**/scratch/**`, `LCM_Inventory/data/inventory.json`, `LCM_Inventory/docs/INVENTORY_DASHBOARD.md`, `LCM_Inventory/data/baselines/*.json`, `LCM_Inventory/logs/*.log`, `*_Inventory/data/subsystem_inventory.json`, `*_Inventory/docs/SUBSYSTEM_DASHBOARD.md`, `*_Inventory/logs/*.log`, `*_Inventory/data/proposals/*.json`, `**/out/test_results.json`, routine test output, `.copilot/Logs/*.log`, `.agents/logs/*.log`.
-- **RULE-EFF-002** Changes to those artifacts never trigger tests or validation cycles.
+- **RULE-EFF-002** Changes to those artifacts never trigger tests or validation cycles. Bookkeeping (these artifacts incl. SQL ledger projections `*_Inventory/data/**/*.sql`, and ledger consistency checks such as bundle presence) never aborts a commit, push or lifecycle step: warn and correct mechanically (BUG-349).
 - **RULE-EFF-003** Never hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md` or baseline snapshots; only CM tools (`Invoke-LCM_Audit.ps1`, `Create-LCM_Baseline.ps1`).
 - **RULE-EFF-004** In DOIT mode execute tool operations and edits directly, without chat planning pauses or per-tool confirmations, up to Gate 2 (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`, RULE-REV-001/014; never past it); normal cycle via `Proceed` keeps interactive checkpoints; direct execution needs a Gate 0 Contract. [Claude] Per-tool prompts are governed by Claude permission settings (not configured yet; COVERAGE).
 - **RULE-EFF-005** Gates run tiers in order (Structure -> Formatting -> GovernanceLinks -> ElevationConsistency -> DocumentationFabric -> PesterSuite) and abort on the first structural failure; never dispatch tests whose prerequisites are known to be missing.

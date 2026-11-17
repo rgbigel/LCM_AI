@@ -21,6 +21,7 @@ How it works:
 - **2026-11-09** (Caller Admin Dependency Disclosure & Anti-Staleness): Whenever a caller tool invokes or relies upon an admin-mode tool, it `MUST` declare that dependency in its `-h` / `-Help` usage reference and header block. Conversely, when no longer needed, the caller `MUST` purge that dependency immediately to avoid stale elevation assumptions (`RULE-ELEV-007`, `RULE-PS-010.3`).
 
 ### Working agreement
+- A CRP being processed is at least as true as the documentation and rules it changes; the temporary inconsistency is never a deadlock. Lift blocking hooks temporarily to get there. (2026-11-16, Claude)
 - Gate 2 Pre-Review Live Testability Invariant: At the time of Gate 2 review (BCR), the implementation must be fully working and testable by the operator in a live test. A visual review is completely meaningless unless the target state is functioning and verifiable in runtime; never transition to review or assert completion on untestable or incomplete deliverables. (2026-11-13, Operator)
 - Mandatory Authority & Lifecycle State Declaration: When addressing any defect, regression, or runtime issue, the AI must immediately establish an authoritative ticket (BUG-xxx / CRP-xxx) and explicitly state the exact lifecycle state reached (suggested -> in_progress -> verified -> Gate 2) rather than delivering unclassified ad-hoc repairs. (2026-11-13, Antigravity)
 - Proactive Display Refresh & Foregrounding on UI Fixes: Following any repair to standard display generators, backend parsers, or templates, the AI must actively dispatch an automated refresh signal (POST /displays/refresh/<id>) and foreground the live viewer (POST /open) so the operator immediately sees the resolved UI. (2026-11-13, Antigravity)
@@ -71,4 +72,3 @@ How it works:
 
 
 
-- [ ] A CRP being processed is at least as true as the documentation and rules it changes; the temporary inconsistency is never a deadlock. Lift blocking hooks temporarily to get there. (2026-11-16, Claude)

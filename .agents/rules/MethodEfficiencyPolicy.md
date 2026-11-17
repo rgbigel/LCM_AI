@@ -9,9 +9,9 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.2.1
+Version: 10.2.2
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-17 15:05:31
 
 ---
 
@@ -35,11 +35,12 @@ Changes strictly modifying tool-generated evidence, audit databases, dashboard s
 * `*_Inventory/data/subsystem_inventory.json` (Subsystem Inventories e.g. `HaSSD06_Inventory`)
 * `*_Inventory/docs/SUBSYSTEM_DASHBOARD.md`
 * `*_Inventory/logs/*.log` and `*_Inventory/data/proposals/*.json`
+* SQL ledger projections `*_Inventory/data/proposals/*.sql` and `*_Inventory/data/tools/*.sql` (exported from the tables; pushed in the final state of the tables, BUG-349)
 * `**/out/test_results.json` and routine test output
 * `.copilot/Logs/*.log` and `.agents/logs/*.log`
 
 ### RULE-EFF-002 (Zero-Test Cascade Invariant)
-Modifications to the mechanical artifacts listed in `RULE-EFF-001` **MUST NEVER** trigger automated test runs, readiness test cascades, or validation cycles. These files are outputs/evidence of prior verification, not executable source code.
+Modifications to the mechanical artifacts listed in `RULE-EFF-001` **MUST NEVER** trigger automated test runs, readiness test cascades, or validation cycles. Bookkeeping (these artifacts and ledger consistency checks such as bundle presence) **MUST NEVER** abort a commit, push or lifecycle step: inconsistencies are reported as warnings and corrected mechanically (operator 2026-11-17, BUG-349: "you can't change the bible using the bible"). These files are outputs/evidence of prior verification, not executable source code.
 
 ### RULE-EFF-003 (Machine-Only Mutation Authority)
 Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-LCM_Audit.ps1`, `Create-LCM_Baseline.ps1`).

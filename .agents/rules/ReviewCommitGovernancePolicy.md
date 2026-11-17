@@ -9,9 +9,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0
+Version: 10.3.1
 Status: Authoritative Policy  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-17 12:27:04
 
 ---
 
@@ -81,6 +81,9 @@ Every review disposition (`completed`, `completed_with_edits`, `rejected`, `held
 3. **LCM_Inventory Operational Data Exemption**:
    - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.db`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
    - Semantic version increments for `LCM_Inventory` apply strictly when source code (`tools/*.ps1`, `modules/*.psm1`), specifications (`docs/*.md`), or governance policies are modified.
+4. **Version Alignment Exemption** (operator, 2026-11-17, BUG-342):
+   - Corrections that only align declared versions (DOX `Version:` headers, tripartite specifications, `README.md` baseline lines, manifests) with the version that the CM consistency mechanism mandates (this rule, `RULE-DOC-005`, `Assert-LcmPackageVersion`) `MUST NOT` be registered as a CRP or BUG: the consistency mechanism already mandates them.
+   - They are applied directly and ride with the review and commit of the change set that requires them (exception to `RULE-LCM-010` and `RULE-LCM-001`).
 
 ### RULE-REV-008: Transparent Single-Session Directory Junction Review (FollowSymLinks)
 1. **Transparent Directory Junction Traversal**: Beyond Compare 5 review sessions `MUST` configure `<FollowSymLinks Value="True"/>` in `BCSessions.xml`, enabling Beyond Compare to traverse NTFS directory junctions (such as `.agents\rules`) inline within the primary review session.

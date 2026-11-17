@@ -3,11 +3,11 @@
 Module: .claude/rules/process/ReviewCommitGovernancePolicy.md  
 Purpose: Claude adapter projection of ReviewCommitGovernancePolicy (review-gated commits, dispositions, overrides, audit, versioning, junction review, BCR exclusivity).  
 Path: LCM_AI/.claude/rules/process/ReviewCommitGovernancePolicy.md  
-Source: .agents/rules/ReviewCommitGovernancePolicy.md v10.3.0 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted)  
+Source: .agents/rules/ReviewCommitGovernancePolicy.md v10.3.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-342 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
 Status: Draft  
-Date: 2026-11-14 22:07:25
+Date: 2026-11-17 12:27:04
 
 ---
 
@@ -17,7 +17,7 @@ Date: 2026-11-14 22:07:25
 - **RULE-REV-004** RULE-REV-001..003 override any general "all commands permitted" or background execution policy. [Claude] Includes Claude permission allowlists.
 - **RULE-REV-005** Each disposition (`completed`, `completed_with_edits`, `rejected`, `held`) is recorded (timestamp, reviewer, HEAD SHA, notes) in `LCM_Inventory/logs/cm_activity.log`, `LCM_Inventory/data/reviews/REVIEW-<Repo>-<Timestamp>.json`, the CR record (`LCM_Inventory/data/change_requests.json`) and, for structural changes, against the Gate 0 exit criteria.
 - **RULE-REV-006** On reaching Gate 2: launch `BCR.cmd` / `Invoke-MacriumBcrReview.ps1` and immediately end the turn with no further tool calls. `Proceed` at Gate 2 = one step `in_review` -> `completed` + local commit with SemVer per REV-007. `PUSH` is the only remote push; `completed` cohort with `LCM_Inventory`; resets LCM/Testing Mode to ON.
-- **RULE-REV-007** Every committed change increments the repository version: Major `+1.0.0` (resets minor and patch to 0 for all components, e.g. 10.2.5 -> 11.0.0; RULE-DOC-005); Minor `+0.1.0` at release (does not reset patch); Patch `+0.0.1` on commit only for physically changed components. Update DOX headers, tripartite specs, README/manifests, `inventory.json`; record the version in commit message and receipt. Routine `LCM_Inventory` data/log/dashboard/review accounting (incl. `proposals.db`) does not bump `LCM_Inventory`.
+- **RULE-REV-007** Every committed change increments the repository version: Major `+1.0.0` (resets minor and patch to 0 for all components, e.g. 10.2.5 -> 11.0.0; RULE-DOC-005); Minor `+0.1.0` at release (does not reset patch); Patch `+0.0.1` on commit only for physically changed components. Update DOX headers, tripartite specs, README/manifests, `inventory.json`; record the version in commit message and receipt. Routine `LCM_Inventory` data/log/dashboard/review accounting (incl. `proposals.db`) does not bump `LCM_Inventory`. (4) Version alignment corrections (declared versions brought to the CM-mandated version) MUST NOT be registered as CRP or BUG; they ride with the change set that requires them (BUG-342, operator 2026-11-17).
 - **RULE-REV-008** BC5 sessions use `<FollowSymLinks Value="True"/>`; single window, no dual sessions; baseline hierarchy: primary = BCR, live `D:\Git_Repositories` vs mounted Macrium image `<MountedDrive>:\Git_Repositories` with the `_LCM` profile (RULE-REV-014); fallback only where Macrium is unavailable (headless, REV-001.6) = left pane exported from the explicit local `BaseCommit` (no remote substitution); junction paths replaced by a committed rules snapshot chosen in the stated order and recorded (source repo, path, SHA, selection source); live-only files appear as additions; cache identity and pane title show target SHA and rules SHA; filters MUST NOT exclude `.agents\rules\`.
 - **RULE-REV-009** If a finding changes the durable review contract: tell the operator before claiming completion (separate code change from pending governance change); update this policy in the same change set; sync `AGENTS.md` and the cross-reference (RULE-AUTH-002).
 - **RULE-REV-010** No Gate 2 review or commit gating without prior mechanical parsing (per INVARIANT-RULES syntax gate, incl. Go) and unit tests recorded in `Walkthrough.md`.

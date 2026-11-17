@@ -4,13 +4,16 @@ updated: 2026-07-11T14:50:45
 created: 2026-07-11T14:47:33
 ---
 
+> Status 2026-11-16: legacy VS Code Copilot profile (10.2.0); not loaded by Copilot's standard discovery. Authoritative rules: `.agents/rules/` (RULE-AUTH-001); where this file differs from them, the rules win.
+
+
 \# SECTION: workspace-location  
 \# FORMAT: ascii-only, copyable, no-prose
 WORKSPACE-ROOT  
 - D:\Git_Repositories
 WORKSPACE-RULES  
 - all copilot control files stored under ".copilot" directory  
-- authoritative path: D:\Git_Repositories\\copilot\\  
+- profile path: D:\Git_Repositories\.copilot\ (rule authority: .agents/rules/, RULE-AUTH-001)  
 - instructions.md stored at: D:\Git_Repositories\\copilot\instructions.md  
 - config.json stored at: D:\Git_Repositories\\copilot\config.json  
 - agent.json stored at: D:\Git_Repositories\\copilot\agent.json  

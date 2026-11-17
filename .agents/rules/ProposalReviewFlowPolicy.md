@@ -9,9 +9,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0
+Version: 10.3.1
 Status: Authoritative Policy  
-Date: 2026-11-14 22:00:00
+Date: 2026-11-17 12:27:04
 
 ---
 
@@ -295,6 +295,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 1. **Mandatory Self-Discovery Reporting**: Whenever the AI agent discovers a bug, syntax defect, unhandled runtime exception, parser failure, or regression in a permanent tool, platform script, shared module, or web UI during development, testing, or tool execution (including deferred deep testing failures per `RULE-LCM-006`), the AI agent `MUST` formally register a Bug Report in `LCM_Inventory/data/proposals/proposals.db` (via governed tools; `proposals.json` serves as transitional fallback) and scaffold the accompanying proposal bundle.
 2. **Immediate Remediation in `DOIT` Mode**: The self-discovered bug transitions directly into `DOIT` mode to diagnose and resolve the failure, but remains bound by the Review Decision Non-Circumvention Invariant (`RULE-LCM-008`).
 3. **Prohibition of Silent In-Place Hotfixing**: The AI agent `MUST NOT` silently patch defects in permanent tools without registering a formal BUG entry in the Configuration Management ledger.
+4. **Version Alignment Exception**: A declared version that deviates from the CM-mandated version is not a bug in the sense of this rule; its alignment is never registered as a BUG or CRP (`RULE-REV-007` item 4).
 
 ### RULE-LCM-011: Scope and Version-Explicit Bug Report Naming Standard
 1. **Canonical Bug Bundle Directory Convention**: All formal Bug Reports `MUST` follow the standardized bundle structure:

@@ -1,44 +1,10 @@
-# Antigravity Workspace Instructions
+<!-- Governed by root LCM standard: D:\Git_Repositories\GEMINI.md -->
+# GEMINI.md - LCM Governance Directive (LCM_AI)
 
-**Workspace**: $targetName  
-**Canonical Source Authority**: .agents/rules/  
-**Generated**: 2026-10-13 21:31:26  
+Antigravity / Gemini follows the workspace LCM rules; there are no Gemini-specific rules or tools.
 
----
+- Authoritative rules: `.agents/rules/` (RULE-AUTH-001); this repository is their physical home.
+- Quick reference: [`AGENTS.md`](AGENTS.md); cross-reference: [`docs/LCM-Rules-Cross-Reference.md`](docs/LCM-Rules-Cross-Reference.md).
+- Session continuity: `.agents/ACTIVE_SESSION.md`, `ACTIVE_CONTEXT.md`, `LEARNED_ADVICE.md` (RULE-LCM-030).
 
-## Active Governance Rules
-
-The following rules govern all code generation, refactoring, and agent behaviors in this workspace:
-- [**CMDRules.md**](.agents/rules/CMDRules.md)
-- [**InvariantRules.md**](.agents/rules/InvariantRules.md)
-- [**JsonRules.md**](.agents/rules/JsonRules.md)
-- [**LanguagePolicy.md**](.agents/rules/LanguagePolicy.md)
-- [**macro-definitions.md**](.agents/rules/macro-definitions.md)
-- [**MethodEfficiencyPolicy.md**](.agents/rules/MethodEfficiencyPolicy.md)
-- [**PowerShellRules.md**](.agents/rules/PowerShellRules.md)
-- [**ReviewCommitGovernancePolicy.md**](.agents/rules/ReviewCommitGovernancePolicy.md)
-- [**RuleAuthority.md**](.agents/rules/RuleAuthority.md)
-
-
----
-
-## Agent Operational Invariants
-
-1. **PowerShell Core Standards**:
-   - Use `pwsh` as the primary shell.
-   - Text files must use **UTF-8 without BOM** with **CRLF** line endings.
-   - Always assign `$_` to an explicit local variable before use in pipeline scriptblocks.
-   - Advanced functions must include `[CmdletBinding()]` and explicit parameter blocks.
-
-2. **Quality Gates & Self-Readiness**:
-   - Run `./tools/Test-WorkspaceReadiness.ps1` to validate workspace health before and after significant updates.
-   - Target repositories under `D:\Git_Repositories\` must be inspected via dry-run before modifications.
-
-3. **Direct Execution & RR Review Gating**:
-   - Agents must proceed directly with tool actions, commands, and edits under `always-proceed` / `allow` without generating redundant interactive chat planning blocks or approval pauses.
-   - All code review, acceptance, and commit safety gating is handled exclusively via Beyond Compare (`RR.ps1` / `Submit-ReviewResult.ps1`) under `RULE-REV-001`.
-
-4. **Customizations Structure**:
-   - Rules: `.agents/rules/`
-   - Skills: `.agents/skills/`
-   - Tools: `tools/`
+Replaced 2026-11-16 (operator instruction): the former generated instruction list of 2026-10-13 restated 9 of 21 rules and outdated invariants; it remains in Git history.

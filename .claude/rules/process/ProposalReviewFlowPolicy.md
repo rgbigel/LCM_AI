@@ -3,11 +3,11 @@
 Module: .claude/rules/process/ProposalReviewFlowPolicy.md  
 Purpose: Claude adapter projection of ProposalReviewFlowPolicy (proposal-first intake, lifecycle, gates, switches, bundles, commands, scope fences, session protocol).  
 Path: LCM_AI/.claude/rules/process/ProposalReviewFlowPolicy.md  
-Source: .agents/rules/ProposalReviewFlowPolicy.md v10.3.0 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted)  
+Source: .agents/rules/ProposalReviewFlowPolicy.md v10.3.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-342 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
 Status: Draft  
-Date: 2026-11-14 22:29:19
+Date: 2026-11-17 12:27:04
 
 ---
 
@@ -39,7 +39,7 @@ Date: 2026-11-14 22:29:19
 - **RULE-LCM-007** Single-dimensional status bound to the flat states `suggested` -> `in_progress` -> `verified` -> `in_review` -> `completed` -> `pushed` (exceptional/terminal: `held`, `withdrawn`, `rejected`, `superseded`); dispositions are markers, not states: `BUG` (sets DOIT, halts at Gate 2), `held` (pauses switches, cleared by `continue`), `approved` (Gate 1 / Gate 2 acceptance). Flow switches: `-DOIT`, `-Force` (Gate 2 emergency only, RULE-REV-001), `-Immediately` (BUG recovery cohort, recorded reason, ends at Gate 2), `-MinimalTests`, `-Coarse`/`-Tight`, `LCM OFF`, `Testing OFF`, `ADMINMODE` (per-tool elevation design criterion). Plans/walkthroughs archived in the bundle (`LCM_Inventory/docs/Proposals/CRP-<nnn>-<Slug>/Implementation_Plan.md`, `Walkthrough.md`) and linked as `plan_path` / `walkthrough_path` in `proposals.db`.
 - **RULE-LCM-008** `BUG` -> DOIT: scaffold `BUG-<nnn>-<Slug>/`, implement and verify without Gate 1 pause, halt at Gate 2 on `verified` (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`, await disposition). Gate 2 bypass only by explicit `IMMEDIATELY`/`FORCE` or critical loop within the 2-attempt breaker; log justification in bundle and ledger.
 - **RULE-LCM-009** CRP bundle `docs/Proposals/CRP-<nnn>-<Slug>/` with `Specification.md`, `Implementation_Plan.md`, `Walkthrough.md`; `nnn` = ledger id, zero-padded >= 3; metadata per RULE-LCM-012.3: `CRP-ID`, `Title`, `Scope`, `Version`, `Affected-Repos`, `Status`, `Priority` (0-10), `App-ID`; legacy flat files valid (LCM-020 Mode 3).
-- **RULE-LCM-010** A self-discovered bug in a permanent tool/script/module/UI MUST be registered as a BUG in `proposals.db` (governed tools) with bundle and fixed in DOIT (Gate 2 still binding); no silent hotfixes.
+- **RULE-LCM-010** A self-discovered bug in a permanent tool/script/module/UI MUST be registered as a BUG in `proposals.db` (governed tools) with bundle and fixed in DOIT (Gate 2 still binding); no silent hotfixes. Exception: version alignment corrections are never registered (RULE-REV-007 item 4).
 - **RULE-LCM-011** BUG bundle `docs/Proposals/BUG-<nnn>-<Slug>/` (shared counter); frontmatter Bug-ID, Scope, Version, Affected-Repos, Severity, Status, Root-Cause.
 - **RULE-LCM-012** Every non-bug feature/tool/workflow/policy proposal needs a standalone `Specification.md` in `LCM_Inventory/docs/Proposals/` linked by `bundle_id`. Missing spec or YAML fence MUST NOT fail transitions: `ProposalSpecificationState.psm1` scaffolds and injects/extends the YAML block (`CRP-ID`, `Title`, `Scope`, `Status`, `Plan-State`, `Progress-State`, `Priority`, `App-ID`); unresolvable conflicts halt for operator triage.
 - **RULE-LCM-013** Every PUSH runs `Update-Gemini.ps1` first (rules export, 21 files, `D:\GDrive\LCM` mirror), commits export changes, then pushes; direct `git push` bypassing `Invoke-LCM_Push.ps1` is prohibited. [Claude] Claude pushes only via `PUBLISH` / `Invoke-LCM_Push.ps1`, never raw `git push` (hook candidate).

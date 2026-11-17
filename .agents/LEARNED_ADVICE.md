@@ -70,3 +70,5 @@ How it works:
 ## Candidates (pending review)
 
 
+
+- [ ] A CRP being processed is at least as true as the documentation and rules it changes; the temporary inconsistency is never a deadlock. Lift blocking hooks temporarily to get there. (2026-11-16, Claude)

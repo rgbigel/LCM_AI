@@ -1,5 +1,8 @@
 # version: 10.2.0
 
+> Status 2026-11-16: legacy VS Code Copilot profile (10.2.0); not loaded by Copilot's standard discovery. Authoritative rules: `.agents/rules/` (RULE-AUTH-001); where this file differs from them, the rules win.
+
+
 Module: instructions.md
 Purpose: Defines workspace documentation and operational rules for instructions.
 Path: D:/Git_Repositories/LCM_AI/.copilot/instructions.md
@@ -144,7 +147,7 @@ WORKSPACE-ROOT
 
 WORKSPACE-RULES
 - all copilot control files stored under ".copilot"
-- authoritative path: D:\Git_Repositories\.copilot\
+- profile path: D:\Git_Repositories\.copilot\ (rule authority: .agents/rules/, RULE-AUTH-001)
 - instructions.md: D:\Git_Repositories\.copilot\instructions.md
 - config.json: D:\Git_Repositories\.copilot\config.json
 - agent.json: D:\Git_Repositories\.copilot\agent.json

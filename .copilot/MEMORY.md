@@ -1,5 +1,8 @@
 # version: 10.2.0
 
+> Status 2026-11-16: legacy VS Code Copilot profile (10.2.0); not loaded by Copilot's standard discovery. Authoritative rules: `.agents/rules/` (RULE-AUTH-001); where this file differs from them, the rules win.
+
+
 Module: MEMORY.md
 Purpose: Defines workspace documentation and operational rules for MEMORY.
 Path: D:/Git_Repositories/LCM_AI/.copilot/MEMORY.md

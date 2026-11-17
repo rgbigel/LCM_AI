@@ -1,5 +1,8 @@
 # CopilotRules
 
+> Status 2026-11-16: legacy VS Code Copilot profile (10.2.0); not loaded by Copilot's standard discovery. Authoritative rules: `.agents/rules/` (RULE-AUTH-001); where this file differs from them, the rules win.
+
+
 Module: CopilotRules.md
 Purpose: Defines workspace documentation and operational rules for CopilotRules.
 Path: D:/Git_Repositories/LCM_AI/.copilot/CopilotRules.md
@@ -30,11 +33,11 @@ Executable: pwsh.exe
 
 Rules:
 - must use UTF-8 without BOM
-- must use CRLF endings
+- must use LF endings (CRLF only for *.cmd / *.bat; D-28 Option B, CRP-332)
 - must not use backticks
 - must not use interpolated method calls
 - must assign $_ to a variable before use
-- must follow InvariantRules.md
+- must follow .agents/rules/ (InvariantRules.md and all other rule files)
 - must execute deterministically
 - identical input → identical output
 

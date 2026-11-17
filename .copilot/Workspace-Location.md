@@ -1,4 +1,7 @@
 # WORKSPACE-LOCATION-METADATA
+
+> Status 2026-11-16: legacy VS Code Copilot profile (10.2.0); not loaded by Copilot's standard discovery. Authoritative rules: `.agents/rules/` (RULE-AUTH-001); where this file differs from them, the rules win.
+
 # version: 10.2.0
 # scope: durable-memory
 # location: .copilot/Workspace-Location.md
@@ -10,7 +13,7 @@ WORKSPACE-ROOT
 
 COPILOT-DIRECTORY
 - path: D:\Git_Repositories\.copilot\
-- purpose: authoritative control files
+- purpose: legacy Copilot profile files (rule authority: .agents/rules/, RULE-AUTH-001)
 - rule: all profile behavior scoped to workspace-root
 
 COPILOT-FILES

@@ -4,9 +4,9 @@ Module: .claude/books/How-I-Understand-LCM-Methodology.md
 Purpose: Book 1 - Claude's reading of the LCM_AI documentation (README -> Architecture -> Requirements -> Implementation -> implementation-level siblings), told as a story, with the consistency, completeness and quality findings written as "the plot of the crime".  
 Path: LCM_AI/.claude/books/How-I-Understand-LCM-Methodology.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
-Status: Draft (Book 1 complete)  
-Date: 2026-11-15 17:44:12
+Version: 10.7.4
+Status: Draft (Book 1 complete; operator review recorded in Appendices B and C)  
+Date: 2026-11-16 21:43:29
 
 ---
 
@@ -291,3 +291,169 @@ No single wrong decision; a missing gate. Content reconciliation of the methodol
 ## Epilogue - For Book 2
 
 LCM_Inventory is the machine room: proposals, ledgers, tools, Control Hub, DO gateway, inventory of the LCM parts. Book 2 reads its documentation the same way, limited to the parts that the tools table classifies as Subsystem LCM, and ignores the outside world (other subsystems, ordinary repositories, external tools).
+
+---
+
+## Appendix A - Host Side Folders (convergence check, 2026-11-16)
+
+Commissioned 2026-11-16 by the operator: check `.copilot`, then `.gemini`, and any host folder that comes up later, for convergence with the canonical rules. Read-only check; everything below observed on disk unless marked.
+
+**Test applied** (agreed in the "Projects" discussion): a host-side file is safe if it only points to the disk authority. It breaks convergence when it holds its own copy of rules or state. A copy is tolerable only if it is generated from disk, marked as derived and covered by a drift check.
+
+### A.1 `.copilot` (VS Code Copilot profile)
+
+Root `.copilot` is a junction to `LCM_AI\.copilot`: 17 files plus `Rules/` and `Logs/`, tracked in LCM_AI, all at version 10.2.0, last changed 2026-11-10 or earlier.
+
+- **H-C1 Rules converged.** `Rules/` is a junction to `LCM_AI\.agents\rules`; 21 of 21 files identical. FINDINGS F-32 (Check 0 hashing `.copilot/Rules/`) is moot: they match by construction.
+- **H-C2 Loading not wired [INFERRED].** Nothing in `.vscode/settings.json` points Copilot at `.copilot`, and there is no `.github/copilot-instructions.md`. Copilot's standard discovery does not read `.copilot/`, so the profile is most likely inert. The operator's open check of 2026-10-13 ("does Copilot really follow the `.agents` rules?", ACTIVE_CONTEXT) remains open.
+- **H-C3 A second authority set.** `instructions.md` (an `@`-command language with `@S`, `@IRA`, `ADM*` operators and the retired timestamp header), `CopilotRules.md` (CRLF - contradicts D-28 Option B), `Standards.md` / `version-bump-procedure.md` / `version-consistency-check.md` (own versioning: "MINOR+1, PATCH=0" contradicts RULE-REV-007 "release does not reset patch"). `Workspace-Location.md`, `Workspace Conventions.md` and `instructions.md` declare `.copilot` "authoritative" - contradicts RULE-AUTH-001.
+- **H-C4 Dangling references.** `Config.json`, `MEMORY.md` and `Workspace-Location.md` list `MyTools.md`, `tests/profile-tests.md`, and `macro-definitions.md` / `InvariantRules.md` at top level (they exist only under `Rules/`); `VSCode_Agent.md` needs `Fixes/` and `Atoms/` - all missing. The `APPLY <fix-module>` pipeline is dead.
+- **H-C5 Live references into `.copilot`.** ACTIVE_CONTEXT section 2 names `CopilotTools.md` as permanent memory anchor 2 (its content duplicates the tool paths already in ACTIVE_CONTEXT and `tools.db`); macros `S` and `profile status` refer to the "copilot profile"; RULE-EFF-001 lists `.copilot/Logs/*.log`.
+- **H-C6 Empty variable memory.** `projects.md`, `problems.md`, `servicing-notes.md` contain only "(empty)".
+- **H-C7 Next door in `.github/`.** `hooks/lcm-guardrails.json` is a Copilot `preToolUse` hook running `pwsh ... LCM_Inventory/tools/Test-Guardrail.ps1` - the only Copilot-side enforcement found (belongs in the Book 3 L2 inventory). `extensions/lcm-control-hub/` (2026-10-01) not checked.
+
+**Verdict:** the rules part passes (junction). The profile part fails the test: hand-written copies, not generated, not drift-checked, partly contradicting current rules, and probably not loaded at all.
+
+### A.2 Gemini / Antigravity
+
+- **H-G1 Pointers pass.** Root `GEMINI.md` points to `.agents/rules/`, `AGENTS.md` and the cross-reference. Six child `GEMINI.md` files (71 bytes, identical) and `SystemConfiguration/GEMINI.md` are pointer-only.
+- **H-G2 `LCM_AI/GEMINI.md` fails.** Generated 2026-10-13 with an unresolved `$targetName`; lists 9 of 21 rules; restates invariants that have since moved (CRLF; "proceed ... without approval pauses", which outside DOIT conflicts with the Gate 1 halt RULE-LCM-014; `RR.ps1`; `Test-WorkspaceReadiness.ps1`). Already named in Chapter 8 item 8; unchanged since.
+- **H-G3 No workspace `.gemini/` folder.** The user-level `~/.gemini` holds host state (plugins, sidecars, user settings, conversations). Antigravity "projects" (`~/.gemini/config/projects/*.json`, `projects.json` mapping `d:\git_repositories`) hold only folder links, permission grants and review/auto-execution settings - no rules: pass. The knowledge store `~/.gemini/antigravity/knowledge` is empty (lock file only). Not inspected: `brain/`, conversations (host transcripts).
+- **H-G4 Permission policy lives outside LCM.** Two plugin projects and the Obsidian Vault project run with `artifactReviewMode: TURBO` (Obsidian also `autoExecutionPolicy: AUTO`); user settings carry global permission grants. Not a rule copy, but an enforcement setting no LCM tool sees (input for Book 3).
+
+### A.3 Standing check
+
+Every further host folder that comes up (`.github` agents/instructions, `.cursor`, `.windsurf`, `~/.claude`, ...) gets a section here with the same test.
+
+### A.4 What I would do
+
+1. **`.copilot`:** make the Copilot binding a CRP-339 host binding file (`.github/copilot-instructions.md` or `AGENTS.md` pointing to `.agents/rules`), keep the `Rules/` junction only if something still reads it, and retire the 10.2.0 profile files (operator decision; RULE-DOC-008 applies to removals).
+2. **`LCM_AI/GEMINI.md`:** replace with a pointer like the root file (CRP-339).
+3. **ACTIVE_CONTEXT anchor 2:** point to `tools.db` instead of `CopilotTools.md`; drop the `copilot profile` wording from macros `S` / `profile status` when CRP-339 rewrites macro-definitions.
+
+## Appendix B - Operator Review, First Sequential Pass (2026-11-16)
+
+Operator remarks on Book 1, recorded per plot point. They are binding for the documentation rework. "Bottom up" means: derive from code -> Implementation -> Requirements -> Architecture -> README.
+
+### B.1 Standing agreements
+
+- **Host convergence is settled (CRP-339).** The concern that claude.ai Projects or other host features could erode convergence is closed by the extra degree of convergence agreed in CRP-339 (one compact canonical rule set, `.claude/rules` junction, host binding files). It is treated as fixed and is not reopened here.
+- **Reading contracts / JSON to SQLite.** For every JSON file already intended to move to SQLite, compare its content with the database and remove the JSON side. The difficult cases found so far are sorted out with the operator. Together with the General_Tools CRP, this gives a cleaner base for later passes.
+- **Order of rework.** The README is the oldest and most incorrect document, so it needs the largest change and is reworked last, bottom up.
+
+### B.2 README (NR1-NR6)
+
+- NR1-NR6 are correct and all need rework.
+- NR5 correction: the topology lists neither tools nor modules.
+- Missing content, to be extracted from Requirements:
+  - external software LCM needs to run;
+  - where to find installation;
+  - what the operator does, and how, when operating LCM;
+  - the key items of the methodology: goals first, design freedom with guides, DOX, implementation efficiency by AI, testing against goals, configuration management.
+
+### B.3 Architecture (NA1-NA6)
+
+- **NA1 Vocabulary.** The implementation wins. **State** is what LCM holds internally and is relevant for understanding it. **Status** is what the operator uses or works on next. The two boxes have different meanings and use only similar words. "verified: ready for 2 - Review" and "2 - Review" duplicate each other; only the latter should remain.
+- **NA2 "Rule hub".** This was my wording, not LCM terminology; drop it. Intent: rules are governed, so they are referenced by LCM_Inventory, linked to their docs, and all reside in LCM_AI.
+- **NA3 Languages and the daemon.** The Architecture names no implementation language (Go, PS7). The daemon is plumbing, not an architectural component, and has nothing to do with testing. Testing was not considered when DOX started and must be added as an architectural concern.
+- **NA4 Data design.** It is completely missing and must be made visible.
+- **NA5 Content.** The Architecture holds use-case areas, not tool names. Its focus is "goals to means". The goals are condensed in the README and detailed in Requirements.
+- **NA6 Goals on top.** Present each tool by the goal it serves: BCR serves review of ongoing work; ShowXYZ serves presentation and controllability. The goal "Security" names its App-level documentation, sourced from Implementation via Requirements to the Architecture condensation.
+
+### B.4 Requirements (NQ1-NQ7)
+
+- **NQ1** The existing requirements are old; update them bottom up.
+- **NQ2 Proposals are not the ledger.** Proposals are ongoing work grouped into CRPs, BUGs and FIXes (by number), eventually absorbed into the documentation, where they lose focus completely. The ledger, the history, lives in the logs. For the Architecture, proposals only have status and states.
+- **NQ3 Chosen tools.** External tools such as Beyond Compare are explained by what they do, how they present themselves and why they were chosen. The same applies to the models in use.
+- **NQ4** There will be many discrepancies; each must be resolved.
+- **NQ5 Open question from the operator.** Does LCM reflect the freedom to choose other implementation concepts (fast prototyping)? To be answered in Book 2.
+- **NQ6** The scattered state is today's "ant hill". The goal is to tidy it with AI and keep it in order through rule-driven method support.
+- **NQ7** Confirmed.
+
+### B.5 Implementation, Data, Security, Tbd, CM
+
+- **NI1-NI6** Very probably the area that needs the most attention. A code analysis would make the list about five times longer, so there is no need to go deeper now.
+- **ND1-ND4, NS1-NS2** The newest area. Derive it from the code, then condense it to Requirements and upward.
+- **NN\*** All tbd; no work yet.
+- **NP\* = CM\*** Exception to "bottom up": viewed top down for terminology and matched to the code bottom up.
+
+### B.6 Chapters 5-7
+
+- **Chapter 5** Confirmed: Records, Machines, Safety. The history is much longer than shown; LCM is at major version 10.
+- **Chapter 6** Not a problem, only work toward the goal.
+- **Chapter 7** New and accepted:
+  - (3) DDL via `sqlite_master`.
+  - (5) Data cleanup reminder: logs no longer relevant at version + 2 must actually be cut (RULE-DOC-006).
+
+### B.7 Status
+
+The operator's insight pass is complete. Further refinement needs the code analysis passes (Book 2).
+
+## Appendix C - Operator Review of Book 1, Chapter by Chapter (2026-11-16)
+
+These remarks are binding for the documentation rework. Where this appendix and Appendix B differ, this appendix is more specific.
+
+### C.1 Hosts
+
+- **Gemini** was used only to get better documents from the LCM_* files, which it could not access directly. It has nothing to do with LCM itself, and this may change once it becomes more capable.
+- **The INBOX feature** that is currently implemented is not used, and never was.
+
+### C.2 README (Chapter 1)
+
+- **Target confirmed.** A manager-level page: what the reader can expect from LCM_* as a whole (not only LCM_AI), what must be in place, and how to get it. Installation may stay a placeholder.
+- **RD1 Prerequisites.** Name the exact products and versions, and state that the user can extend the list or substitute products.
+- **RD2 Order.** The DOX methodology comes before the documentation index.
+- **RD3** Confirmed and very important. AI is not yet brought into context and must be.
+- **RD4 Verification and testing** tell management that this is not a free-running "vibe code" area. LCM enforces reviews, with AI thoroughness and speed.
+- **R1, R3** Confirmed.
+- **R2** Management is not interested in this; leave it out of the README.
+- **R4** True, but off target. No account of how LCM got here will interest a manager.
+- **R5** There must be exactly one README.
+- **R6** Later, maybe.
+
+### C.3 Topology (Chapter 2, items 1-12)
+
+- Items 1-7 are understood correctly.
+- **New order:**
+  1. Item 8 becomes the top item.
+  2. Item 12 follows.
+  3. Then a new item, **"Tool support"**.
+  4. Then items 2-7.
+  5. Items 9, 10 and 11 become one group, **"Design patterns"**.
+- **New item 13:** LCM is built for self-progression and is self-governed.
+- The General_Tools rename fits this topology.
+
+### C.4 Architecture plot points (A1-A18)
+
+Convergence here is the goal of the next efforts. The work goes bottom up from here, because the system currently works better than its documentation.
+
+- **A1, A4 Terminology.** See the terminology in the other book (the Inventory book, Book 2).
+- **A2 Granularity** is not a discrepancy but a top-down choice. Coarse fits prototyping, the first design step; tight is needed as the work matures. This is a wording matter. The fast-fix and bug-handling switches matter much more.
+- **A3** Wording only. The meaning is clear; phrase it correctly.
+- **A5 Priority range** is -n..10. "Alive" items are 0..10.
+- **A6 Proposals** live only in LCM_Inventory, including those about the LCM_* repositories. Other subsystems may keep their own specialized inventory: HaSSD06 does now, and the future PC subsystem will too.
+- **A7 App naming** is a future convention, since Apps are not really in use yet. Example: a security App area would be named `APP#1 Security`.
+- **A8** Not a contradiction: correct at architecture level, more detailed in Implementation.
+- **A9** Confirmed.
+- **A10** Elevation is mentioned at this level. The operator expected an empty set.
+- **A11** The material comes from the newest CRP. Every CRP ends with a documentation change in one or more of the three tripartite documents.
+- **A12-A15** Gaps, and errors too. This is work to do. A13: much to clean out.
+- **A16 Important: the document hierarchy.**
+  - Implementation is mainly the summary and detail of idealized code atoms plus their comments. The better the atoms are defined, the better the Implementation document.
+  - Summaries of Implementation become Requirements.
+  - Summaries of Requirements, at the top, feed the README.
+- **A17, A18** Most likely taken from the proposal list. They are probably not defined as goals or requirements.
+
+### C.5 Requirements plot points (Q1-Q17)
+
+- **Q1 Correction.** "Any script's behavior overrules the rules" must be an incorrect implication. Rules can be changed; their goals cannot. A rule change can require a goal change, and that is called evolution.
+- **Q2 Retention horizon.** This results from missing cleanup. The horizon should be a single version; tracking back to -2.0.0 can help regression analysis. Docs kept current would make the limit clearer.
+- **Q3-Q17** Correct observations and all work items. No documentation updates happened during implementation; the priority was getting things to work. The task borders on human capability and is only attempted because AI can help.
+
+### C.6 Chapters 6-8
+
+- **Chapter 6** shows LCM forming itself in its documentation. Much of that chapter is what the operator calls Architecture.
+- **Chapter 7** Confirmed. The documents lack a Goals section, especially at the top level.
+- **Chapter 8, suggestion 1 (simplify versioning): rejected.** Versioning is inherently not simple. Expected long-run versions look like 27.9.104, with patch counts beyond 104 for some components.
+- **Chapter 8, suggestion 2 (change history in the docs): rejected.** Change history lives in the logs and has no place in the documentation. Module header histories exist, but clipped; nobody needs 104 change details.
+- **Chapter 8, suggestions 3-8:** accepted.

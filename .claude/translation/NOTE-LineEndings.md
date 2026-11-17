@@ -6,7 +6,7 @@ Path: LCM_AI/.claude/translation/NOTE-LineEndings.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
 Status: Draft  
-Date: 2026-11-15 15:17:03
+Date: 2026-11-16 16:23:20
 
 ---
 
@@ -91,3 +91,7 @@ Option **B** (LF everywhere, CRLF only for `*.cmd` / `*.bat`): it matches what G
 - Cause of LF on disk clarified: not GitHub; Git converts only at commit and checkout; LF comes from whole-file writes of hosts/tools after checkout.
 - Enforcement: CRP-332 (`LCM_Inventory/docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement/Specification.md`), for Antigravity.
 - LF found in third-party writes: Claude converts to CRLF without involving the operator.
+
+## 10. Decision Revised (2026-11-16)
+
+- Operator: **Option B** - LF for all text files, CRLF only for `*.cmd` / `*.bat`; no exception for `*.md`; existing files converted in both directions. Supersedes section 9. Contract: CRP-332 section 0a.

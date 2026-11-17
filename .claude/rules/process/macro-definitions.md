@@ -3,17 +3,17 @@
 Module: .claude/rules/process/macro-definitions.md  
 Purpose: Claude adapter projection of macro-definitions (operator command words and their governed targets).  
 Path: LCM_AI/.claude/rules/process/macro-definitions.md  
-Source: .agents/rules/macro-definitions.md v10.3.0 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted)  
+Source: .agents/rules/macro-definitions.md v10.3.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + CRP-350 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
 Status: Draft  
-Date: 2026-11-14 22:07:25
+Date: 2026-11-17 15:40:19
 
 ---
 
 ## Convention
 
-- Bare words are the primary syntax; `@` is a backward-compatible alias. [Claude] A macro typed in chat is an operator instruction to run its primary target exactly as listed (via `LCM_Inventory\DoT\do.exe` when `Admin: true`); nothing else. Operator-exclusive macros (GoodMorning, GoodNight) are never run by Claude.
+- Bare words are the primary syntax; `@` is a backward-compatible alias. [Claude] A macro typed in chat is an operator instruction to run its primary target exactly as listed (via `LCM_Inventory\DoT\do.exe` when `Admin: true`); nothing else. GoodMorning and GoodNight are run by Claude only on explicit operator instruction (CRP-350).
 - Precedence: in `technical` mode, ASCII tags `[GOODNIGHT]` / `[GOODMORNING]` replace the protocol emojis of RULE-LCM-030.
 
 ## Macros
@@ -24,8 +24,8 @@ Date: 2026-11-14 22:07:25
 | `user` | output mode | brief explanations, minimal formatting, concise |
 | `S` | system-aligned mode | follow workspace rules, copilot profile, durable memory [Claude: no copilot profile] |
 | `profile status` | report | durable memory, test suite, version alignment |
-| `GoodMorning` | `LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1 -Force` | operator-only (RULE-CTX-006); AI's first reply references the GoodNight timestamp; report attention items; change nothing |
-| `GoodNight [-Push]` (`goodnight`, `SaveAll`) | `LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1 [-Push]` | operator/Antigravity only; ends Quiescent (RULE-LCM-030) |
+| `GoodMorning` | `LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1 -Force` | operator, or an AI host on operator instruction (RULE-CTX-006); AI's first reply references the GoodNight timestamp; report attention items; changes only per RULE-LCM-030 (5) |
+| `GoodNight [-Push]` (`goodnight`, `SaveAll`) | `LCM_Inventory/tools/Invoke-LCM_GoodNight.ps1 [-Push]` | operator, or an AI host on operator instruction; ends Quiescent (RULE-LCM-030 (6)) |
 | `learn <text>` (`/learn`) | `Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI>` | nothing else; review before push [Claude: allowed, `-Author Claude`] |
 | `ToolExplorer` (`tools`, `ToolsExplorer`, `ShowTools`) | `LCM_Inventory/tools/Show-ToolsExplorer.ps1` | served only via `http://127.0.0.1:9876`; params `-Audience -Group -Subsystem -HaSSD06 -Role -Tool -Env -Filter -NoBrowser -NoLaunch -h` |
 | `AnalyzeFailures` | `LCM_Inventory/tools/Invoke-FailureModeAnalysis.ps1` | missing anchor is an error; viewer via port 9876 |

@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-14 22:36:41 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-17 20:24:55 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -298,9 +298,9 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 10.3.0
+Version: 10.3.1
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 22:00:00
+Date: 2026-11-17 15:40:19
 
 ---
 
@@ -341,10 +341,10 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 7. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
 8. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
 
-### `RULE-CTX-006` (GoodMorning Session Start — Operator Exclusivity)
-1. **Operator Exclusivity**: `Invoke-LCM_GoodMorning.ps1` is an operator-executed command and `MUST NEVER` be launched automatically by an AI assistant as an envelope to obtain a baseline or perform multi-repo research.
+### `RULE-CTX-006` (GoodMorning Session Start)
+1. **Day Routine Trigger**: `Invoke-LCM_GoodMorning.ps1` is run by the operator or, on explicit operator instruction, by any sanctioned AI host (`RULE-LCM-030` (6), CRP-350). An AI assistant `MUST NEVER` launch it on its own initiative, nor as an envelope to obtain a baseline or perform multi-repo research.
 2. **Multi-Host Attention Aggregation**: `Invoke-LCM_GoodMorning.ps1` aggregates session status, time gaps, repository drift, and pending attention items across all registered AI hosts (Antigravity, Claude Code) into a unified report.
-3. **AI Read-Only Resumption Protocol**: At session start, the AI assistant's role is strictly read-only:
+3. **AI Resumption Protocol**: At session start, the AI assistant changes nothing except what `RULE-LCM-030` (5) allows (its own host block `Active`, the GoodMorning section 1 fields, the DO front-end start):
    - Read `.agents/ACTIVE_SESSION.md`, `.agents/ACTIVE_CONTEXT.md`, and `.agents/LEARNED_ADVICE.md`.
    - Adhere to the Session Quiescence and GoodMorning Resumption Response Protocol per `RULE-LCM-030`.
    - State that active context and binding learned advice have been verified, identify any stated attention items or stale entries across all registered hosts, and await explicit operator direction.
@@ -361,9 +361,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0
+Version: 10.3.2
 Status: Authoritative Policy  
-Date: 2026-11-14 22:00:00
+Date: 2026-11-17 15:40:19
 
 ---
 
@@ -647,6 +647,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 1. **Mandatory Self-Discovery Reporting**: Whenever the AI agent discovers a bug, syntax defect, unhandled runtime exception, parser failure, or regression in a permanent tool, platform script, shared module, or web UI during development, testing, or tool execution (including deferred deep testing failures per `RULE-LCM-006`), the AI agent `MUST` formally register a Bug Report in `LCM_Inventory/data/proposals/proposals.db` (via governed tools; `proposals.json` serves as transitional fallback) and scaffold the accompanying proposal bundle.
 2. **Immediate Remediation in `DOIT` Mode**: The self-discovered bug transitions directly into `DOIT` mode to diagnose and resolve the failure, but remains bound by the Review Decision Non-Circumvention Invariant (`RULE-LCM-008`).
 3. **Prohibition of Silent In-Place Hotfixing**: The AI agent `MUST NOT` silently patch defects in permanent tools without registering a formal BUG entry in the Configuration Management ledger.
+4. **Version Alignment Exception**: A declared version that deviates from the CM-mandated version is not a bug in the sense of this rule; its alignment is never registered as a BUG or CRP (`RULE-REV-007` item 4).
 
 ### RULE-LCM-011: Scope and Version-Explicit Bug Report Naming Standard
 1. **Canonical Bug Bundle Directory Convention**: All formal Bug Reports `MUST` follow the standardized bundle structure:
@@ -861,7 +862,8 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
      - **Learned Advice (Binding / Guidance)**: Unified entries in `.agents/LEARNED_ADVICE.md`.
      - **Per-CRP Evidence**: Confined strictly to proposal bundles (`docs/Proposals/CRP-nnn/`).
    - **Host-Native Memory Pointers**: Host-private memory systems (Claude auto-memory, Antigravity project context) `MUST` store pointers only. Disk files are the sole authoritative truth.
-   - **Independent Host Execution**: Each AI host performs its own session handoff against this layer. A host writes only its own session section in `.agents/ACTIVE_SESSION.md` and candidate advice in `.agents/LEARNED_ADVICE.md`; it `MUST NOT` execute or alter another host's internal tools or private adapter state.
+   - **Independent Host Execution**: Each AI host performs its own session handoff against this layer. A host writes only its own session section in `.agents/ACTIVE_SESSION.md` and candidate advice in `.agents/LEARNED_ADVICE.md`. It `MAY` change another host's adapter files (e.g. `GEMINI.md`, `.agents/skills/`, `.claude/`) only to carry out an accepted CRP/BUG, and `MUST` announce such a change in its own session section (CRP-350).
+   - **No Host-Exclusive Open Items**: While one host is working, every open item `MUST` be executable by that host; no item may wait for one specific other host (CRP-350).
    - **Non-Concurrent Operation**: Concurrent host execution in the same workspace is prohibited; the operator coordinates turns. One-sided modifications `MUST` be announced. Physical data stored on disk wins every contest.
 
 2. **Quiescent State Invariant**:
@@ -878,6 +880,17 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
      `☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h).`
    - Under technical ASCII mode (`technical`), plain text `[GOODMORNING] Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h).` substitutes for the emoji prefix.
    - The response `MUST` reflect per-host activity recorded in `.agents/ACTIVE_SESSION.md` and state any identified attention items.
+
+5. **Session State Schema (`.agents/ACTIVE_SESSION.md`, CRP-350)**: every host and every tool reads and writes the file with these meanings only; no host keeps its own copy of this schema.
+   - **Workspace GoodNight**: set only by `Invoke-LCM_GoodNight.ps1` (via `Save-AllSessionMemory.ps1 -Quiescent`) as section 1 `GoodNight Timestamp`, together with section 1 `Status: Quiescent (GoodNight completed at <ts>)`. It is the only value for "Resuming from Good Night at ..." (item 4), for every host and for `Invoke-LCM_GoodMorning.ps1`.
+   - **Host session close**: a host closes by writing only its own block. Status vocabulary: `Active` / `Closed (<ts>)`. A host block never says `Quiescent` or `good-night`.
+   - **Snapshot save** (`Saved:` in `ACTIVE_CONTEXT.md`, section 1 `Last Updated`): a save event only; it is never read as a GoodNight.
+   - **Gaps**: the workspace gap is measured from the workspace GoodNight; each host gap from that host's `Last Activity`. Both are reported with their labels.
+   - **Section ownership**: section 1 belongs to the workspace tooling: `Save-AllSessionMemory.ps1` (`Last Updated`; with `-Quiescent` also `Status` and `GoodNight Timestamp`) and `Invoke-LCM_GoodMorning.ps1` (`Status: Active (resumed at <ts>; ...)`, `Resumption Timestamp`). Section 2: each host its own block. Section 3: generated from `proposals.db`, or marked `as of <ts>, not live`.
+   - **Host-block fields** (fixed list): `Status`, `Session ID` or `Conversation ID`, `Last Activity`, `Current Task`, `Next Step`, `Open Operator Decisions`, `Attention Items`. GoodMorning reports all of them and flags a host block whose status is outside the vocabulary, or that is `Active` with a `Last Activity` older than the workspace GoodNight.
+   - **DO front-end liveness**: every good-morning routine checks the DO front-end (daemon on `127.0.0.1:9876`, Session 1) and starts it (`LCM_DesktopDaemon_<user>` logon task) when it does not answer.
+
+6. **Day Routines by AI Hosts (CRP-350)**: `GoodMorning` (`Invoke-LCM_GoodMorning.ps1`) and `GoodNight [-Push]` (`Invoke-LCM_GoodNight.ps1`) are run by the operator or, on explicit operator instruction, by any sanctioned AI host. An AI host `MUST NOT` start them on its own initiative or on a synthetic turn (item 2). Their review, commit and push gates are unchanged.
 
 ---
 
@@ -940,9 +953,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0
+Version: 10.3.1
 Status: Authoritative Policy  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-17 12:27:04
 
 ---
 
@@ -1012,6 +1025,9 @@ Every review disposition (`completed`, `completed_with_edits`, `rejected`, `held
 3. **LCM_Inventory Operational Data Exemption**:
    - Routine data accounting mutations within `LCM_Inventory` (specifically `data/inventory.json`, `data/proposals/proposals.db`, `data/proposals/proposals.json`, `logs/cm_activity.log`, `docs/INVENTORY_DASHBOARD.md`, and `data/reviews/*`) occurring as a standard byproduct of reviews, audits, proposal lifecycle transitions, or push recording `SHALL NOT` increment `LCM_Inventory`'s semantic version.
    - Semantic version increments for `LCM_Inventory` apply strictly when source code (`tools/*.ps1`, `modules/*.psm1`), specifications (`docs/*.md`), or governance policies are modified.
+4. **Version Alignment Exemption** (operator, 2026-11-17, BUG-342):
+   - Corrections that only align declared versions (DOX `Version:` headers, tripartite specifications, `README.md` baseline lines, manifests) with the version that the CM consistency mechanism mandates (this rule, `RULE-DOC-005`, `Assert-LcmPackageVersion`) `MUST NOT` be registered as a CRP or BUG: the consistency mechanism already mandates them.
+   - They are applied directly and ride with the review and commit of the change set that requires them (exception to `RULE-LCM-010` and `RULE-LCM-001`).
 
 ### RULE-REV-008: Transparent Single-Session Directory Junction Review (FollowSymLinks)
 1. **Transparent Directory Junction Traversal**: Beyond Compare 5 review sessions `MUST` configure `<FollowSymLinks Value="True"/>` in `BCSessions.xml`, enabling Beyond Compare to traverse NTFS directory junctions (such as `.agents\rules`) inline within the primary review session.
@@ -1082,9 +1098,9 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.2.1
+Version: 10.2.2
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-17 15:05:31
 
 ---
 
@@ -1108,11 +1124,12 @@ Changes strictly modifying tool-generated evidence, audit databases, dashboard s
 * `*_Inventory/data/subsystem_inventory.json` (Subsystem Inventories e.g. `HaSSD06_Inventory`)
 * `*_Inventory/docs/SUBSYSTEM_DASHBOARD.md`
 * `*_Inventory/logs/*.log` and `*_Inventory/data/proposals/*.json`
+* SQL ledger projections `*_Inventory/data/proposals/*.sql` and `*_Inventory/data/tools/*.sql` (exported from the tables; pushed in the final state of the tables, BUG-349)
 * `**/out/test_results.json` and routine test output
 * `.copilot/Logs/*.log` and `.agents/logs/*.log`
 
 ### RULE-EFF-002 (Zero-Test Cascade Invariant)
-Modifications to the mechanical artifacts listed in `RULE-EFF-001` **MUST NEVER** trigger automated test runs, readiness test cascades, or validation cycles. These files are outputs/evidence of prior verification, not executable source code.
+Modifications to the mechanical artifacts listed in `RULE-EFF-001` **MUST NEVER** trigger automated test runs, readiness test cascades, or validation cycles. Bookkeeping (these artifacts and ledger consistency checks such as bundle presence) **MUST NEVER** abort a commit, push or lifecycle step: inconsistencies are reported as warnings and corrected mechanically (operator 2026-11-17, BUG-349: "you can't change the bible using the bible"). These files are outputs/evidence of prior verification, not executable source code.
 
 ### RULE-EFF-003 (Machine-Only Mutation Authority)
 Human operators and AI assistants `MUST NOT` hand-edit `inventory.json`, `INVENTORY_DASHBOARD.md`, or baseline snapshots. They must be modified solely by designated CM tools (`Invoke-LCM_Audit.ps1`, `Create-LCM_Baseline.ps1`).
@@ -1985,9 +2002,9 @@ Module: macro-definitions
 Purpose: Defines operator and agent command macros, bare-word syntax standards, execution routing, and parameter mappings across the workspace.  
 Path: .agents/rules/macro-definitions.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0  
+Version: 10.3.1  
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00  
+Date: 2026-11-17 15:40:19  
 
 ---
 
@@ -2030,14 +2047,15 @@ MACRO: profile status
   - summarize version alignment
 
 MACRO: GoodMorning
-- description: full read-only session-start check (RULE-CTX-006, RULE-LCM-030): time gap, work in between, versions, context staleness, pending learned advice
+- description: full session-start check (RULE-CTX-006, RULE-LCM-030 (5)/(6)): time gap, work in between, versions, context staleness, pending learned advice, host blocks, DO front-end liveness
 - syntax: GoodMorning | goodmorning
 - primary target: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1 -Force
 - rules:
   - the first line of the AI's response MUST reference the preceding GoodNight timestamp: "☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h)."
   - report every attention item to the operator before other work
   - confirm that ACTIVE_CONTEXT.md and LEARNED_ADVICE.md were read and can be followed
-  - change nothing
+  - change nothing except what RULE-LCM-030 (5) allows (section 1 Status / Resumption Timestamp, DO front-end start)
+  - run by the operator, or by an AI host on explicit operator instruction (RULE-CTX-006, CRP-350)
 
 MACRO: GoodNight
 - description: comprehensive end-of-day workspace save, log archival, commit, optional push, and quiescence transition (RULE-LCM-030)
@@ -2051,6 +2069,7 @@ MACRO: GoodNight
   - commit governed repositories (and publish with -Push)
   - the final console banner and AI terminal message MUST show the completion timestamp: "🌙 Good Night completed at YYYY-MM-DD HH:mm:ss. Session is Quiescent."
   - after GoodNight completes, the workspace enters a Quiescent State; AI MUST NOT emit unprompted wakeups or greetings until operator speaks
+  - run by the operator, or by an AI host on explicit operator instruction (RULE-LCM-030 (6), CRP-350)
 
 
 MACRO: learn
@@ -2401,10 +2420,10 @@ All 21 canonical governance policies are organized into three functional tiers u
 | **[RuleAuthority.md](file:///.agents/rules/RuleAuthority.md)** | `RULE-AUTH-001` - `004` | **Governance Hierarchy** | Core Governance | Single physical source of truth (`LCM_AI\.agents\rules\`), multi-host adapter standard (Antigravity, Claude, Gemini, VS Code, Cursor), matrix synchronization, and Tri-Tier Rule Architecture (`RULE-AUTH-004`). |
 | **[GoalFirstDesignPolicy.md](file:///.agents/rules/GoalFirstDesignPolicy.md)** | `RULE-GOAL-001` - `005` | **Goal-First Design** | Workspace-wide | Gate 0 target-state contracts, default no-havoc Non-Goal for ordinary evident work, explicit contracts for structural scope, traceability, and safeguard preservation. |
 | **[ProposalReviewFlowPolicy.md](file:///.agents/rules/ProposalReviewFlowPolicy.md)** | `RULE-LCM-001` - `034` | **Proposal & Review Flow** | Workspace & Child Repos | Proposal-first intent, authoritative Specification acceptance at Gate 1, supplementary plans/walkthroughs, batch commands (`do`, `delete`, `defer`), Beyond Compare 5 review gate, dual-commit sync, Dual-State lifecycle, CM plan archive, Unconditional Plan Review Gate & Anti-Auto-Proceed Invariant (`RULE-LCM-014`), intake gates (`BUG:`, `CRP:`), directional `PROCEED ALL`, 2-attempt loop breaker, credit exhaustion guards, Active App Context (`Workon: A#`), multi-App problem gating, automated tripartite synthesis on `COMPLETE`, Proposal Bundle Directory Architecture (`RULE-LCM-020`), Tool & Macro Synchronization Invariant (`RULE-LCM-021`), Atomic Edit Consolidation & Editor Review Safety Invariant (`RULE-LCM-022`), Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant (`RULE-LCM-023`), Mandatory Pre-Handoff Verification & Zero-Assumption Testing Invariant (`RULE-LCM-024`), Temporary Specification Absorption & Semantic-Delta Restart (`RULE-LCM-025`), Explicit Control-Hub Target & Cohort Action Invariant (`RULE-LCM-026`), Strict Proposal Scope Boundary & Anti-Scope-Creep Invariant (`RULE-LCM-027`), Question Response & Anti-Overreaction Invariant (`RULE-LCM-028`), Boundary Ambiguity & Alternatives Invariant (`RULE-LCM-029`), Session Quiescence & GoodNight / GoodMorning Protocol Invariant (`RULE-LCM-030`), Context Absorption, Reverse-Ticket Invariant & Guaranteed Learned-Advice Retirement (`RULE-LCM-031`), Fix Completeness, Defect-Driven Rule Reconciliation & Operator Disclosure Invariant (`RULE-LCM-032`), Diagnostic Triage Protocol (`RULE-LCM-033`), and LCM Inventory Centralization for Governed Proposals Invariant (`RULE-LCM-034`). |
-| **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `014` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), standard SemVer arithmetic (`+1.0.0` Major, `+0.1.0` Minor, `+0.0.1` Patch on commit completion per `RULE-REV-007`), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`), ADMINMODE rule change authorization (`RULE-REV-011`), Review Tool Window Non-Interference, Title Neutrality, Baseline Currency & Baseline Re-Creation Prohibition Invariant (`RULE-REV-012`), Baseline Modification Detection & Interactive Dismount Choice Guardrail (`RULE-REV-013`), and Prohibition of Ad-Hoc / Git-Based BCompare Invocations & Exclusivity of BCR Invariant (`RULE-REV-014`). |
+| **[ReviewCommitGovernancePolicy.md](file:///.agents/rules/ReviewCommitGovernancePolicy.md)** | `RULE-REV-001` - `014` | **Commit Gating & Review** | Governed Repos & Root | Mandatory review-gated commits (`ACCEPTED`), Gate 2 visual review with 2 authorized bypass exceptions (explicit operator `IMMEDIATELY`/`FORCE` instruction, or critical loop-preventing bug with max 2 attempts), standard SemVer arithmetic (`+1.0.0` Major, `+0.1.0` Minor, `+0.0.1` Patch on commit completion per `RULE-REV-007`; version alignment corrections never need a CRP or BUG, `RULE-REV-007` item 4), reproducible local composite BCompare baselines using time-aligned junction-authority rules snapshots, policy-discovery disclosure, readiness quality gate pass, audit receipts in `LCM_Inventory/data/reviews/`, Zero-Assumption Pre-Review Gate Verification Invariant (`RULE-REV-010`), ADMINMODE rule change authorization (`RULE-REV-011`), Review Tool Window Non-Interference, Title Neutrality, Baseline Currency & Baseline Re-Creation Prohibition Invariant (`RULE-REV-012`), Baseline Modification Detection & Interactive Dismount Choice Guardrail (`RULE-REV-013`), and Prohibition of Ad-Hoc / Git-Based BCompare Invocations & Exclusivity of BCR Invariant (`RULE-REV-014`). |
 | **[AnalysisGovernancePolicy.md](file:///.agents/rules/AnalysisGovernancePolicy.md)** | `RULE-ANA-001` - `006` | **Analysis Governance** | Workspace & Gemini Sessions | Intent wake words (`ANALYZE` / `IMPLEMENT`), read-only tool lock, provenance tagging (`[VERIFIED]`, `[GAP]`), search radius fence ($\le 2$), Circuit Breaker protocol (`[ANALYSIS RESUMED]`), and runtime state transparency. |
 | **[DecisionCascadeGovernancePolicy.md](file:///.agents/rules/DecisionCascadeGovernancePolicy.md)** | `RULE-DEC-001` - `005` | **Decision Cascade & Docs** | Workspace-wide & Child Repos | System-1/System-2 Decision Cascade architecture, Sub-85% Low-Confidence Operator Triage Invariant (`RULE-DEC-002`), Standalone Gate 2A Documentation Checkpoint (`RULE-DEC-003`), automated Gate 2A bypass conditions for low-significance changes and minimal-tests cycles (`RULE-DEC-004`), and Pre-Push Clean State & Relief Switch Reset Invariant (`RULE-DEC-005`). |
-| **[RepositoryContextPolicy.md](file:///.agents/rules/RepositoryContextPolicy.md)** | `RULE-CTX-001` - `006` | **Context Scoping** | Child Repositories | Strict repository boundary separation, deterministic relative path resolution, global configuration reading (`LCM_Inventory/config.json`), and GoodMorning Operator Exclusivity (`RULE-CTX-006`). |
+| **[RepositoryContextPolicy.md](file:///.agents/rules/RepositoryContextPolicy.md)** | `RULE-CTX-001` - `006` | **Context Scoping** | Child Repositories | Strict repository boundary separation, deterministic relative path resolution, global configuration reading (`LCM_Inventory/config.json`), and the GoodMorning session start, run by the operator or on operator instruction by an AI host (`RULE-CTX-006`, CRP-350). |
 | **[ElevationPolicy.md](file:///.agents/rules/ElevationPolicy.md)** | `RULE-ELEV-001` - `007` | **Security & Privileges** | Workspace-wide | Least-privilege execution default, elevated script runner delegation, auto-detection of privileged commands, elevated console non-auto-close invariant, automated privilege-aware execution/elevation interception, and caller admin dependency disclosure & anti-staleness invariant. |
 | **[SubsystemGovernancePolicy.md](file:///.agents/rules/SubsystemGovernancePolicy.md)** | `RULE-SUB-001` - `008` | **Subsystem Architecture** | Subsystem Repositories | Disjunct domains, dedicated subsystem inventories, JIT ephemeral tokens, host safety hardware interlocks, log segregation, Update-Gate & CRP bundling, central registry non-mutation invariant, and LCM Inventory Exclusivity & Proposal Directory Invariant (`RULE-SUB-008`). |
 | **[macro-definitions.md](file:///.agents/rules/macro-definitions.md)** | `MACRO-DEFS` | **Operator Macros** | Interactive Shell | Antigravity IDE bare-word standard (`ToolExplorer`, `ShowTools`, `tools`, `ar`, `bcr`, `COMPLETE`, `PUSH`), persistent `TimestampHeaderRule` (legacy `@tsr` retired), `@RULEAUTH`, `@ml`. |
@@ -2416,7 +2435,7 @@ All 21 canonical governance policies are organized into three functional tiers u
 | **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Question Response Invariant, Boundary Ambiguity & Alternatives Invariant, determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, Comment & Documentation Preservation Invariant, Universal Header Modification Timestamp Invariant, Single-Commit Version Increment Invariant, and Language Deference Hierarchy (generic formatting yields to language rules). |
 | **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY`, `RULE-LANG-001` - `005` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |
 | **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `012` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance, Comment & Documentation Preservation Invariant (`RULE-DOC-009`), Mandatory Modification Timestamp Update Invariant (`RULE-DOC-010`), Implementation Choices, Rationale & Caveats Synchronization Invariant (`RULE-DOC-011`), and Data Design Specification Standard (`RULE-DOC-012`). |
-| **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `009`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence, zero-test cascade on telemetry, short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing, and Anti-Code-Reading & Direct Goal Execution Invariant (`RULE-EFF-009`). |
+| **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `009`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence (incl. SQL ledger projections), zero-test cascade on telemetry, bookkeeping never aborts a commit or push (`RULE-EFF-002`), short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing, and Anti-Code-Reading & Direct Goal Execution Invariant (`RULE-EFF-009`). |
 
 ### 1.3 Language-Specific Standards & Presentation (`lang/` — Path-Scoped)
 

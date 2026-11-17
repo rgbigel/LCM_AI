@@ -31,7 +31,7 @@ How it works:
 - Execution loop breaker: Stop working immediately and report to the operator when multiple attempts (max 2) to reach a goal fail. Do not speculatively cascade through alternate execution methods (CIM, cmd start, tasks). (2026-11-09, operator)
 - Prohibition of pre-execution code reading: It is totally unproductive to read code before executing it. If you want to run a command or tool, just run it directly. You have NO reason whatever to read or dump tool source code into context before execution. (2026-11-09, operator)
 - Structured logging cleanliness: In task and command logs, record only the command name that is executed and essential progress; never echo entire script listings or voluminous debug dumps into logs. (2026-11-09, operator)
-- Operator exclusivity for GoodMorning: GoodMorning is only run by the operator at session start, never by the AI as an envelope to obtain a baseline or perform multi-repo research. (2026-11-09, operator)
+- No GoodMorning envelope: GoodMorning runs only on explicit operator instruction (by the operator or an AI host) and is never used by an AI as an envelope to obtain a baseline or perform multi-repo research. (2026-11-09, operator; operator exclusivity removed by CRP-350, RULE-CTX-006, 2026-11-17)
 - Direct goal-to-command intent mapping: Avoid linear searching of markdown documents or documentation to find tool commands. Use direct structured intent-to-command mappings (`tool_intents.json`). (2026-11-09, operator)
 - When the operator poses a Question, it must not cause the AI to do anything except answer. An inquiry, critical query, or explanation (e.g. "X does not justify Y") is NOT a directive to modify files, rollback, revert, or execute mutations; state changes require explicit instruction. (2026-11-07, operator)
 - Wherever the boundary is not explicit or given by the goal, present alternatives and WAIT FOR CONFIRMATION before executing. (2026-11-07, operator)
@@ -72,3 +72,8 @@ How it works:
 
 
 
+
+- [ ] Consider a tool mode that establishes and produces the "calls directly" xref entries (confirmation or creation) for the tool it runs, so the tool-call xref table is built and verified from the tools themselves. (2026-11-17, Rolf, Claude)
+- [ ] Atomizing: an atom is an external, separately started unit (script or, where practical, a Go executable) registered as an intent with its own elevated flag; only minimal-size helpers stay internal functions. Atomizing also allows shared module use: atoms and tools import the same shared modules instead of duplicating internal functions (CRP-343). (2026-11-17, Rolf, Claude)
+- [ ] Tool call cross-reference: replace the outdated tool-call xref by an xref table (first "calls directly", later its counterpart "directly called by") and use it consistently when determining design and security issues (e.g. elevation consistency, CRP-343). (2026-11-17, Rolf, Claude)
+- [ ] I am all in favor of using git bash iff it simplifies evading the many problems we have with PowerShell. We can install it and it will become a part of the external tools list (as should all other AI extensions we use). (2026-11-17, Claude)

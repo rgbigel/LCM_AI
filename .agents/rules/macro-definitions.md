@@ -9,9 +9,9 @@ Module: macro-definitions
 Purpose: Defines operator and agent command macros, bare-word syntax standards, execution routing, and parameter mappings across the workspace.  
 Path: .agents/rules/macro-definitions.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0  
+Version: 10.3.1  
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00  
+Date: 2026-11-17 15:40:19  
 
 ---
 
@@ -54,14 +54,15 @@ MACRO: profile status
   - summarize version alignment
 
 MACRO: GoodMorning
-- description: full read-only session-start check (RULE-CTX-006, RULE-LCM-030): time gap, work in between, versions, context staleness, pending learned advice
+- description: full session-start check (RULE-CTX-006, RULE-LCM-030 (5)/(6)): time gap, work in between, versions, context staleness, pending learned advice, host blocks, DO front-end liveness
 - syntax: GoodMorning | goodmorning
 - primary target: LCM_Inventory/tools/Invoke-LCM_GoodMorning.ps1 -Force
 - rules:
   - the first line of the AI's response MUST reference the preceding GoodNight timestamp: "☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h)."
   - report every attention item to the operator before other work
   - confirm that ACTIVE_CONTEXT.md and LEARNED_ADVICE.md were read and can be followed
-  - change nothing
+  - change nothing except what RULE-LCM-030 (5) allows (section 1 Status / Resumption Timestamp, DO front-end start)
+  - run by the operator, or by an AI host on explicit operator instruction (RULE-CTX-006, CRP-350)
 
 MACRO: GoodNight
 - description: comprehensive end-of-day workspace save, log archival, commit, optional push, and quiescence transition (RULE-LCM-030)
@@ -75,6 +76,7 @@ MACRO: GoodNight
   - commit governed repositories (and publish with -Push)
   - the final console banner and AI terminal message MUST show the completion timestamp: "🌙 Good Night completed at YYYY-MM-DD HH:mm:ss. Session is Quiescent."
   - after GoodNight completes, the workspace enters a Quiescent State; AI MUST NOT emit unprompted wakeups or greetings until operator speaks
+  - run by the operator, or by an AI host on explicit operator instruction (RULE-LCM-030 (6), CRP-350)
 
 
 MACRO: learn

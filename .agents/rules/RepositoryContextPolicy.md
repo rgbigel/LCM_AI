@@ -9,9 +9,9 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 10.3.0
+Version: 10.3.1
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 22:00:00
+Date: 2026-11-17 15:40:19
 
 ---
 
@@ -52,10 +52,10 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 7. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
 8. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
 
-### `RULE-CTX-006` (GoodMorning Session Start — Operator Exclusivity)
-1. **Operator Exclusivity**: `Invoke-LCM_GoodMorning.ps1` is an operator-executed command and `MUST NEVER` be launched automatically by an AI assistant as an envelope to obtain a baseline or perform multi-repo research.
+### `RULE-CTX-006` (GoodMorning Session Start)
+1. **Day Routine Trigger**: `Invoke-LCM_GoodMorning.ps1` is run by the operator or, on explicit operator instruction, by any sanctioned AI host (`RULE-LCM-030` (6), CRP-350). An AI assistant `MUST NEVER` launch it on its own initiative, nor as an envelope to obtain a baseline or perform multi-repo research.
 2. **Multi-Host Attention Aggregation**: `Invoke-LCM_GoodMorning.ps1` aggregates session status, time gaps, repository drift, and pending attention items across all registered AI hosts (Antigravity, Claude Code) into a unified report.
-3. **AI Read-Only Resumption Protocol**: At session start, the AI assistant's role is strictly read-only:
+3. **AI Resumption Protocol**: At session start, the AI assistant changes nothing except what `RULE-LCM-030` (5) allows (its own host block `Active`, the GoodMorning section 1 fields, the DO front-end start):
    - Read `.agents/ACTIVE_SESSION.md`, `.agents/ACTIVE_CONTEXT.md`, and `.agents/LEARNED_ADVICE.md`.
    - Adhere to the Session Quiescence and GoodMorning Resumption Response Protocol per `RULE-LCM-030`.
    - State that active context and binding learned advice have been verified, identify any stated attention items or stale entries across all registered hosts, and await explicit operator direction.

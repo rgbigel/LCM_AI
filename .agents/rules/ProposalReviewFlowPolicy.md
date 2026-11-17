@@ -9,9 +9,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.1
+Version: 10.3.2
 Status: Authoritative Policy  
-Date: 2026-11-17 12:27:04
+Date: 2026-11-17 15:40:19
 
 ---
 
@@ -510,7 +510,8 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
      - **Learned Advice (Binding / Guidance)**: Unified entries in `.agents/LEARNED_ADVICE.md`.
      - **Per-CRP Evidence**: Confined strictly to proposal bundles (`docs/Proposals/CRP-nnn/`).
    - **Host-Native Memory Pointers**: Host-private memory systems (Claude auto-memory, Antigravity project context) `MUST` store pointers only. Disk files are the sole authoritative truth.
-   - **Independent Host Execution**: Each AI host performs its own session handoff against this layer. A host writes only its own session section in `.agents/ACTIVE_SESSION.md` and candidate advice in `.agents/LEARNED_ADVICE.md`; it `MUST NOT` execute or alter another host's internal tools or private adapter state.
+   - **Independent Host Execution**: Each AI host performs its own session handoff against this layer. A host writes only its own session section in `.agents/ACTIVE_SESSION.md` and candidate advice in `.agents/LEARNED_ADVICE.md`. It `MAY` change another host's adapter files (e.g. `GEMINI.md`, `.agents/skills/`, `.claude/`) only to carry out an accepted CRP/BUG, and `MUST` announce such a change in its own session section (CRP-350).
+   - **No Host-Exclusive Open Items**: While one host is working, every open item `MUST` be executable by that host; no item may wait for one specific other host (CRP-350).
    - **Non-Concurrent Operation**: Concurrent host execution in the same workspace is prohibited; the operator coordinates turns. One-sided modifications `MUST` be announced. Physical data stored on disk wins every contest.
 
 2. **Quiescent State Invariant**:
@@ -527,6 +528,17 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
      `☀️ Good Morning! Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h).`
    - Under technical ASCII mode (`technical`), plain text `[GOODMORNING] Resuming from Good Night at YYYY-MM-DD HH:mm:ss (Gap: X.X h).` substitutes for the emoji prefix.
    - The response `MUST` reflect per-host activity recorded in `.agents/ACTIVE_SESSION.md` and state any identified attention items.
+
+5. **Session State Schema (`.agents/ACTIVE_SESSION.md`, CRP-350)**: every host and every tool reads and writes the file with these meanings only; no host keeps its own copy of this schema.
+   - **Workspace GoodNight**: set only by `Invoke-LCM_GoodNight.ps1` (via `Save-AllSessionMemory.ps1 -Quiescent`) as section 1 `GoodNight Timestamp`, together with section 1 `Status: Quiescent (GoodNight completed at <ts>)`. It is the only value for "Resuming from Good Night at ..." (item 4), for every host and for `Invoke-LCM_GoodMorning.ps1`.
+   - **Host session close**: a host closes by writing only its own block. Status vocabulary: `Active` / `Closed (<ts>)`. A host block never says `Quiescent` or `good-night`.
+   - **Snapshot save** (`Saved:` in `ACTIVE_CONTEXT.md`, section 1 `Last Updated`): a save event only; it is never read as a GoodNight.
+   - **Gaps**: the workspace gap is measured from the workspace GoodNight; each host gap from that host's `Last Activity`. Both are reported with their labels.
+   - **Section ownership**: section 1 belongs to the workspace tooling: `Save-AllSessionMemory.ps1` (`Last Updated`; with `-Quiescent` also `Status` and `GoodNight Timestamp`) and `Invoke-LCM_GoodMorning.ps1` (`Status: Active (resumed at <ts>; ...)`, `Resumption Timestamp`). Section 2: each host its own block. Section 3: generated from `proposals.db`, or marked `as of <ts>, not live`.
+   - **Host-block fields** (fixed list): `Status`, `Session ID` or `Conversation ID`, `Last Activity`, `Current Task`, `Next Step`, `Open Operator Decisions`, `Attention Items`. GoodMorning reports all of them and flags a host block whose status is outside the vocabulary, or that is `Active` with a `Last Activity` older than the workspace GoodNight.
+   - **DO front-end liveness**: every good-morning routine checks the DO front-end (daemon on `127.0.0.1:9876`, Session 1) and starts it (`LCM_DesktopDaemon_<user>` logon task) when it does not answer.
+
+6. **Day Routines by AI Hosts (CRP-350)**: `GoodMorning` (`Invoke-LCM_GoodMorning.ps1`) and `GoodNight [-Push]` (`Invoke-LCM_GoodNight.ps1`) are run by the operator or, on explicit operator instruction, by any sanctioned AI host. An AI host `MUST NOT` start them on its own initiative or on a synthetic turn (item 2). Their review, commit and push gates are unchanged.
 
 ---
 

@@ -1,8 +1,8 @@
 # Workspace Active Context & LCM Operational Manifest
 
-**Last Updated:** 2026-11-17 15:17:20  
+**Last Updated:** 2026-11-17 20:24:41  
 **Workspace Root:** `D:\Git_Repositories`  
-**Governance Framework:** Lifecycle Model (LCM V10.6.4)  
+**Governance Framework:** Lifecycle Model (LCM V10.7.4, `.agents/version.json`)  
 **Parent Workspace:** `D:\VSCode-Workspaces\Solution.code-workspace`
 
 ---
@@ -20,7 +20,7 @@ graph TB
         REPOS["Candidate & Governed Repositories<br/>(VolumeInventory, BootEntryManager, etc.)"]
     end
 
-    WAI -->|"LCM Release Baseline (V10.0.0)"| WI
+    WAI -->|"LCM Release Baseline (V10.7.4)"| WI
     WAI -->|"NTFS Junctions & Scaffolds"| REPOS
     SM -->|"Exported Atoms (Logging, VolumeAtoms, BcdAtoms)"| REPOS
     WI -->|"Audits, CM Ledgers & CR Indexing"| REPOS & WAI & SM
@@ -28,7 +28,7 @@ graph TB
 ```
 
 1. **[LCM_AI](file:///d:/Git_Repositories/LCM_AI/README.md) (Governance & Methodology Baseline Authority):**
-   * Releases and maintains the authoritative LCM standard (currently `V10.0.0`).
+   * Releases and maintains the authoritative LCM standard (currently `V10.7.4`, `.agents/version.json`).
    * Owns repository templates (`templates/repo-scaffold/`), onboarding engines (`Invoke-LCMOnboardRepo.ps1`), and quality gates (`WorkspaceQualityGates.psm1`, `Test-WorkspaceReadiness.ps1`).
    * Projects governance via NTFS directory junctions into onboarded repositories.
 
@@ -65,7 +65,7 @@ graph TB
   * `antigravity.fileAccessPolicy`: `allow`
   * `antigravity.terminalExecutionPolicy`: `always-proceed`
   * `antigravity.autoExecuteCommands`: `true`
-  * `files.eol`: `\r\n` (CRLF)
+  * `files.eol`: `\r\n` (CRLF; CRP-332 Option B pending: LF everywhere except `*.cmd`/`*.bat`)
   * `files.encoding`: `utf8` (without BOM)
   * `git.ignoredRepositories`: Includes all 10 non-git directories.
 
@@ -77,13 +77,13 @@ graph TB
 All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are authoritative:
 
 1. **[ReviewCommitGovernancePolicy.md](file:///d:/Git_Repositories/.agents/rules/ReviewCommitGovernancePolicy.md):**
-   * `RULE-REV-001`: Commits require prior validated review disposition (`ACCEPTED` / `ACCEPTED_WITH_EDITS`).
+   * `RULE-REV-001`: Commits require prior validated review disposition (`completed` / `completed_with_edits`).
    * `RULE-REV-004`: Review-gating takes strict precedence over general permissions.
    * **Exemption:** `HaSSD06` workspace is **exempt** from mandatory review-gating.
 2. **[MethodEfficiencyPolicy.md](file:///d:/Git_Repositories/.agents/rules/MethodEfficiencyPolicy.md):**
    * `RULE-EFF-001`: Mechanical telemetry, baseline snapshots, and logs are automatically accepted without review gates.
    * `RULE-EFF-002`: Zero-test cascade on log/evidence mutations.
-   * `RULE-EFF-004`: Direct agent execution without chat planning blocks; gating handled exclusively downstream via Beyond Compare (`RR.ps1`).
+   * `RULE-EFF-004`: Direct execution only under `DOIT`, up to Gate 2 (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1`), never past it; outside `DOIT` the Gate 0 / Gate 1 pauses stay binding.
 3. **[ElevationPolicy.md](file:///d:/Git_Repositories/.agents/rules/ElevationPolicy.md):**
    * `RULE-ELEV-001` through `RULE-ELEV-003`: Explicit `ElevationRequired` declared in `AGENTS.md` and audited in `LCM_Inventory/data/inventory.json`; `-NoElevation` support for automated runners.
 4. **[LanguagePolicy.md](file:///d:/Git_Repositories/.agents/rules/LanguagePolicy.md):**
@@ -94,7 +94,7 @@ All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are au
    * `RULE-CTX-003`: Zero redundant scan invariant.
    * `RULE-CTX-004`: Continuous methodology triad awareness.
    * `RULE-CTX-005`: Learned advice; read `ACTIVE_CONTEXT.md` and `LEARNED_ADVICE.md` at session start, accepted entries are binding, `/learn` adds candidates, review no later than push.
-   * `RULE-CTX-006`: GoodMorning session start (operator exclusivity); AI responds with read-only confirmation and reports attention items across all registered hosts.
+   * `RULE-CTX-006`: GoodMorning session start, run by the operator or on operator instruction by an AI host (CRP-350); the AI changes only what RULE-LCM-030 (5) allows and reports attention items across all registered hosts.
 
 ---
 
@@ -110,7 +110,7 @@ All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are au
 ### Stream B: Workspace AI & Antigravity Setup
 * Shared `.venv` installed and verified (Python 3.14 + `google-antigravity` SDK).
 * Antigravity settings configured to `always-proceed` + `allow` across all `.vscode/settings.json`.
-* Rule `RULE-EFF-004` (Agent direct execution + Beyond Compare review gating) active and enforced.
+* Rule `RULE-EFF-004` (direct execution under `DOIT` up to Gate 2 / BCR) active and enforced.
 
 ### Stream C: CI Stabilization & Pester v5 Modernization
 * **Completed Repositories:**
@@ -125,14 +125,6 @@ All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are au
 
 ## Operator Remarks (open, for the next session)
 
-### 2026-11-08: Master Consolidation Plan (CRP-309 & COH-307)
-
-Master consolidation agreed with operator before reboot:
-1. **Phase 1 (Clear Backlog):** Review and complete verified cohort `COH-307` (`CRP-304`, `CRP-305`, `CRP-306`, `BUG-307`, `CRP-298`).
-2. **Phase 2 (Master Proposal CRP-309):** Execute unified elevated Port 9876 daemon (`RunLevel Highest`), universal synchronous back-channel, thin-client REST routes, rich feedback drawer, binding CORS/CSP (`ShowTools -Pane`), JIT ephemeral tokens (`Authenticated Users` SID S-1-5-11), and `Invoke-InteractiveDesktop.ps1` short-circuit remediation. Absorbs and supersedes: `CRP-292` through `CRP-297`, `BUG-289`, and `CRP-248`.
-3. **Phase 3 (GoodMorning & Baseline CRP-308):** Deploys context remarks editor tool, default baseline readiness, and Macrium automation atoms. Absorbs and supersedes `CRP-258`.
-4. Detailed specifications and implementation plans updated in `LCM_Inventory/docs/Proposals/CRP-309-*/`.
-
 ### 2026-10-20: Review/commit workflow friction for tomorrow
 
 Analyze these workflow mismatches with the operator before changing policy or tooling. The accepted work is allowed to be committed while its proposal remains unfinished; a commit is not lifecycle completion.
@@ -142,7 +134,7 @@ Analyze these workflow mismatches with the operator before changing policy or to
 3. **Workspace-root BCR path mapping:** [`LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1`](../../LCM_Inventory/tools/Invoke-MacriumBcrReview.ps1) resolves repository names below `D:\Git_Repositories`; the root obligation named `Git_Repositories` was therefore treated as a nested repository and failed. The user-accepted full-workspace BCR covered the root review, but exact-obligation BCR could not.
 4. **Proposal ledger shape:** [`LCM_Inventory/modules/ProposalManager.psm1`](../../LCM_Inventory/modules/ProposalManager.psm1) expects `review_obligation_ledger.entries`, but the stored value was a one-element array. It required normalization before recording the CRP-300 obligations; assess the canonical schema and validation.
 5. **Lifecycle versus commit semantics:** CRP-298 remains `in_review` / `verification` after accepted component commits (the LCM_AI RR used `-SkipLifecycleSynchronization`). Keep unfinished lifecycle state distinct from commit status; decide whether any follow-up synchronization is needed.
-6. **BCR dialog timeout:** During Macrium baseline preparation, the Browse Image dialog was visible but automation timed out; F: was mounted and available afterward. This is tracked as open [`BUG-299`](../../LCM_Inventory/docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou/Specification.md). Investigate dialog/readiness detection separately; leave the bug open until explicitly activated.
+6. **BCR dialog timeout:** During Macrium baseline preparation, the Browse Image dialog was visible but automation timed out; F: was mounted and available afterward. This was tracked as [`BUG-299`](../../LCM_Inventory/docs/Proposals/BUG-299-BUG-Macrium-Browse-Image-dialog-detection-times-ou/Specification.md). BUG-299 is `pushed` (ledger 2026-11-17); operator to confirm this remark is done.
 7. **GoodNight snapshot-sync path:** GoodNight completed, but `Update-Gemini.ps1` warned that it could not find `Sync-LCMResearchSnapshot.ps1` in the legacy `LCM_Inventory/tools` or workspace-root `tools` locations. The script now lives in `LCM_Tools/tools`; the Google Drive knowledge-base snapshot step was therefore skipped. Review the launcher/catalog wiring tomorrow; no fix was attempted tonight.
 
 * 2026-10-13: Beyond Compare review staging still uses a scratch directory as the right-hand comparison side. Avoid this where possible; review the live target directly or make the staging side clearly distinguishable from the live working tree.
@@ -168,11 +160,11 @@ Analyze these workflow mismatches with the operator before changing policy or to
 <!-- SESSION_SNAPSHOT:BEGIN (generated by Save-AllSessionMemory.ps1; do not edit) -->
 ## Session Snapshot
 
-Saved: 2026-11-17 15:17:20
+Saved: 2026-11-17 20:24:41
 
 | Repository | Branch | HEAD | State |
 |---|---|---|---|
-| Git_Repositories | main | 138095d | committed, unpublished: 1 |
+| Git_Repositories | main | 578a478 | committed, unpublished: 2 |
 | AuthorizeMasterUser | NewStructure | 04c3b42 | published |
 | BackgroundModifier | NewStructure | 014258f | published |
 | BGMSAMVInv | NewStructure | 8ae2d85 | published |
@@ -180,8 +172,8 @@ Saved: 2026-11-17 15:17:20
 | HaSSD06 | NewStructure | b7819d7 | published |
 | HaSSD06_Inventory | NewStructure | 75e954b | published |
 | InstallFonts | main | 37a275a | committed, no upstream |
-| LCM_AI | main | 779a65c | committed, unpublished: 1 |
-| LCM_Inventory | main | 5d18c00 | committed, unpublished: 4 |
+| LCM_AI | main | 47a9613 | uncommitted: 14 |
+| LCM_Inventory | main | 5d18c00 | uncommitted: 53 |
 | LCM_Shared | NewStructure | fc18719 | published |
 | LCM_Supervision | NewStructure | 6c4123c | published |
 | LCM_Tools | main | 15a19a2 | published |

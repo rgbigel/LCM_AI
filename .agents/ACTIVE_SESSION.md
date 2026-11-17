@@ -4,73 +4,76 @@ Module: .agents/ACTIVE_SESSION.md
 Purpose: Authoritative multi-host session continuity, handoff state, and attention ledger (RULE-LCM-030).  
 Path: .agents/ACTIVE_SESSION.md  
 Authors: Rolf, Antigravity, Claude  
-Version: 10.6.4  
+Version: 10.7.4  
 Status: Authoritative Invariant State  
-Date: 2026-11-16 15:46:50  
+Date: 2026-11-17 15:29:34  
 
 ---
 
 ## 1. Workspace State
 
-- **Last Updated**: 2026-11-17 15:17:20
-- **Status**: Quiescent (GoodNight completed at 2026-11-17 15:17:20)
-- **GoodNight Timestamp**: 2026-11-17 15:17:20
-- **Resumption Timestamp**: 2026-11-15 14:31:07
-- **LCM Version**: 10.7.4 (`.agents/version.json`; WIP publish 2026-11-15, +0.1.0)
-- **Active Cohort**: `CRP-331`
-- **Commits** (all pushed, WIP "Convergence Pending" 2026-11-15 19:24-19:25):
-  - `LCM_AI`: `e258f1c`
-  - `LCM_Inventory`: `58ad671`
-  - `LCM_Shared`: `fc18719`
-  - `LCM_Supervision`: `6c4123c`
-  - `LCM_Tools`: `15a19a2`
-  - `Git_Repositories` (Root): `453844f`
-- **Quality Gates**: `Test-GeneralReadiness.ps1` (100% PASS across 7 gates in LCM_AI and LCM_Inventory, last recorded 2026-11-14; not re-run after the WIP publish)
+- **Last Updated**: 2026-11-17 20:24:41
+- **Status**: Quiescent (GoodNight completed at 2026-11-17 20:24:41)
+- **GoodNight Timestamp**: 2026-11-17 20:24:41
+- **Resumption Timestamp**: 2026-11-17 15:22:45
+- **LCM Version**: 10.7.4 (`.agents/version.json`)
+- **Active Cohort**: none open (COH-331 pushed 2026-11-17)
+- **Commits** (git, read 2026-11-17 15:29):
+  - `LCM_AI`: `47a9613` (pushed)
+  - `LCM_Inventory`: `5d18c00` (pushed; 16 post-push bookkeeping paths uncommitted)
+  - `LCM_Shared`: `fc18719` (pushed)
+  - `LCM_Supervision`: `6c4123c` (pushed)
+  - `LCM_Tools`: `15a19a2` (pushed)
+  - `Git_Repositories` (Root): `138095d` (committed, NOT pushed, ahead 1)
+- **Quality Gates**: `Test-GeneralReadiness.ps1` last recorded 100% PASS on 2026-11-14; not re-run since.
+- **Convergence target** (operator 2026-11-17): while one host works, no open item may be executable only by the other host (CRP-350 target item 9).
 
 ---
 
 ## 2. Multi-Host Session Registry
 
 ### Host: Antigravity (Gemini)
-- **Status**: Quiescent (GoodNight completed at 2026-11-17 15:17:20)
+- **Status**: Closed (2026-11-14 22:37:21)
 - **Conversation ID**: `777d3833-90fc-46ed-abe9-3ede0d9320a1`
 - **Last Activity**: 2026-11-14 22:37:21
-- **Current Task**: CRP-331 Batch 1-3 & residual harmonizations completed and verified.
-- **Next Step**: Awaiting operator Gate 2 review and cohort completion.
-- **Attention Items**: None
+- **Current Task**: None. Its last task (CRP-331 Batch 1-3) was completed and pushed with COH-331 on 2026-11-17 by Claude.
+- **Next Step**: CRP-350 in_review (Gate 2 postponed). Chain A DOIT: CRP-343 IMPLEMENTED AND DEPLOYED 2026-11-17 17:00:34 (do.exe 10.2.4; rollback LCM_Inventory/scratch/do-before-crp343.exe); evidence in its Walkthrough. Mount worker = external atom Invoke-MacriumMountWorker.ps1 via Mount-MacriumLatestBaseline.ps1 (admin dispatcher); BCR tools admin 0 / not elevated; generator no longer sets elevated = Admin. OPEN: operator live tests (Control Hub/Tool Explorer buttons; BCR mount at next new baseline); migrate keyless PowerShell daemon callers that need elevation (Dismount-MacriumCurrentBaseline, Invoke-LcmAction); wire policy export into Sync-LcmToolCatalogDb. Then CRP-343 verify -> Gate 2 (operator), CRP-344 (largely satisfied: BC launched non-elevated by the daemon), CRP-345, CRP-346; then A: Book 1 appendix.
+- **Open Operator Decisions**: None.
+- **Attention Items**: Block refreshed by Claude on operator instruction 2026-11-17 15:29:34 (stale state removed; CRP-350 item 9).
 
 ### Host: Claude Code
-- **Status**: Quiescent (GoodNight completed at 2026-11-17 15:17:20)
-- **Session ID**: `942dbb71-3f95-46cd-8dca-5926705cddb9`
-- **Last Activity**: 2026-11-17 15:09:22
-- **Current Task**: Done 2026-11-17: COH-331 COMPLETED (8 members incl. BUG-341 one-joint-BCR + image-identity currency, BUG-342 version alignment; LCM_AI bf13206, LCM_Inventory 182ef03, local, not pushed); RULE-REV-007 item 4 / RULE-LCM-010 item 4 (version alignments never need CRP/BUG); BUG-347 security fix (Go daemon guard.go: foreign origins 403, non-JSON 415; DoT/do.exe redeployed PID 22384, rollback scratch/do-before-bug347.exe); registered CRP-343..346, BUG-348; convergence plan C:\Users\rgbig\.claude\plans\cozy-riding-turtle.md. 14:44: BUG-347 COMPLETED (operator Gate 2: Control Hub / Tool Explorer items work), LCM_Inventory d660fb3 (66 files, incl. the 13:26 Update-ToolCatalog trampoline regeneration and the new bundles). Day break paused by operator before root commit / PUSH. 14:55: learned-advice candidate accepted (operator); BUG-349 (push bundle check vs RULE-LCM-034) fixed in DOIT, verified-pending (module + test, Pester 7/7, not committed); PUSH -SkipGemini PARTIAL: LCM_AI pushed (e258f1c..bf13206), LCM_Inventory refused by pre-push hook (data/proposals/proposals.sql uncommitted) - lockstep broken, no proposal moved to pushed. Dry-run of Invoke-LCM_Push deleted 186 script logs (dry-run defect, for BUG-348). 15:10: BUG-349 COMPLETED (push bundle check -> LCM_Inventory + warn only; push commits SQL projections; RULE-EFF-001/002 bookkeeping never aborts). LCM_Inventory 3 ahead; LCM_AI 7 uncommitted (rules, adapter, hashes, session, advice), 0 ahead -> push lockstep needs LCM_AI ahead; Submit-ReviewResult refused (BUG-349 already completed). Halted (2-attempt rule): operator GoodNight -Push -SkipGemini proposed.
-- **Next Step**: New session: resolve the open CRPs/BUGs of 2026-11-15..17 in this order (proposal, operator to confirm): (1) BUG-347 Gate 2 (operator live test of Control Hub / Tool Explorer buttons, then COMPLETE); (2) commit the leftovers (LCM_Inventory completion state sync + BUG-347 code/bundle; root repo AGENTS.md + docs junction copies); (3) CRP-332 reset to in_progress for Option B delta; (4) consolidate CRP-337 into CRP-343 (same topic: DO gateway elevation per tool admin state); (5) CRP-343 -> 344/345 -> 346 (Gate 1 each); (6) BUG-348 and BUG-340 (DOIT); (7) CRP-339 (compact canonical rules, Gate 0 accepted 2026-11-16); (8) register the queued CRPs: session-continuity convergence (plan file, incl. DO front-end liveness at good morning), proposals.db sole store (B), folder naming (C, 4 open details), collecting doc-absorption CRP (D-31), General_Tools rename, tool_intents.json -> SQLite; queued BUGs: Test-LcmProposalsDb live DB writes, do.exe -> assets/bin, retire run.cmd/Invoke-LcmAction/lcmdo/InvokeLcmDo, delete RunShell.ps1/.cmd.
-- **Open Operator Decisions**: BUG-347 Gate 2 disposition; order of the list in Next Step; CRP-337 vs CRP-343 consolidation; how to commit the leftovers; B (proposals.db sole store) and C (folder naming: padding width, BUG marker on all BUG folders, COH separator, legacy flat files); Gate 1 of CRP-343..346; deferred Gate 2 review guide (D-24).
-- **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan, D-01..D-29); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
+- **Status**: Closed (2026-11-17 20:24:24)
+- **Session ID**: `66e6ec9b-0e2b-4b2d-946b-f8daaccb253a`
+- **Last Activity**: 2026-11-17 20:24:24
+- **Current Task**: 2026-11-17 evening: CRP-350 Gate 2 accepted by the operator (with amendments) and set `completed`; root commit `578a478` only (see attention item 1). CRP-343: operator live tests 1-4 done (Control Hub ok; Tool Explorer findings -> new BUG; BCR [CRP-350] reused F: and launched BC through the DO); Specification section 9 added (tri-state `tools.admin` 1 none / 2 controlled / 3 admin, declared atom list per controlled tool, elevation border table, migration, legacy removal); O-1 decided B (fast path checks the atom only). Operator accepted all decided items (decision A: CRP-343 first segment rides as WIP).
+- **Next Step**: (1) Register the new BUG (text in attention item 2) with bundle and fix it in DOIT to Gate 2. (2) CRP-343 segment 2: tri-state migration (tools.db, catalog, exporter, Go policy loader, Show pages), declared atom lists, BCR dispatches mount worker and registry atom directly as `controlled`, remove legacy `-ElevatedWorker` and duplicate mount hop, trace dismount path, migrate keyless daemon callers to `LcmDoClient.psm1`, wire `Export-LcmElevationPolicy.py` into `Sync-LcmToolCatalogDb.ps1`, rules RULE-ELEV-001/003/006/007 + RULE-AUTH-002 sync, diagrams in `LCM_Inventory/docs/Implementation.md` and use cases in `docs/Requirements.md`. (3) New CRP "DO-Little" (`do.exe --little`, `suggested`). (4) CRP-344/345/346; bare `bcr` must work (operator: the CRP parameter of BCR is legacy; discrepancy for CRP-346). (5) Book 1 appendix.
+- **Open Operator Decisions**: CRP-337 vs CRP-343 consolidation; B (proposals.db sole store) and C (folder naming); deferred Gate 2 review guide (D-24); ACTIVE_CONTEXT operator remarks of 2026-10-13 / 2026-10-20; author of the 2026-11-17 git-bash learned-advice candidate; bare `bcr` vs CRP-bound review (RULE-LCM-002).
+- **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
-  - Claude state 2026-11-16 22:02:57 (Quiescent): 6 elevated Beyond Compare windows from the BUG-341 run (21:44-21:49) may still be open - operator closes extras. Operator suspects BCR sometimes locks F: so it cannot be dismounted (analyze with BUG-341). Books 1 and 3 in LCM_AI/.claude/books are uncommitted and will ride with the COH-331 commit (whole worktree). REMIND operator: data cleanup at version+2 (RULE-DOC-006) and JSON->SQLite compare/eliminate pass.
-  - For Antigravity (2026-11-15 19:2x): WIP publish done by Claude (see Current Task). LCM_Tools keeps an untracked `tools/__pycache__/*.pyc` (not committed). Operator corrections: rules live physically only in `LCM_AI/.agents` (all others junctions); LCM = 4 parts, LCM_Tools = governed tool bucket, LCM_Supervision = future use-case home.
-  - This block is maintained by Claude from 2026-11-14 22:17 (operator decision F-52 A); the former pointer `LCM_AI/.claude/translation/SESSION_HANDOFF.md` was deleted 2026-11-16 (operator, baseline review).
-  - For Antigravity (2026-11-16 15:46:50): on operator instruction Claude repaired the stale workspace sections 1 and 3 of this file (version, commits, ledger states); they had not been refreshed since the WIP publish of 2026-11-15, because that publish bypassed GoodNight and Claude writes only this block. Disk/ledger values; no tool state changed.
-  - Claude state 2026-11-16 17:19:45 (baseline review mode still ON): DONE today - Check 0 OK; bookkeeping sections 1/3 repaired; SESSION_HANDOFF.md deleted; BUG-338 (.agents junctions, ACCEPTED, awaits COMPLETE); CRP-339 (compact canonical rules, Gate 0 ACCEPTED, starts after cohort); BUG-340 registered; CRP-332 revised to Option B (LF except cmd/bat, commit-time normalizer, Claude hook to be removed). Operator decision: doc absorption deferred until Books converged, option B = collecting CRP held + bundles NOT purged at push until absorbed (exception to RULE-LCM-020; collecting CRP not yet registered). QUEUE after review: register collecting CRP; register CRP "Rename LCM_Tools to General_Tools Subsystem" from draft `LCM_Inventory/scratch/CRP-draft-General_Tools-Subsystem/` (operator Q1 C / Q2 A / Q3 A, starts after CRP-339); CRP tool_intents.json -> SQLite; BUGs: Test-LcmProposalsDb live DB writes, do.exe -> assets/bin, retire run.cmd/Invoke-LcmAction/lcmdo/InvokeLcmDo (do.cmd sole client), delete RunShell.ps1/.cmd + catalog row; implement BUG-340, CRP-332 (B); delete NOTE-LineEndings.md. Book 1 operator first pass recorded (Appendix B, 2026-11-16 20:26:24); REMIND operator: data cleanup (logs irrelevant at version+2 must be cut, RULE-DOC-006) and JSON->SQLite content compare/eliminate pass.
+  - (1) `Submit-ReviewResult.ps1 -CRP CRP-350` without `-RepositoryPath` committed only the root repo (`578a478`, 2 files), then set CRP-350 `completed`; `LCM_AI` and `LCM_Inventory` were then refused ("requires in_review"). Their CRP-350 + CRP-343 WIP changes are left for the GoodNight leftover commit.
+  - (2) New BUG to register (operator 2026-11-17: one BUG for all findings): "Tool Explorer Run Selection, Admin Filter And ToolHelp Fail": (a) Run Selection posts `{action:DO,target,parameters}` to `/api/action`; the Go daemon needs a command string; no target resolution (older). (b) Admin column filter options `true`/`false` vs filter code `Admin`/`User` (older). (c) ToolHelp: no `/tool_help` route; fallback `2>&1` misses Write-Host (empty help file); Win11 Notepad opens a background tab in the existing non-elevated window (CRP-343 side effect). (d) item (1). Creation failed twice: `Invoke-ProposalAction.ps1 -Action suggest|bug` require an existing `-TargetExpression`; creation tool to be found via the catalog.
+  - (3) BCR dispatcher ledger print says "No open proposals currently tracked" although six are open; BCR opened a new window instead of refreshing (CRP-346).
+  - (4) The Antigravity block's Next Step holds Claude's text (written during the 15:29 refresh); to be corrected on operator instruction.
+  - For BUG-348 (found under CRP-350): `Test-LCMRuleHealth.ps1` reports false "Drift: Static Rule Copies" for every child repo (expects `rules/` junction, BUG-338 junctions `.agents/`); GoodMorning shows "last remote push 10.8 days ago" because the push path does not update registry `MRPushTimeStamp`.
+  - Queue to register: collecting doc-absorption CRP (D-31, held; bundles are not purged at push until absorbed); "Rename LCM_Tools to General_Tools Subsystem" from draft `LCM_Inventory/scratch/CRP-draft-General_Tools-Subsystem/` (starts after CRP-339); `tool_intents.json` -> SQLite; proposals.db sole store (B); folder naming (C). Queued BUGs: `Test-LcmProposalsDb` live DB writes; `do.exe` -> `assets/bin`; retire `run.cmd` / `Invoke-LcmAction` / `lcmdo` / `InvokeLcmDo` (`do.cmd` sole client); delete `RunShell.ps1/.cmd` and its catalog row; delete `translation/NOTE-LineEndings.md`.
+  - `Invoke-LCM_Push` pushes only repos that own a completed proposal, so the root repo is left behind (for BUG-348 or B). A dry run of `Invoke-LCM_Push` deleted 186 script logs (for BUG-348).
+  - Never run `ProposalManager.Tests.ps1` from a version before BUG-336. `Test-LcmProposalsDb.Tests.ps1` still hydrates the live DB (queued BUG). DO rollback copies are in `LCM_Inventory/scratch/` (`do-before-crp335.exe`, `do-before-bug347.exe`, `do-before-crp343.exe`); build artifacts in `scratch/` must not be committed.
+  - Operator suspects that BCR sometimes locks F: so it cannot be dismounted (unverified; candidate for BUG-348).
+  - REMIND operator: data cleanup at version+2 (RULE-DOC-006) and the JSON->SQLite compare/eliminate pass.
   - Never write to LCM INBOX (D-15).
-  - For Antigravity (2026-11-15): Claude registered CRP-332 (Workspace CRLF Line-Ending Enforcement, operator Option A) in `proposals.db` via `New-LCM_Proposal` (id 332, `suggested`, priority 5); bundle `LCM_Inventory/docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement/` (Specification by Claude; plan and walkthrough are tool placeholders for Antigravity). Per D-29 the host writing a bundle registers it. Also registered by Claude (operator instruction): CRP-333 (Sync-LcmProposalsDb help switch, RULE-PS-010) and CRP-334 (New-LCM_Proposal Specification template currency), both `suggested`.
-  - New for Claude sessions: `/sessionlog` converts the Claude transcript (`LCM_AI/.claude/tools/ConvertTo-LcmTranscript.ps1`) and runs the shared `AnalyzeFailures` / `ShowFailureAnalysis` (shared tools unchanged). Claude PostToolUse CRLF hook (`LCM_AI/.claude/settings.json`).
-  - For Antigravity (2026-11-15): BUG-336 - never run `ProposalManager.Tests.ps1` from a version before the fix (it wrote into the live ledger). `Test-LcmProposalsDb.Tests.ps1` still hydrates the live DB by design (operator decision pending). DO daemon binary replaced 16:54 (CRP-335); rollback copy `LCM_Inventory/scratch/do-before-crp335.exe`; build artifacts in `LCM_Inventory/scratch/` must not be committed.
 
 ---
 
 ## 3. Active Proposal & Cohort Status
 
-- **Ledger states** (`proposals.db`, read 2026-11-16 15:46:50): `CRP-331` `in_review`; `CRP-332`..`CRP-336` `verified` (await Gate 2); `CRP-337` `suggested`.
-- **`CRP-331` (Claude Re-ingestion Findings and Rule Harmonization)**:
-  - **State**: `in_review` | **Progress-State**: `verification` | **Priority**: 9
-  - **Batch 1**: Completed & Converged (F-18, F-19, F-20, F-21 entrypoint, F-22, F-46, F-47, F-27, F-38).
-  - **Batch 2**: Completed & Converged (F-21 residual, F-23, F-24, F-25, F-28, F-33, F-34, F-40, F-41, F-42, F-48, F-49, F-20 macro).
-  - **Residues & Unassigned**: Completed (F-50, F-34 residue, F-33 DOX header, F-15 rule IDs, F-07/F-36, F-09, F-14, F-16, F-26, F-29, F-30, F-31/F-45, F-32, F-35, F-37, F-39, F-43, F-44).
-  - **Batch 3**: Implemented (Section 9 Joint Design: Host-Neutral Session Continuity Architecture); in Gate 2 review with the cohort.
+- **Ledger states** (`proposals.db`, read 2026-11-17 15:29 via `Get-LCM_Proposals`; not live):
+  - `suggested`: CRP-337 (7), CRP-339 (8, Gate 0 accepted 2026-11-16), BUG-340 (5), CRP-343 (7), CRP-344 (7), CRP-345 (6), CRP-346 (6), BUG-348 (6), CRP-350 (9).
+  - `verified`: CRP-332 (5; Option B delta pending).
+  - `held`: CRP-253 (6).
+- **Open cohort**: none.
 
 ---
 
 ## 4. Historical Cohort Lineage
 - **`CRP-263`, `CRP-267`, `CRP-280`, `BUG-311`, `CRP-312`, `BUG-313`, `BUG-314`, `CRP-315`, `CRP-316`, `CRP-318`**: Accepted, committed, and published.
+- **`CRP-326`..`CRP-331`, `CRP-333`..`CRP-335`, `BUG-336`, `BUG-338`, `BUG-341`, `BUG-342`, `BUG-347`, `BUG-349`**: pushed (COH-331 and follow-ups, 2026-11-15..17).

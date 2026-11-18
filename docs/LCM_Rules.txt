@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-17 20:24:55 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-18 23:55:16 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -361,9 +361,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.2
+Version: 10.3.4
 Status: Authoritative Policy  
-Date: 2026-11-17 15:40:19
+Date: 2026-11-18 22:29:49
 
 ---
 
@@ -390,6 +390,7 @@ may not complete, commit, or otherwise pass the review gate until a matching BCR
 is recorded; a COH may not continue until every member has one. The only exception is an
 explicit authorized BCR bypass recorded in the proposal ledger. `-Force` and `-Immediately`
 remain separate governed mechanisms and MUST NOT be treated as BCR bypasses.
+An implied review scope (scope omitted, or a repository) forms a temporary cohort only from items whose state allows review acceptance (`verified`, `in_review`); their cross-repository review obligations are registered before the item completes. This implied cohort is the sanctioned form of the bare `bcr`; it does not fall back to rows or selections. An `in_progress` item whose changes lie inside the reviewed area is not a member and never blocks: the operator is asked to `do <ID>` (finish to `verified`, then include), to let its changes ride as WIP, or to `hold <ID>`; before asking, the agent checks whether the item's intent blocks the target at all. A `DOIT` item joins an implied cohort only once it is `verified` (CRP-346).
 
 #### Canonical Cohort Gate Synchronization Invariant
 Before review-gate continuation, an active/open declared cohort MUST automatically synchronize
@@ -629,9 +630,10 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-009: Scope and Version-Explicit CRP Naming Standard
 1. **Canonical Directory Bundle Convention**: All Change Request Proposals (CRPs) `MUST` follow the standardized bundle directory structure:
-   `docs/Proposals/CRP-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`.
+   `docs/Proposals/<nnn>_CRP-[Slug]/` (since CRP-359 revision 3, operator 2026-11-18; before: `CRP-<nnn>-[Slug]/`, all existing folders renamed) containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`. Since CRP-359 the files carry the item ID: `Specification <ID>.md`, `Implementation Plan <ID>.md`, `Walkthrough <ID>.md` (e.g. `Specification BUG-344.md`), so editor tabs identify the item; bundles closed before CRP-359 keep the legacy names, and tools resolve the new name first, the legacy name as fallback. Elsewhere in the rules, `Specification.md`, `Implementation_Plan.md` and `Walkthrough.md` denote these documents.
    - `nnn`: Universal monotonic sequence integer zero-padded to at least 3 digits (e.g. `018`, `119`), matching the proposal ledger `id` 1:1.
    - `[Slug]`: Descriptive kebab-case intent description.
+   - The folder name starts with the number so that folders sort by number across CRPs and BUGs (shared counter); displays such as the Control Hub table show the item as `<nnn>_<Kind>` (e.g. `365_BUG`); ledger IDs, commands and document names keep `CRP-<nnn>` / `BUG-<nnn>`.
 2. **Mandatory Header & YAML Metadata**: Every CRP specification `MUST` include standardized metadata matching `RULE-LCM-012.3`:
    - `CRP-ID`: Sequential unique identifier (e.g. `CRP-331`).
    - `Title`: Concise descriptive title.
@@ -651,7 +653,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-011: Scope and Version-Explicit Bug Report Naming Standard
 1. **Canonical Bug Bundle Directory Convention**: All formal Bug Reports `MUST` follow the standardized bundle structure:
-   `docs/Proposals/BUG-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`.
+   `docs/Proposals/<nnn>_BUG-[Slug]/` (folder and display form as in RULE-LCM-009) containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md` (named with the item ID as in RULE-LCM-009).
    - `nnn`: Universal monotonic sequence integer zero-padded to at least 3 digits (e.g. `024`, `092`), sharing the exact same sequence counter as CRPs and matching the proposal ledger `id` 1:1.
 2. **Mandatory Frontmatter Metadata**: Every Bug Report `MUST` include explicit frontmatter fields:
    - `Bug-ID`: Sequential unique identifier sharing the sequence counter with CRPs (e.g. `BUG-024`, `BUG-092`).
@@ -709,6 +711,8 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - Before committing, the operator-facing result MUST list the exact changed files and disclose
      any scope amendment, linked BUG, or cohort membership.
    - Never invokes a remote push.
+   - One accepted workspace review covers every governed repository. `COMPLETE <ID>` commits each governed repository with committable changes: the other repositories first, each as a resolved cross-repository review obligation, the primary (origin) repository last, which moves the item to `completed` (BUG-351, CRP-346).
+   - `completed` confirms the completion and is no boundary: `COMPLETE` on a `completed` item commits the governed repositories that are still uncommitted, as obligations, without a lifecycle change. Changes in the item's origin repository belong to a new revision (`reinstate`) (CRP-346).
 4. **`PUSH`**:
    - Pushes only `COMPLETED` proposal repositories in a preflighted cohort with `LCM_Inventory`.
    - A cohort member that is missing, lacks a remote, or is not ahead blocks all remote dispatch.
@@ -953,9 +957,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.1
+Version: 10.3.2
 Status: Authoritative Policy  
-Date: 2026-11-17 12:27:04
+Date: 2026-11-18 16:02:15
 
 ---
 
@@ -1060,10 +1064,10 @@ Every review disposition (`completed`, `completed_with_edits`, `rejected`, `held
 
 ### RULE-REV-012: Review Tool Window Non-Interference, Title Neutrality & Baseline Currency Invariant
 1. **Window Non-Interference**: Beyond Compare review launchers (`Invoke-MacriumDailyBcrBaseline.ps1`, `BCR.cmd`) `MUST NOT` enforce arbitrary single-window constraints (e.g. `Count -ne 1`), kill existing operator instances, or terminate processes with `MainWindowHandle: 0` while they are initializing. Operators own their desktop windows and sessions.
-2. **Title Neutrality**: The launcher may append the review scope (`[CRP-xxx]`) to an opened window, but `MUST NOT` poll window titles in intrusive loops or kill instances whose titles deviate from automation expectations.
+2. **Title Neutrality**: The launcher appends the review scope (`[CRP-xxx]`) only to the window it started or reuses, identified by its record (process ID, start time, window handle, mounted drive), never by a title search; it `MUST NOT` poll window titles in intrusive loops or kill instances whose titles deviate from automation expectations (CRP-346).
 3. **Baseline Currency Invariant**: Baseline preparation tools `MUST NEVER` silently reuse an older mounted image when a newer completed backup exists for the current day on `B:\Backups\`. Before reusing any mounted partition, the tool `MUST` verify whether today has a newer completed `.mrimgx`. If a newer image exists, the tool `MUST` unmount the stale partition and mount today's fresh image. If an older image is intentionally reused, the tool `MUST` explicitly notify the operator of the image date, file name, and mounted drive letter before review dispatch.
 4. **Prohibition of Baseline Re-Creation / Re-Launch & Sandbox Preservation**:
-   - Automation and AI agents `MUST NEVER` re-launch a Beyond Compare review session or re-allocate/remount a new baseline unless the underlying baseline image itself has physically changed.
+   - Automation and AI agents `MUST NEVER` re-launch a Beyond Compare review session while their recorded review window is open; they refresh its `_LCM` tab instead (Full Refresh), also after a newer image was remounted on the same drive. A baseline is remounted only when the underlying image has physically changed. A window is the same review when its compare roots are `<drive>:\Git_Repositories` and `D:\Git_Repositories`; the folder focused below the roots is irrelevant (CRP-346).
    - The comparison dynamically refreshes on filesystem change or manual operator reload, independent of individual CRP identifiers (window title differences are negligible).
    - **Operator Review Markers**: The operator utilizes file modifications and markers on the Left-Hand Side (LHS baseline) to track review progress; introducing a new baseline or remounting wipes out these markers.
    - **Sandbox State Preservation**: In sandbox environments (where a simulated drive mirrors `D:` with junction adjustments), re-allocating or remounting the baseline causes catastrophic loss of the sandbox state.
@@ -2002,9 +2006,9 @@ Module: macro-definitions
 Purpose: Defines operator and agent command macros, bare-word syntax standards, execution routing, and parameter mappings across the workspace.  
 Path: .agents/rules/macro-definitions.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.1  
+Version: 10.3.2  
 Status: Authoritative Invariant Rule  
-Date: 2026-11-17 15:40:19  
+Date: 2026-11-18 16:02:15  
 
 ---
 
@@ -2145,9 +2149,9 @@ MACRO: BCR
 - aliases: bcr, BCR, @bcr
 - rules:
   - exact CRP/BUG, repository, and declared cohort forms are valid. Declared cohorts use `COH-<prime CRP/BUG number>` and contain their prime member.
-  - when scope is omitted, the dispatcher resolves exactly one declared open cohort. If none exists, it constructs a bounded proposed cohort from open `in_progress`, `verified`, and `in_review` proposals.
+  - when scope is omitted (the primary form), the dispatcher resolves exactly one declared open cohort; if none exists, it forms the implied cohort of all `verified` and `in_review` items (RULE-LCM-002). `in_progress` items are named with the choices `do`, ride as WIP, or `hold`, and never block (CRP-346).
   - the dispatcher records a cohort-resolution receipt before launch. `in_progress` members are reported as pending verification, `verified` members are review-ready, and `in_review` members refresh rather than duplicate a review session.
-  - omitted or broadened scope requires an interactive confirmation. A scope that exceeds configured proposal or repository limits, has incompatible baselines, or has unresolved overlap/conflict evidence requires explicit operator selection; non-interactive or cancelled resolution fails closed.
+  - the bare form needs no confirmation. Explicit repository scopes beyond the configured proposal or repository limits, incompatible baselines, or unresolved overlap/conflict evidence still require explicit operator selection; non-interactive or cancelled resolution fails closed. An item parameter otherwise only labels the window title (CRP-346).
   - only review-ready `verified` members may transition to `in_review`, and only after their review handoff succeeds.
   - the dispatcher executes `BCR.cmd` (`Invoke-MacriumBcrReview.ps1`) against the resolved baseline and preserves the configured coarse or tight review granularity.
   - an optional baseline commit is accepted only when it matches the resolved review scope.
@@ -2178,6 +2182,7 @@ MACRO: COMPLETE
 - aliases: complete, COMPLETE, completed
 - rules:
   - completion supports exact CRP/BUG, repository, declared cohort, and `all` forms. `complete all` processes eligible cohorts stepwise and reports every cohort outcome; unresolved or ambiguous scope is invalid.
+  - a single item commits every governed repository with changes, the other repositories first as obligations and its origin repository last; a `completed` item commits only its remaining repositories, without a lifecycle change (RULE-LCM-016, CRP-346).
   - `complete COH-<nnn>` reads the matching BCR staging receipt, validates that every member is `in_review`, and commits once per affected repository. It then advances that repository's reviewed members together.
   - before staging, completion displays unreviewed live paths from the repository staging manifest and requires explicit operator inclusion; cancellation leaves every member in `in_review`.
   - cohort-resolution receipts remain under `LCM_Inventory\scratch\BC_Review\COH-<nnn>` until review completion; permanent commit receipts remain governed CM evidence.

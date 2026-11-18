@@ -12,9 +12,9 @@ Date: 2026-11-17 15:29:34
 
 ## 1. Workspace State
 
-- **Last Updated**: 2026-11-18 23:29:59
-- **Status**: Active (resumed at 2026-11-18 10:14:51; last GoodNight 2026-11-17 20:25:29)
-- **GoodNight Timestamp**: 2026-11-17 20:25:29
+- **Last Updated**: 2026-11-18 23:55:02
+- **Status**: Quiescent (GoodNight completed at 2026-11-18 23:55:02)
+- **GoodNight Timestamp**: 2026-11-18 23:55:02
 - **Resumption Timestamp**: 2026-11-18 10:14:51
 - **LCM Version**: 10.7.4 (`.agents/version.json`)
 - **Active Cohort**: none open (COH-331 pushed 2026-11-17)
@@ -42,11 +42,11 @@ Date: 2026-11-17 15:29:34
 - **Attention Items**: Block refreshed by Claude on operator instruction 2026-11-17 15:29:34 (stale state removed; CRP-350 item 9).
 
 ### Host: Claude Code
-- **Status**: Active
+- **Status**: Closed (2026-11-18 23:54:59)
 - **Session ID**: `66e6ec9b-0e2b-4b2d-946b-f8daaccb253a`
-- **Last Activity**: 2026-11-18 23:44:31
+- **Last Activity**: 2026-11-18 23:55:00
 - **Current Task**: 2026-11-19 ~00:05: completed together via Complete-Review (local, not pushed): CRP-332, CRP-355 rev A/B/C, CRP-357 seg 1, CRP-362. CRP-343 segment 2 core done and deployed (levels 0..3 in catalog/tools.db, atom lists, policy export, daemon 10.2.7 with callerDecision, Tool Explorer words); open steps in the CRP-343 Plan (legacy retirement, key transition, ELEV rules, diagrams, live T2 tests, 31 conflicts for the operator). Backups in scratch/db-dumps (delete after completion checks).
-- **Next Step**: (1) Operator decides the 31 consistency conflicts (elevation_policy.json violations). (2) CRP-343 remaining steps 7-10, BUG-348 daemon items, then CRP-361. (3) Learned-advice review, then PUSH.
+- **Next Step**: (1) Operator decides the 31 consistency conflicts of CRP-343 (data/tools/elevation_policy.json, violations), postponed to 2026-11-19 by the operator. (2) CRP-343 steps 7-10 (legacy retirement + key transition, ELEV rules, diagrams, live T2 tests), BUG-348 daemon items, then CRP-361. (3) Learned-advice candidates of 2026-11-18 still unreviewed (pushed as candidates on operator instruction). (4) Delete CRP-343 backups in scratch/db-dumps after its completion checks.
 - **Open Operator Decisions**: CRP-343 caller check A/B; CRP-355 re-stamped legacy ids >= 100; CRP-337 vs CRP-343 consolidation; proposals.db sole store (B, now CRP-358); deferred Gate 2 review guide (D-24).
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:

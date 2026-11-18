@@ -3,11 +3,11 @@
 Module: .claude/rules/process/ReviewCommitGovernancePolicy.md  
 Purpose: Claude adapter projection of ReviewCommitGovernancePolicy (review-gated commits, dispositions, overrides, audit, versioning, junction review, BCR exclusivity).  
 Path: LCM_AI/.claude/rules/process/ReviewCommitGovernancePolicy.md  
-Source: .agents/rules/ReviewCommitGovernancePolicy.md v10.3.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-342 (uncommitted)  
+Source: .agents/rules/ReviewCommitGovernancePolicy.md v10.3.2 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-342 + CRP-346 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.5
 Status: Draft  
-Date: 2026-11-17 12:27:04
+Date: 2026-11-18 16:02:15
 
 ---
 
@@ -22,6 +22,6 @@ Date: 2026-11-17 12:27:04
 - **RULE-REV-009** If a finding changes the durable review contract: tell the operator before claiming completion (separate code change from pending governance change); update this policy in the same change set; sync `AGENTS.md` and the cross-reference (RULE-AUTH-002).
 - **RULE-REV-010** No Gate 2 review or commit gating without prior mechanical parsing (per INVARIANT-RULES syntax gate, incl. Go) and unit tests recorded in `Walkthrough.md`.
 - **RULE-REV-011** Rule changes require `ADMINMODE = true` (member of SID `S-1-5-32-544`, independent of elevation); hidden state; `Make-Admin -Mode On|Off` for eligible users only; non-admin attempts audited; review submission enforces ADMINMODE for staged rule paths and logs user, SID, CRP, paths.
-- **RULE-REV-012** Review launchers MUST NOT kill or force-single operator BC windows or poll titles intrusively; MUST NOT silently reuse an older mounted baseline when a newer completed `.mrimgx` exists today on `B:\Backups\` (remount, or notify date/file/drive); never relaunch BC or remount unless the image changed (preserves LHS markers and sandbox state).
+- **RULE-REV-012** Review launchers MUST NOT kill or force-single operator BC windows or poll titles intrusively; MUST NOT silently reuse an older mounted baseline when a newer completed `.mrimgx` exists today on `B:\Backups\` (remount, or notify date/file/drive); remount only when the image changed, and never relaunch while the recorded review window (process, start time, handle, drive) is open: refresh its `_LCM` tab (Full Refresh) instead, also after a remount on the same drive; tag only the own window; same review = same compare roots, focused folder irrelevant (CRP-346).
 - **RULE-REV-013** Before dismounting a baseline drive (F:..I:) check mounted repos for modifications/markers; if found, interactive `[Y]/[N]` choice, non-interactive fail closed unless `-Force`/`-DiscardChanges`.
 - **RULE-REV-014** Ad-hoc `BCompare.exe`, custom diff scripts, Git-based or single-repo comparisons are PROHIBITED; the only valid comparison is `BCR` (`BCR.cmd` / `Invoke-MacriumBcrReview.ps1` / `Invoke-MacriumDailyBcrBaseline.ps1`) at workspace root with the `_LCM` profile; if today's backup is not mounted, run BCR to mount or halt. [Claude] Claude never composes a BCompare command line.

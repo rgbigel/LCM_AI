@@ -9,9 +9,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.2
+Version: 10.3.3
 Status: Authoritative Policy  
-Date: 2026-11-17 15:40:19
+Date: 2026-11-18 16:11:02
 
 ---
 
@@ -38,6 +38,7 @@ may not complete, commit, or otherwise pass the review gate until a matching BCR
 is recorded; a COH may not continue until every member has one. The only exception is an
 explicit authorized BCR bypass recorded in the proposal ledger. `-Force` and `-Immediately`
 remain separate governed mechanisms and MUST NOT be treated as BCR bypasses.
+An implied review scope (scope omitted, or a repository) forms a temporary cohort only from items whose state allows review acceptance (`verified`, `in_review`); their cross-repository review obligations are registered before the item completes. This implied cohort is the sanctioned form of the bare `bcr`; it does not fall back to rows or selections. An `in_progress` item whose changes lie inside the reviewed area is not a member and never blocks: the operator is asked to `do <ID>` (finish to `verified`, then include), to let its changes ride as WIP, or to `hold <ID>`; before asking, the agent checks whether the item's intent blocks the target at all. A `DOIT` item joins an implied cohort only once it is `verified` (CRP-346).
 
 #### Canonical Cohort Gate Synchronization Invariant
 Before review-gate continuation, an active/open declared cohort MUST automatically synchronize
@@ -277,7 +278,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-009: Scope and Version-Explicit CRP Naming Standard
 1. **Canonical Directory Bundle Convention**: All Change Request Proposals (CRPs) `MUST` follow the standardized bundle directory structure:
-   `docs/Proposals/CRP-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`.
+   `docs/Proposals/CRP-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`. Since CRP-359 the files carry the item ID: `Specification <ID>.md`, `Implementation Plan <ID>.md`, `Walkthrough <ID>.md` (e.g. `Specification BUG-344.md`), so editor tabs identify the item; bundles closed before CRP-359 keep the legacy names, and tools resolve the new name first, the legacy name as fallback. Elsewhere in the rules, `Specification.md`, `Implementation_Plan.md` and `Walkthrough.md` denote these documents.
    - `nnn`: Universal monotonic sequence integer zero-padded to at least 3 digits (e.g. `018`, `119`), matching the proposal ledger `id` 1:1.
    - `[Slug]`: Descriptive kebab-case intent description.
 2. **Mandatory Header & YAML Metadata**: Every CRP specification `MUST` include standardized metadata matching `RULE-LCM-012.3`:
@@ -299,7 +300,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-011: Scope and Version-Explicit Bug Report Naming Standard
 1. **Canonical Bug Bundle Directory Convention**: All formal Bug Reports `MUST` follow the standardized bundle structure:
-   `docs/Proposals/BUG-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`.
+   `docs/Proposals/BUG-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md` (named with the item ID as in RULE-LCM-009).
    - `nnn`: Universal monotonic sequence integer zero-padded to at least 3 digits (e.g. `024`, `092`), sharing the exact same sequence counter as CRPs and matching the proposal ledger `id` 1:1.
 2. **Mandatory Frontmatter Metadata**: Every Bug Report `MUST` include explicit frontmatter fields:
    - `Bug-ID`: Sequential unique identifier sharing the sequence counter with CRPs (e.g. `BUG-024`, `BUG-092`).
@@ -357,6 +358,8 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
    - Before committing, the operator-facing result MUST list the exact changed files and disclose
      any scope amendment, linked BUG, or cohort membership.
    - Never invokes a remote push.
+   - One accepted workspace review covers every governed repository. `COMPLETE <ID>` commits each governed repository with committable changes: the other repositories first, each as a resolved cross-repository review obligation, the primary (origin) repository last, which moves the item to `completed` (BUG-351, CRP-346).
+   - `completed` confirms the completion and is no boundary: `COMPLETE` on a `completed` item commits the governed repositories that are still uncommitted, as obligations, without a lifecycle change. Changes in the item's origin repository belong to a new revision (`reinstate`) (CRP-346).
 4. **`PUSH`**:
    - Pushes only `COMPLETED` proposal repositories in a preflighted cohort with `LCM_Inventory`.
    - A cohort member that is missing, lacks a remote, or is not ahead blocks all remote dispatch.

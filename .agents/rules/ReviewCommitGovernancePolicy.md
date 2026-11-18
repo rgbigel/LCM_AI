@@ -9,9 +9,9 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.1
+Version: 10.3.2
 Status: Authoritative Policy  
-Date: 2026-11-17 12:27:04
+Date: 2026-11-18 16:02:15
 
 ---
 
@@ -116,10 +116,10 @@ Every review disposition (`completed`, `completed_with_edits`, `rejected`, `held
 
 ### RULE-REV-012: Review Tool Window Non-Interference, Title Neutrality & Baseline Currency Invariant
 1. **Window Non-Interference**: Beyond Compare review launchers (`Invoke-MacriumDailyBcrBaseline.ps1`, `BCR.cmd`) `MUST NOT` enforce arbitrary single-window constraints (e.g. `Count -ne 1`), kill existing operator instances, or terminate processes with `MainWindowHandle: 0` while they are initializing. Operators own their desktop windows and sessions.
-2. **Title Neutrality**: The launcher may append the review scope (`[CRP-xxx]`) to an opened window, but `MUST NOT` poll window titles in intrusive loops or kill instances whose titles deviate from automation expectations.
+2. **Title Neutrality**: The launcher appends the review scope (`[CRP-xxx]`) only to the window it started or reuses, identified by its record (process ID, start time, window handle, mounted drive), never by a title search; it `MUST NOT` poll window titles in intrusive loops or kill instances whose titles deviate from automation expectations (CRP-346).
 3. **Baseline Currency Invariant**: Baseline preparation tools `MUST NEVER` silently reuse an older mounted image when a newer completed backup exists for the current day on `B:\Backups\`. Before reusing any mounted partition, the tool `MUST` verify whether today has a newer completed `.mrimgx`. If a newer image exists, the tool `MUST` unmount the stale partition and mount today's fresh image. If an older image is intentionally reused, the tool `MUST` explicitly notify the operator of the image date, file name, and mounted drive letter before review dispatch.
 4. **Prohibition of Baseline Re-Creation / Re-Launch & Sandbox Preservation**:
-   - Automation and AI agents `MUST NEVER` re-launch a Beyond Compare review session or re-allocate/remount a new baseline unless the underlying baseline image itself has physically changed.
+   - Automation and AI agents `MUST NEVER` re-launch a Beyond Compare review session while their recorded review window is open; they refresh its `_LCM` tab instead (Full Refresh), also after a newer image was remounted on the same drive. A baseline is remounted only when the underlying image has physically changed. A window is the same review when its compare roots are `<drive>:\Git_Repositories` and `D:\Git_Repositories`; the folder focused below the roots is irrelevant (CRP-346).
    - The comparison dynamically refreshes on filesystem change or manual operator reload, independent of individual CRP identifiers (window title differences are negligible).
    - **Operator Review Markers**: The operator utilizes file modifications and markers on the Left-Hand Side (LHS baseline) to track review progress; introducing a new baseline or remounting wipes out these markers.
    - **Sandbox State Preservation**: In sandbox environments (where a simulated drive mirrors `D:` with junction adjustments), re-allocating or remounting the baseline causes catastrophic loss of the sandbox state.

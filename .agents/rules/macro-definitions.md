@@ -9,9 +9,9 @@ Module: macro-definitions
 Purpose: Defines operator and agent command macros, bare-word syntax standards, execution routing, and parameter mappings across the workspace.  
 Path: .agents/rules/macro-definitions.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.1  
+Version: 10.3.2  
 Status: Authoritative Invariant Rule  
-Date: 2026-11-17 15:40:19  
+Date: 2026-11-18 16:02:15  
 
 ---
 
@@ -152,9 +152,9 @@ MACRO: BCR
 - aliases: bcr, BCR, @bcr
 - rules:
   - exact CRP/BUG, repository, and declared cohort forms are valid. Declared cohorts use `COH-<prime CRP/BUG number>` and contain their prime member.
-  - when scope is omitted, the dispatcher resolves exactly one declared open cohort. If none exists, it constructs a bounded proposed cohort from open `in_progress`, `verified`, and `in_review` proposals.
+  - when scope is omitted (the primary form), the dispatcher resolves exactly one declared open cohort; if none exists, it forms the implied cohort of all `verified` and `in_review` items (RULE-LCM-002). `in_progress` items are named with the choices `do`, ride as WIP, or `hold`, and never block (CRP-346).
   - the dispatcher records a cohort-resolution receipt before launch. `in_progress` members are reported as pending verification, `verified` members are review-ready, and `in_review` members refresh rather than duplicate a review session.
-  - omitted or broadened scope requires an interactive confirmation. A scope that exceeds configured proposal or repository limits, has incompatible baselines, or has unresolved overlap/conflict evidence requires explicit operator selection; non-interactive or cancelled resolution fails closed.
+  - the bare form needs no confirmation. Explicit repository scopes beyond the configured proposal or repository limits, incompatible baselines, or unresolved overlap/conflict evidence still require explicit operator selection; non-interactive or cancelled resolution fails closed. An item parameter otherwise only labels the window title (CRP-346).
   - only review-ready `verified` members may transition to `in_review`, and only after their review handoff succeeds.
   - the dispatcher executes `BCR.cmd` (`Invoke-MacriumBcrReview.ps1`) against the resolved baseline and preserves the configured coarse or tight review granularity.
   - an optional baseline commit is accepted only when it matches the resolved review scope.
@@ -185,6 +185,7 @@ MACRO: COMPLETE
 - aliases: complete, COMPLETE, completed
 - rules:
   - completion supports exact CRP/BUG, repository, declared cohort, and `all` forms. `complete all` processes eligible cohorts stepwise and reports every cohort outcome; unresolved or ambiguous scope is invalid.
+  - a single item commits every governed repository with changes, the other repositories first as obligations and its origin repository last; a `completed` item commits only its remaining repositories, without a lifecycle change (RULE-LCM-016, CRP-346).
   - `complete COH-<nnn>` reads the matching BCR staging receipt, validates that every member is `in_review`, and commits once per affected repository. It then advances that repository's reviewed members together.
   - before staging, completion displays unreviewed live paths from the repository staging manifest and requires explicit operator inclusion; cancellation leaves every member in `in_review`.
   - cohort-resolution receipts remain under `LCM_Inventory\scratch\BC_Review\COH-<nnn>` until review completion; permanent commit receipts remain governed CM evidence.

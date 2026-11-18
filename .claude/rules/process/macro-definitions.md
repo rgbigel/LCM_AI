@@ -3,11 +3,11 @@
 Module: .claude/rules/process/macro-definitions.md  
 Purpose: Claude adapter projection of macro-definitions (operator command words and their governed targets).  
 Path: LCM_AI/.claude/rules/process/macro-definitions.md  
-Source: .agents/rules/macro-definitions.md v10.3.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + CRP-350 (uncommitted)  
+Source: .agents/rules/macro-definitions.md v10.3.2 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + CRP-350 + CRP-346 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.5
 Status: Draft  
-Date: 2026-11-17 15:40:19
+Date: 2026-11-18 16:02:15
 
 ---
 
@@ -32,7 +32,7 @@ Date: 2026-11-17 15:40:19
 | `ShowFailureAnalysis` | `LCM_Inventory/tools/Show-FailureAnalysis.ps1` | opens retained report, no rerun; port 9876 only |
 | `set-tool-audience` | ToolExplorer / `Update-ToolCatalog.ps1` | metadata maintained interactively |
 | `log` (`logs`, `lastlog`) | `tools/Show-LastLog.ps1 [-ToolName]` | |
-| `BCR` (`bcr`) | BCR dispatcher for CRP/BUG, repo, `COH-<prime>` | omitted scope resolves the one open cohort or a bounded proposed cohort with receipt and confirmation; only `verified` -> `in_review` after handoff; dispatcher runs `BCR.cmd` (`Invoke-MacriumBcrReview.ps1`); exempt paths peek-only |
+| `BCR` (`bcr`) | BCR dispatcher for CRP/BUG, repo, `COH-<prime>` | omitted scope (primary form) resolves the one open cohort, else the implied cohort of `verified` / `in_review` items without confirmation, `in_progress` items named (do / WIP / hold) (CRP-346); only `verified` -> `in_review` after handoff; dispatcher runs `BCR.cmd` (`Invoke-MacriumBcrReview.ps1`); exempt paths peek-only |
 | `cohort <create\|add\|remove\|hold\|reopen\|close>` | cohort management | one open cohort; prime member cannot be removed |
 | `continue` (`CONTINUE`, `reopen`, `ReOpen`, `resume`) | restore held CRP/BUG/cohort to active flow | restores `resume_state`, clears `held`; `cohort reopen` only when no cohort is open |
 | `COMPLETE` (`complete`, `completed`) | review completion + local commit | exact scope or `all`; shows unreviewed live paths; closes BC window; never pushes |

@@ -12,7 +12,7 @@ Date: 2026-11-17 15:29:34
 
 ## 1. Workspace State
 
-- **Last Updated**: 2026-11-18 20:59:58
+- **Last Updated**: 2026-11-18 23:29:59
 - **Status**: Active (resumed at 2026-11-18 10:14:51; last GoodNight 2026-11-17 20:25:29)
 - **GoodNight Timestamp**: 2026-11-17 20:25:29
 - **Resumption Timestamp**: 2026-11-18 10:14:51
@@ -44,9 +44,9 @@ Date: 2026-11-17 15:29:34
 ### Host: Claude Code
 - **Status**: Active
 - **Session ID**: `66e6ec9b-0e2b-4b2d-946b-f8daaccb253a`
-- **Last Activity**: 2026-11-18 21:55:07
-- **Current Task**: 2026-11-18 late evening: completed (local commits, not pushed): CRP-346 revision (window record match), CRP-354 (direct Notepad++, daemon foreground, Show CRP top only), BUG-356 (badge in header, build time instead of clock, Rules Refresh button), CRP-359 revision 2 (REQ-WINV-014: open items specified, live tests guided in chat). Earlier today completed: BUG-351, BUG-340, CRP-344, CRP-345, CRP-355 (apply not run), BUG-352, BUG-360 (+ CRP-350). Daemon now 10.2.6 (rollback copies in scratch). CRP-343 Specification accepted (section 8 exempt), segment 2 starts on "do 343"; CRP-361 DO-Little registered (suggested), back-to-back after CRP-343.
-- **Next Step**: (1) CRP-355: the cleanup apply runs only at the move to the next release (operator 2026-11-18); answers Q1-Q3 shape the code now (uncommitted receipts, candidates, re-stamped ids >= 100). CRP-362 (Macrium -BackupType, default Diff) registered, low priority. Full Macrium backup started 21:43 for the BCR remount test (takes hours). (2) Learned-advice review (new today: B1/B2, status line, open items/live tests), then PUSH of the completed items. (3) "do 343" (segment 2 with BUG-348 segment 2, daemon rebuild with the operator present; caller check O-1 default B), then CRP-361. (4) CRP-357, CRP-358, CRP-339, CRP-332 (verified since 2026-11-15, not yet reviewed).
+- **Last Activity**: 2026-11-18 23:23:56
+- **Current Task**: 2026-11-18 ~23:25: DOIT batch (operator): verified and waiting for operator review (BCR stopped by operator, Claude starts no BCR without explicit request): CRP-362 (-BackupType, default Diff; live diff run open), CRP-357 segment 1 (Complete-Review.ps1 single entry, together completion), CRP-355 revision (compacted ledger rows keep common fields; restored from HEAD), CRP-332 (verified since 2026-11-15). Completed today (local, not pushed): CRP-344/345/346/350/354/355/359, BUG-340/351/352/356/360. Not started: CRP-343 segment 2 + BUG-348 daemon part + CRP-361 (multi-hour, elevation core). CRP-253 held; 339/358 excluded by operator. Full Macrium backup running (not tied to the daemon).
+- **Next Step**: (1) Operator reviews (own BCR) of CRP-332, CRP-355 revision, CRP-357, CRP-362; BCR profile check rejects _LCM dirShowAll (noted in BUG-348, no change without go). (2) CRP-343 segment 2 + BUG-348 daemon part in one block (fresh session), then CRP-361. (3) Learned-advice review, then PUSH (GoodNight -Push optional). (4) Open findings: 21 orphan old bundle folders (v7/v8 + test residue) for deletion?; CRP-357 segment 2.
 - **Open Operator Decisions**: CRP-343 caller check A/B; CRP-355 re-stamped legacy ids >= 100; CRP-337 vs CRP-343 consolidation; proposals.db sole store (B, now CRP-358); deferred Gate 2 review guide (D-24).
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:

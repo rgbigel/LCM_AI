@@ -6,12 +6,13 @@ Path: LCM_AI/.claude/translation/CANONICAL_HASHES.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
 Status: Draft  
-Date: 2026-11-17 15:40:19
+Date: 2026-11-18 22:29:49
 
 ---
 
 Baseline: LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted working tree); content identical to LCM_AI e258f1c (WIP commit 2026-11-15).
 
+- 2026-11-18 22:29:49: ProposalReviewFlowPolicy.md (10.3.4, RULE-LCM-009 / RULE-LCM-011 bundle folders <nnn>_<Kind>-<Slug>) re-hashed (CRP-359 revision 3, operator 2026-11-18); adapter lines updated.
 - 2026-11-18 16:11:02: ProposalReviewFlowPolicy.md (10.3.3, RULE-LCM-009 / RULE-LCM-011 bundle file names carry the item ID) re-hashed (CRP-359, operator 2026-11-18); adapter line updated.
 - 2026-11-18 16:02:48: ProposalReviewFlowPolicy.md (10.3.3, RULE-LCM-002 implied cohort, RULE-LCM-016 multi-repository COMPLETE), ReviewCommitGovernancePolicy.md (10.3.2, RULE-REV-012 window ownership / Full Refresh) and macro-definitions.md (10.3.2, BCR / COMPLETE) re-hashed (CRP-346 revision, operator 2026-11-18); adapter lines updated.
 - 2026-11-17 15:40:19: ProposalReviewFlowPolicy.md (10.3.2, RULE-LCM-030 (1) cross-host adapter changes, (5) session state schema, (6) AI-run day routines), RepositoryContextPolicy.md (10.3.1, RULE-CTX-006) and macro-definitions.md (10.3.1, GoodMorning / GoodNight) re-hashed (CRP-350, operator 2026-11-17); adapter lines updated.
@@ -36,7 +37,7 @@ Baseline: LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted working tree); content
 | MethodEfficiencyPolicy.md | 27C8B34CFBF3E697 |
 | PowerShellRules.md | 2F23056F652F024C |
 | PowerShellStandardsPolicy.md | 9F6E6DD1DF96AC1C |
-| ProposalReviewFlowPolicy.md | 6647FB3247473647 |
+| ProposalReviewFlowPolicy.md | 4B86EA2345F55B19 |
 | PythonRules.md | C14EE91B678EA312 |
 | RepositoryContextPolicy.md | E2EECA66E74F3DE4 |
 | ReviewCommitGovernancePolicy.md | 4768FB9A0A7F9BFE |

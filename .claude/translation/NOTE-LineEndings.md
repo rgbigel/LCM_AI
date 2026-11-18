@@ -89,7 +89,7 @@ Option **B** (LF everywhere, CRLF only for `*.cmd` / `*.bat`): it matches what G
 
 - Operator: **Option A** - CRLF everywhere, no mixed setup. Claude's recommendation B is rejected.
 - Cause of LF on disk clarified: not GitHub; Git converts only at commit and checkout; LF comes from whole-file writes of hosts/tools after checkout.
-- Enforcement: CRP-332 (`LCM_Inventory/docs/Proposals/CRP-332-Workspace-CRLF-Line-Ending-Enforcement/Specification.md`), for Antigravity.
+- Enforcement: CRP-332 (`LCM_Inventory/docs/Proposals/332_CRP-Workspace-CRLF-Line-Ending-Enforcement/Specification.md`), for Antigravity.
 - LF found in third-party writes: Claude converts to CRLF without involving the operator.
 
 ## 10. Decision Revised (2026-11-16)

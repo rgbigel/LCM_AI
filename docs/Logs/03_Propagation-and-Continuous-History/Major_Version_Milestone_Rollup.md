@@ -57,3 +57,13 @@ First release of each major version; the cleanup (`LCM_Inventory/tools/Invoke-Lc
 ## 3. Cleanup Runs (in-place log, CRP-355)
 
 Each applied cleanup run appends one block here: run ID, time, current major M, cutoff, per store the deleted period, counts and bytes, the repository SHAs before deletion (retrieval: `git show <sha>:<path>` for tracked files), the protected items kept, and the deleted evidence that was not tracked by git (not recoverable).
+
+### Cleanup run CLEANUP-20261118_220338 (2026-11-18 22:08:24)
+
+* **Scope**: current major 10; items of major 8 and older; logs and review receipts before 2026-10-13.
+* **flat-proposal**: 72 entries, 72 files, 262227 bytes deleted; 0 not tracked by git (not recoverable).
+* **review-receipt**: 215 entries, 215 files, 2765382 bytes deleted; 155 not tracked by git (not recoverable).
+* **Ledger**: 149 proposals compacted to rows (see LCM_Inventory/docs/Proposals/LEDGER_COMPLETED.md).
+* **Retrieval anchors (HEAD before deletion)**: Git_Repositories d49cb27, LCM_AI bc4cf88, LCM_Inventory 44f911a.
+* **Protected and kept**: none.
+* **Manifest**: D:\Git_Repositories\LCM_Inventory\data\analysis\history\CLEANUP-20261118_220338.json (hash 0b8f684c7ecfcab8b277b7ebbbce47ce7ca1066b47cace822766585720e28216).

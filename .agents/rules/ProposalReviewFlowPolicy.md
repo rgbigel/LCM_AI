@@ -9,9 +9,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.3
+Version: 10.3.4
 Status: Authoritative Policy  
-Date: 2026-11-18 16:11:02
+Date: 2026-11-18 22:29:49
 
 ---
 
@@ -278,9 +278,10 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-009: Scope and Version-Explicit CRP Naming Standard
 1. **Canonical Directory Bundle Convention**: All Change Request Proposals (CRPs) `MUST` follow the standardized bundle directory structure:
-   `docs/Proposals/CRP-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`. Since CRP-359 the files carry the item ID: `Specification <ID>.md`, `Implementation Plan <ID>.md`, `Walkthrough <ID>.md` (e.g. `Specification BUG-344.md`), so editor tabs identify the item; bundles closed before CRP-359 keep the legacy names, and tools resolve the new name first, the legacy name as fallback. Elsewhere in the rules, `Specification.md`, `Implementation_Plan.md` and `Walkthrough.md` denote these documents.
+   `docs/Proposals/<nnn>_CRP-[Slug]/` (since CRP-359 revision 3, operator 2026-11-18; before: `CRP-<nnn>-[Slug]/`, all existing folders renamed) containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md`. Since CRP-359 the files carry the item ID: `Specification <ID>.md`, `Implementation Plan <ID>.md`, `Walkthrough <ID>.md` (e.g. `Specification BUG-344.md`), so editor tabs identify the item; bundles closed before CRP-359 keep the legacy names, and tools resolve the new name first, the legacy name as fallback. Elsewhere in the rules, `Specification.md`, `Implementation_Plan.md` and `Walkthrough.md` denote these documents.
    - `nnn`: Universal monotonic sequence integer zero-padded to at least 3 digits (e.g. `018`, `119`), matching the proposal ledger `id` 1:1.
    - `[Slug]`: Descriptive kebab-case intent description.
+   - The folder name starts with the number so that folders sort by number across CRPs and BUGs (shared counter); displays such as the Control Hub table show the item as `<nnn>_<Kind>` (e.g. `365_BUG`); ledger IDs, commands and document names keep `CRP-<nnn>` / `BUG-<nnn>`.
 2. **Mandatory Header & YAML Metadata**: Every CRP specification `MUST` include standardized metadata matching `RULE-LCM-012.3`:
    - `CRP-ID`: Sequential unique identifier (e.g. `CRP-331`).
    - `Title`: Concise descriptive title.
@@ -300,7 +301,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-011: Scope and Version-Explicit Bug Report Naming Standard
 1. **Canonical Bug Bundle Directory Convention**: All formal Bug Reports `MUST` follow the standardized bundle structure:
-   `docs/Proposals/BUG-<nnn>-[Slug]/` containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md` (named with the item ID as in RULE-LCM-009).
+   `docs/Proposals/<nnn>_BUG-[Slug]/` (folder and display form as in RULE-LCM-009) containing `Specification.md`, `Implementation_Plan.md`, and `Walkthrough.md` (named with the item ID as in RULE-LCM-009).
    - `nnn`: Universal monotonic sequence integer zero-padded to at least 3 digits (e.g. `024`, `092`), sharing the exact same sequence counter as CRPs and matching the proposal ledger `id` 1:1.
 2. **Mandatory Frontmatter Metadata**: Every Bug Report `MUST` include explicit frontmatter fields:
    - `Bug-ID`: Sequential unique identifier sharing the sequence counter with CRPs (e.g. `BUG-024`, `BUG-092`).

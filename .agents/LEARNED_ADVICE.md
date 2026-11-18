@@ -21,6 +21,7 @@ How it works:
 - **2026-11-09** (Caller Admin Dependency Disclosure & Anti-Staleness): Whenever a caller tool invokes or relies upon an admin-mode tool, it `MUST` declare that dependency in its `-h` / `-Help` usage reference and header block. Conversely, when no longer needed, the caller `MUST` purge that dependency immediately to avoid stale elevation assumptions (`RULE-ELEV-007`, `RULE-PS-010.3`).
 
 ### Working agreement
+- Proposal bundle documents each have their own job: Specification = what and why (Gate 0); Implementation_Plan = the concrete planned changes per file/function, only when they go beyond the Specification; Walkthrough = the path actually taken (deviations, decisions made without the operator, issues on the way) plus test evidence. Never repeat the Specification text in the other two. The Specification Executive Summary states briefly whether, and why, the Plan or Walkthrough needs review; without such a mention the operator reviews only the Specification. [->rule RULE-LCM-009] (operator 2026-11-18) (2026-11-18, Claude)
 - A CRP being processed is at least as true as the documentation and rules it changes; the temporary inconsistency is never a deadlock. Lift blocking hooks temporarily to get there. (2026-11-16, Claude)
 - Gate 2 Pre-Review Live Testability Invariant: At the time of Gate 2 review (BCR), the implementation must be fully working and testable by the operator in a live test. A visual review is completely meaningless unless the target state is functioning and verifiable in runtime; never transition to review or assert completion on untestable or incomplete deliverables. (2026-11-13, Operator)
 - Mandatory Authority & Lifecycle State Declaration: When addressing any defect, regression, or runtime issue, the AI must immediately establish an authoritative ticket (BUG-xxx / CRP-xxx) and explicitly state the exact lifecycle state reached (suggested -> in_progress -> verified -> Gate 2) rather than delivering unclassified ad-hoc repairs. (2026-11-13, Antigravity)
@@ -72,8 +73,12 @@ How it works:
 
 
 
-
-- [ ] Proposal bundle documents each have their own job: Specification = what and why (Gate 0); Implementation_Plan = the concrete planned changes per file/function, only when they go beyond the Specification; Walkthrough = the path actually taken (deviations, decisions made without the operator, issues on the way) plus test evidence. Never repeat the Specification text in the other two. The Specification Executive Summary states briefly whether, and why, the Plan or Walkthrough needs review; without such a mention the operator reviews only the Specification. [->rule RULE-LCM-009] (operator 2026-11-18) (2026-11-18, Claude)
+
+
+
+
+
+
 - [ ] When a completion or review is blocked because a related item is in the wrong state, first check whether that item's intent actually blocks the target; if it does, ask the operator (e.g. "do <ID>", ride as WIP, hold). Do not escalate into rule analysis. Implied cohorts contain only items whose state allows review acceptance (verified / in_review). (CRP-350 completion stall, 2026-11-18) (2026-11-18, Claude)
 - [ ] Consider a tool mode that establishes and produces the "calls directly" xref entries (confirmation or creation) for the tool it runs, so the tool-call xref table is built and verified from the tools themselves. (2026-11-17, Rolf, Claude)
 - [ ] Atomizing: an atom is an external, separately started unit (script or, where practical, a Go executable) registered as an intent with its own elevated flag; only minimal-size helpers stay internal functions. Atomizing also allows shared module use: atoms and tools import the same shared modules instead of duplicating internal functions (CRP-343). (2026-11-17, Rolf, Claude)

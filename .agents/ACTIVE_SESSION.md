@@ -12,10 +12,10 @@ Date: 2026-11-17 15:29:34
 
 ## 1. Workspace State
 
-- **Last Updated**: 2026-11-17 20:25:29
-- **Status**: Quiescent (GoodNight completed at 2026-11-17 20:25:29)
+- **Last Updated**: 2026-11-18 12:20:49
+- **Status**: Active (resumed at 2026-11-18 10:14:51; last GoodNight 2026-11-17 20:25:29)
 - **GoodNight Timestamp**: 2026-11-17 20:25:29
-- **Resumption Timestamp**: 2026-11-17 15:22:45
+- **Resumption Timestamp**: 2026-11-18 10:14:51
 - **LCM Version**: 10.7.4 (`.agents/version.json`)
 - **Active Cohort**: none open (COH-331 pushed 2026-11-17)
 - **Commits** (git, read 2026-11-17 15:29):
@@ -42,9 +42,9 @@ Date: 2026-11-17 15:29:34
 - **Attention Items**: Block refreshed by Claude on operator instruction 2026-11-17 15:29:34 (stale state removed; CRP-350 item 9).
 
 ### Host: Claude Code
-- **Status**: Closed (2026-11-17 20:24:24)
+- **Status**: Active
 - **Session ID**: `66e6ec9b-0e2b-4b2d-946b-f8daaccb253a`
-- **Last Activity**: 2026-11-17 20:24:24
+- **Last Activity**: 2026-11-18 10:15:48
 - **Current Task**: 2026-11-17 evening: CRP-350 Gate 2 accepted by the operator (with amendments) and set `completed`; root commit `578a478` only (see attention item 1). CRP-343: operator live tests 1-4 done (Control Hub ok; Tool Explorer findings -> new BUG; BCR [CRP-350] reused F: and launched BC through the DO); Specification section 9 added (tri-state `tools.admin` 1 none / 2 controlled / 3 admin, declared atom list per controlled tool, elevation border table, migration, legacy removal); O-1 decided B (fast path checks the atom only). Operator accepted all decided items (decision A: CRP-343 first segment rides as WIP).
 - **Next Step**: (1) Register the new BUG (text in attention item 2) with bundle and fix it in DOIT to Gate 2. (2) CRP-343 segment 2: tri-state migration (tools.db, catalog, exporter, Go policy loader, Show pages), declared atom lists, BCR dispatches mount worker and registry atom directly as `controlled`, remove legacy `-ElevatedWorker` and duplicate mount hop, trace dismount path, migrate keyless daemon callers to `LcmDoClient.psm1`, wire `Export-LcmElevationPolicy.py` into `Sync-LcmToolCatalogDb.ps1`, rules RULE-ELEV-001/003/006/007 + RULE-AUTH-002 sync, diagrams in `LCM_Inventory/docs/Implementation.md` and use cases in `docs/Requirements.md`. (3) New CRP "DO-Little" (`do.exe --little`, `suggested`). (4) CRP-344/345/346; bare `bcr` must work (operator: the CRP parameter of BCR is legacy; discrepancy for CRP-346). (5) Book 1 appendix.
 - **Open Operator Decisions**: CRP-337 vs CRP-343 consolidation; B (proposals.db sole store) and C (folder naming); deferred Gate 2 review guide (D-24); ACTIVE_CONTEXT operator remarks of 2026-10-13 / 2026-10-20; author of the 2026-11-17 git-bash learned-advice candidate; bare `bcr` vs CRP-bound review (RULE-LCM-002).

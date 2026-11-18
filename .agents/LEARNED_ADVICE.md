@@ -78,7 +78,8 @@ How it works:
 
 
 
-
+
+- [ ] Open items must be specified, not "walked through" (Specification or Implementation Plan, never the Walkthrough). The operator live tests are guided in the chat window rather than mentioned in the Walkthrough, and they are not part of the specs. The Walkthrough documents the (guided) live test results. (2026-11-18, AI)
 - [ ] B1 - when you have detected a bug in "unfinished business", add that fact not as an individual new BUG, but to the CRP being processed, or if not allowed (see B2). B2 - when a new BUG or CRP is about to be opened by you (not by the operator's instruction) check: B21 if the main goal is contained in an already existing goal, of another recent CRP (Recent=same 0.x.0), reopen or add to that CRPs Specification. else: B22 - find if it can be "convincingly" added as an addition to "open business" by aligning it to the best suited Repo and/or functional frame. This means i require goal-oriented initiative from AI under the Rule governing Efficiency. I will be glad to give it more rigid rule formulation at a later time when we resolve "B" (2026-11-18, AI)
 - [ ] i want you to report at the end of (typically long) output i get from processing CRP(s) in chats by a line like "crp xxx <done>, status <state, status>"; the line is prefixed with the timestamp (operator addition 2026-11-18; no author for learn entries) (2026-11-18)
 - [ ] When a completion or review is blocked because a related item is in the wrong state, first check whether that item's intent actually blocks the target; if it does, ask the operator (e.g. "do <ID>", ride as WIP, hold). Do not escalate into rule analysis. Implied cohorts contain only items whose state allows review acceptance (verified / in_review). (CRP-350 completion stall, 2026-11-18) (2026-11-18, Claude)

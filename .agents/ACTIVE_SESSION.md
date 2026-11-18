@@ -44,9 +44,9 @@ Date: 2026-11-17 15:29:34
 ### Host: Claude Code
 - **Status**: Active
 - **Session ID**: `66e6ec9b-0e2b-4b2d-946b-f8daaccb253a`
-- **Last Activity**: 2026-11-18 23:23:56
-- **Current Task**: 2026-11-18 ~23:25: DOIT batch (operator): verified and waiting for operator review (BCR stopped by operator, Claude starts no BCR without explicit request): CRP-362 (-BackupType, default Diff; live diff run open), CRP-357 segment 1 (Complete-Review.ps1 single entry, together completion), CRP-355 revision (compacted ledger rows keep common fields; restored from HEAD), CRP-332 (verified since 2026-11-15). Completed today (local, not pushed): CRP-344/345/346/350/354/355/359, BUG-340/351/352/356/360. Not started: CRP-343 segment 2 + BUG-348 daemon part + CRP-361 (multi-hour, elevation core). CRP-253 held; 339/358 excluded by operator. Full Macrium backup running (not tied to the daemon).
-- **Next Step**: (1) Operator reviews (own BCR) of CRP-332, CRP-355 revision, CRP-357, CRP-362; BCR profile check rejects _LCM dirShowAll (noted in BUG-348, no change without go). (2) CRP-343 segment 2 + BUG-348 daemon part in one block (fresh session), then CRP-361. (3) Learned-advice review, then PUSH (GoodNight -Push optional). (4) Open findings: 21 orphan old bundle folders (v7/v8 + test residue) for deletion?; CRP-357 segment 2.
+- **Last Activity**: 2026-11-18 23:44:31
+- **Current Task**: 2026-11-19 ~00:05: completed together via Complete-Review (local, not pushed): CRP-332, CRP-355 rev A/B/C, CRP-357 seg 1, CRP-362. CRP-343 segment 2 core done and deployed (levels 0..3 in catalog/tools.db, atom lists, policy export, daemon 10.2.7 with callerDecision, Tool Explorer words); open steps in the CRP-343 Plan (legacy retirement, key transition, ELEV rules, diagrams, live T2 tests, 31 conflicts for the operator). Backups in scratch/db-dumps (delete after completion checks).
+- **Next Step**: (1) Operator decides the 31 consistency conflicts (elevation_policy.json violations). (2) CRP-343 remaining steps 7-10, BUG-348 daemon items, then CRP-361. (3) Learned-advice review, then PUSH.
 - **Open Operator Decisions**: CRP-343 caller check A/B; CRP-355 re-stamped legacy ids >= 100; CRP-337 vs CRP-343 consolidation; proposals.db sole store (B, now CRP-358); deferred Gate 2 review guide (D-24).
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:

@@ -79,6 +79,7 @@ How it works:
 
 
 
+- [ ] i want you to report at the end of (typically long) output i get from processing CRP(s) in chats by a line like "crp xxx <done>, status <state, status>"; the line is prefixed with the timestamp (operator addition 2026-11-18; no author for learn entries) (2026-11-18)
 - [ ] When a completion or review is blocked because a related item is in the wrong state, first check whether that item's intent actually blocks the target; if it does, ask the operator (e.g. "do <ID>", ride as WIP, hold). Do not escalate into rule analysis. Implied cohorts contain only items whose state allows review acceptance (verified / in_review). (CRP-350 completion stall, 2026-11-18) (2026-11-18, Claude)
 - [ ] Consider a tool mode that establishes and produces the "calls directly" xref entries (confirmation or creation) for the tool it runs, so the tool-call xref table is built and verified from the tools themselves. (2026-11-17, Rolf, Claude)
 - [ ] Atomizing: an atom is an external, separately started unit (script or, where practical, a Go executable) registered as an intent with its own elevated flag; only minimal-size helpers stay internal functions. Atomizing also allows shared module use: atoms and tools import the same shared modules instead of duplicating internal functions (CRP-343). (2026-11-17, Rolf, Claude)

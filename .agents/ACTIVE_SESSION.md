@@ -12,7 +12,7 @@ Date: 2026-11-17 15:29:34
 
 ## 1. Workspace State
 
-- **Last Updated**: 2026-11-18 15:17:53
+- **Last Updated**: 2026-11-18 18:44:52
 - **Status**: Active (resumed at 2026-11-18 10:14:51; last GoodNight 2026-11-17 20:25:29)
 - **GoodNight Timestamp**: 2026-11-17 20:25:29
 - **Resumption Timestamp**: 2026-11-18 10:14:51
@@ -44,13 +44,13 @@ Date: 2026-11-17 15:29:34
 ### Host: Claude Code
 - **Status**: Active
 - **Session ID**: `66e6ec9b-0e2b-4b2d-946b-f8daaccb253a`
-- **Last Activity**: 2026-11-18 16:17:31
-- **Current Task**: 2026-11-18: completed (local commits, not pushed): BUG-351, BUG-340 (BUG-353 merged), CRP-345, CRP-346, CRP-354 (plus CRP-350 from 2026-11-17). Operator away ~2 h for a full review; prepared to Gate 2 (`in_review`, BC window PID 40376 refreshed): CRP-346 revision (rule texts applied to `.agents/rules` + adapter + hashes), BUG-352 (Tool Explorer Run Selection / Admin filter / ToolHelp, shared BCR exclusion atom, Control Hub completion routes), CRP-355 (major cleanup tool, live report CLEANUP-20261118_161519 waiting for hash confirmation), CRP-359 (bundle files "<Kind> <ID>.md", 18 open bundles renamed). BUG-348 segment 1 done (push dry-run guards, Maintenance button, rule-health junction check, two lifecycle test fixes), segment 2 (Go daemon) waits for the operator.
-- **Next Step**: (1) Operator full review / Gate 2 of CRP-346, BUG-352, CRP-355, CRP-359 (Specifications name what else to read). (2) CRP-355: confirm the manifest hash, then `Invoke-LcmMajorCleanup.ps1 -Apply`. (3) Learned-advice candidates review, then PUSH of the completed items. (4) BUG-348 segment 2 (daemon rebuild/redeploy with the operator present). (5) Then CRP-343 segment 2, CRP-344, BUG-356, CRP-357, CRP-358, CRP-339, CRP-332.
-- **Open Operator Decisions**: lifecycle transition table (module allows 10 transitions the rule table forbids, BUG-348 Walkthrough); CRP-355 re-stamped legacy ids >= 100; CRP-337 vs CRP-343 consolidation; proposals.db sole store (B, now CRP-358); deferred Gate 2 review guide (D-24).
+- **Last Activity**: 2026-11-18 20:04:03
+- **Current Task**: 2026-11-18 evening: operator Gate 2 for prototype testing - completed (local commits, not pushed): CRP-344 (delivered by CRP-343 segment 1), CRP-346 revision, BUG-352, CRP-355 (apply not run), CRP-359, BUG-360 (new; completion aborted on a tracked file under an ignored directory; Gate 2 exception RULE-REV-001 (2), visual review with the next BCR). Earlier today completed: BUG-351, BUG-340, CRP-345, CRP-346, CRP-354 (plus CRP-350). CRP-343 section 9.6 written: tri-state data and border enforcement in one segment. Later: CRP-343 Specification revised after operator disposition "accepted with (massive) changes" (T1-T6, tests section 3, follow-up goals section 4; old sections 4-9 moved to the Implementation Plan "Design considerations"; Walkthrough table aligned). CRP-354 revision 2 (Edit Original CRP removed) at Gate 2.
+- **Next Step**: (1) Operator prototype testing of the completed items. (2) CRP-355: confirm manifest hash, then `Invoke-LcmMajorCleanup.ps1 -Apply`. (3) Learned-advice review, then PUSH. (4) CRP-343 segment 2 (tri-state + border enforcement, section 9.6) together with BUG-348 segment 2: one daemon build/deploy with the operator present; open: caller check A/B. (5) Rule-table alignment to the 10 engine transitions (operator: B, priority 5, slider later) - not yet registered. (6) BUG-356, CRP-357, CRP-358, CRP-339, CRP-332.
+- **Open Operator Decisions**: CRP-343 caller check A/B; CRP-355 re-stamped legacy ids >= 100; CRP-337 vs CRP-343 consolidation; proposals.db sole store (B, now CRP-358); deferred Gate 2 review guide (D-24).
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
-  - Rule files changed today (CRP-346 revision, CRP-359): commit needs ADMINMODE; Claude adapter hashes updated in `translation/CANONICAL_HASHES.md`.
+  - Root commit d49cb27 carries the CRP-355 rollup change under the CRP-346 message (root `docs` junction to `LCM_AI\docs`, both repos track the file). BUG-360 visual review pending (exception).
   - Pre-existing test failures (unchanged by today's work): 5 cases in `ControlHubSafety.Tests.ps1`, 1 in `ProposalSpecificationState.Tests.ps1`, 1 lifecycle transition case (decision).
   - Bundle purge at push is on hold by decision D-31 (not a defect).
   - The Antigravity block's Next Step holds Claude's text (written during the 2026-11-17 15:29 refresh); to be corrected on operator instruction.

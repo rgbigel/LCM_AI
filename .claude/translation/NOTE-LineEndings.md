@@ -4,7 +4,7 @@ Module: .claude/translation/NOTE-LineEndings.md
 Purpose: Impact note for revising the LCM line-ending policy (CRLF today) towards LF; facts measured on disk, options, affected rules and tools, recommendation. Input for a later CRP.  
 Path: LCM_AI/.claude/translation/NOTE-LineEndings.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-16 16:23:20
 

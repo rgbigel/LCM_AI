@@ -4,7 +4,7 @@ Module: .claude/translation/COVERAGE.md
 Purpose: Coverage table mapping every source rule file and rule group in .agents/rules to its Claude adapter file, mechanism and enforcement level.  
 Path: LCM_AI/.claude/translation/COVERAGE.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-14 19:14:51
 

@@ -11,7 +11,7 @@ Purpose: Claude adapter projection of POWERSHELL-RULES (compact key list complem
 Path: LCM_AI/.claude/rules/lang/PowerShellRules.md  
 Source: .agents/rules/PowerShellRules.md v10.2.2 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-365 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.5
+Version: 10.6.5  
 Status: Draft  
 Date: 2026-11-19 11:44:09
 

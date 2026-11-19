@@ -5,7 +5,7 @@ Purpose: Claude adapter projection of RuleAuthority (single source of truth, mul
 Path: LCM_AI/.claude/rules/process/RuleAuthority.md  
 Source: .agents/rules/RuleAuthority.md v10.3.0 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-14 22:29:19
 

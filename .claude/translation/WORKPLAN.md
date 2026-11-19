@@ -4,7 +4,7 @@ Module: .claude/translation/WORKPLAN.md
 Purpose: Durable record of the agreed task, layout, operator decisions and open questions for the Claude adaptation of the LCM rules; read at the start of every Claude session.  
 Path: LCM_AI/.claude/translation/WORKPLAN.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-17 15:40:19
 

@@ -5,7 +5,7 @@ Purpose: Claude adapter projection of ProposalReviewFlowPolicy (proposal-first i
 Path: LCM_AI/.claude/rules/process/ProposalReviewFlowPolicy.md  
 Source: .agents/rules/ProposalReviewFlowPolicy.md v10.3.5 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-342 + CRP-350 + CRP-346 + CRP-359 + BUG-365 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.6
+Version: 10.6.6  
 Status: Draft  
 Date: 2026-11-19 11:44:09
 

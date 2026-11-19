@@ -5,7 +5,7 @@ Purpose: Claude adapter projection of INVARIANT-RULES (interaction, verification
 Path: LCM_AI/.claude/rules/quality/InvariantRules.md  
 Source: .agents/rules/InvariantRules.md v10.3.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-365 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.5
+Version: 10.6.5  
 Status: Draft  
 Date: 2026-11-19 11:44:09
 

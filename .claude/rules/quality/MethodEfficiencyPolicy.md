@@ -5,7 +5,7 @@ Purpose: Claude adapter projection of MethodEfficiencyPolicy (mechanical artifac
 Path: LCM_AI/.claude/rules/quality/MethodEfficiencyPolicy.md  
 Source: .agents/rules/MethodEfficiencyPolicy.md v10.2.2 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-349 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-17 15:05:31
 

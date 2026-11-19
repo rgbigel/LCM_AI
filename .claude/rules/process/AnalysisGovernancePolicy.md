@@ -5,7 +5,7 @@ Purpose: Claude adapter projection of AnalysisGovernancePolicy (Check 0, read-on
 Path: LCM_AI/.claude/rules/process/AnalysisGovernancePolicy.md  
 Source: .agents/rules/AnalysisGovernancePolicy.md v10.2.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-14 22:29:19
 

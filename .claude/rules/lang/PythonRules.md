@@ -9,7 +9,7 @@ Purpose: Claude adapter projection of PYTHON-RULES (RULE-PY-001..010, linter gat
 Path: LCM_AI/.claude/rules/lang/PythonRules.md  
 Source: .agents/rules/PythonRules.md v10.2.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + CRP-366 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.5
+Version: 10.6.5  
 Status: Draft  
 Date: 2026-11-19 12:01:29
 

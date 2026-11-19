@@ -4,7 +4,7 @@ Module: .claude/books/How-I-Understand-LCM-Inventory.md
 Purpose: Book 2 - Claude's reading of the LCM_Inventory documentation (the machine room of LCM), in the same order and with the same yardstick as Book 1; findings written as the plot.  
 Path: LCM_AI/.claude/books/How-I-Understand-LCM-Inventory.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft (Book 2 complete, documentation only)  
 Date: 2026-11-15 17:47:30
 

@@ -9,7 +9,7 @@ Purpose: Claude adapter projection of LCM-RULE-GO-001 (Go header block and gener
 Path: LCM_AI/.claude/rules/lang/GoRules.md  
 Source: .agents/rules/GoRules.md v10.3.0 (LCM-RULE-GO-001) @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-14 22:07:25
 

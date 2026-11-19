@@ -4,7 +4,7 @@ Module: .claude/translation/FINDINGS.md
 Purpose: Register of incomplete, unclear, contradictory or host-specific LCM rules found while mapping .agents/rules to the Claude adapter; numbered, quotable, each with a proposed resolution and current status.  
 Path: LCM_AI/.claude/translation/FINDINGS.md  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-14 22:29:32
 

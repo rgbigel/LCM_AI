@@ -10,20 +10,20 @@ globs: "*.ps1, *.psm1, *.psd1"
 <!-- ===================================================================== -->
 # File: PowerShellRules.md
 
-Module: PowerShellRules
-Purpose: Authoritative rules for PowerShell script generation and normalization.
-Path: .agents/rules/PowerShellRules.md
-Authors: Rolf
-Version: 10.2.2
-Status: Authoritative Invariant Rule
-Date: 2026-11-19 11:44:09
-Changelog:
-- 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.
-- 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.
-- 2026-10-13: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
-- 2026-10-13: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
-- 2026-10-13: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
-- 2026-10-13: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
+Module: PowerShellRules  
+Purpose: Authoritative rules for PowerShell script generation and normalization.  
+Path: .agents/rules/PowerShellRules.md  
+Authors: Rolf  
+Version: 10.2.2  
+Status: Authoritative Invariant Rule  
+Date: 2026-11-19 11:44:09  
+Changelog:  
+- 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.  
+- 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.  
+- 2026-10-13: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.  
+- 2026-10-13: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.  
+- 2026-10-13: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.  
+- 2026-10-13: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.  
 - 2026-10-13: Split unified rule file; clarified ASCII constraints; stabilized PS rules.
 
 POWERSHELL-RULES

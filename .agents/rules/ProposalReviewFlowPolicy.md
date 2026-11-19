@@ -9,7 +9,7 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.5
+Version: 10.3.5  
 Status: Authoritative Policy  
 Date: 2026-11-19 11:44:09
 

@@ -9,7 +9,7 @@ Module: GoRules
 Purpose: Automated AI agent governance directive and strict coding constraints for Go source code generation and refactoring.  
 Path: .agents/rules/GoRules.md  
 Authors: Rolf, LCM_AI  
-Version: 10.3.0
+Version: 10.3.0  
 Status: Authoritative Invariant Rule  
 Date: 2026-11-14 22:00:00
 

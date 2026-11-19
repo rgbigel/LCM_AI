@@ -5,12 +5,12 @@ globs: "*"
 ---
 # File: DecisionCascadeGovernancePolicy.md
 
-Module: DecisionCascadeGovernancePolicy
-Purpose: Authoritative governance policy for System-1/System-2 Decision Cascade, Sub-85% Low-Confidence Triage, Standalone Gate 2A Documentation Checkpoint, and Pre-Push Clean State switch reset.
-Path: .agents/rules/DecisionCascadeGovernancePolicy.md
-Authors: Rolf, LCM_AI Engine
-Version: 10.2.1
-Status: Authoritative Invariant Rule
+Module: DecisionCascadeGovernancePolicy  
+Purpose: Authoritative governance policy for System-1/System-2 Decision Cascade, Sub-85% Low-Confidence Triage, Standalone Gate 2A Documentation Checkpoint, and Pre-Push Clean State switch reset.  
+Path: .agents/rules/DecisionCascadeGovernancePolicy.md  
+Authors: Rolf, LCM_AI Engine  
+Version: 10.2.1  
+Status: Authoritative Invariant Rule  
 Date: 2026-11-14 21:40:00
 
 ---

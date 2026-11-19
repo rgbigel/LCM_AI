@@ -9,7 +9,7 @@ Module: RuleAuthority
 Purpose: Defines canonical rule authority, governance hierarchy, multi-host adapter standards, and mandatory cross-reference synchronization across the workspace.  
 Path: .agents/rules/RuleAuthority.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0
+Version: 10.3.0  
 Status: Authoritative Policy  
 Date: 2026-11-14 22:25:00
 

@@ -5,7 +5,7 @@ Purpose: Claude adapter projection of RepositoryContextPolicy (scope resolution,
 Path: LCM_AI/.claude/rules/process/RepositoryContextPolicy.md  
 Source: .agents/rules/RepositoryContextPolicy.md v10.3.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + CRP-350 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.4  
 Status: Draft  
 Date: 2026-11-17 15:40:19
 

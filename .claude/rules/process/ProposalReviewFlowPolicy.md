@@ -3,11 +3,11 @@
 Module: .claude/rules/process/ProposalReviewFlowPolicy.md  
 Purpose: Claude adapter projection of ProposalReviewFlowPolicy (proposal-first intake, lifecycle, gates, switches, bundles, commands, scope fences, session protocol).  
 Path: LCM_AI/.claude/rules/process/ProposalReviewFlowPolicy.md  
-Source: .agents/rules/ProposalReviewFlowPolicy.md v10.3.4 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-342 + CRP-350 + CRP-346 + CRP-359 (uncommitted)  
+Source: .agents/rules/ProposalReviewFlowPolicy.md v10.3.5 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-342 + CRP-350 + CRP-346 + CRP-359 + BUG-365 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.5
+Version: 10.6.6
 Status: Draft  
-Date: 2026-11-18 22:29:49
+Date: 2026-11-19 11:44:09
 
 ---
 
@@ -52,7 +52,7 @@ Date: 2026-11-18 22:29:49
 - **RULE-LCM-020** Bundles live in the working tree until push; on push record `commit_sha` and `github_url`, then purge the bundle directory; retrieval: Mode 1 disk, Mode 2 `git show <sha>:<path>`, Mode 3 legacy flat paths.
 - **RULE-LCM-021** Any tool/trampoline/alias/parameter change MUST update `macro-definitions.md` in the same increment; no obsolete primaries. Antigravity bare-word syntax is primary there; `@` is an alias. [Claude] Bare words are typed as chat text; slash-command skills are a candidate (COVERAGE).
 - **RULE-LCM-022** One comprehensive edit per file per turn; no back-to-back edits to the same file without review; do not re-modify a file with an unreviewed pending diff; keep `files.autoSave` off. [Claude] Use one `Edit`/`Write` per file per turn where possible; Claude cannot see editor review state (FINDINGS F-31).
-- **RULE-LCM-023** `-MinimalTests` = single cycle of fast hygiene checks (AST, py_compile, UTF-8/CRLF, English), auto-resets to full; record `state: completed` with `test_scope: minimal` in `proposals.db`, log in `cm_activity.log` and the review receipt.
+- **RULE-LCM-023** `-MinimalTests` = single cycle of fast hygiene checks (AST, py_compile, UTF-8/line endings, English), auto-resets to full; record `state: completed` with `test_scope: minimal` in `proposals.db`, log in `cm_activity.log` and the review receipt.
 - **RULE-LCM-024** Before `verified`, Gate 2 or handoff: validate every changed file per INVARIANT-RULES mandatory-pre-handoff-syntax-gate and run relevant unit tests; no readiness claim from visual inspection.
 - **RULE-LCM-025** Bundles are temporary specifications absorbed into baseline docs on push; further work reopens the same ID at `suggested`; a semantic spec change restarts affected CRPs at `suggested`, review/testing only the delta; ShowCM exposes state-appropriate actions.
 - **RULE-LCM-026** Control Hub actions target exactly one explicit `CRP`, `COH` or `workspace`; cohort actions evaluate all members before mutation, all-or-nothing; one open cohort; FIX group keeps `-Force`/`-Immediately` distinct; UI parity incl. `Complete ITEM`.

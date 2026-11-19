@@ -3,11 +3,11 @@
 Module: .claude/rules/quality/InvariantRules.md  
 Purpose: Claude adapter projection of INVARIANT-RULES (interaction, verification, encoding, formatting, timestamps, versioning).  
 Path: LCM_AI/.claude/rules/quality/InvariantRules.md  
-Source: .agents/rules/InvariantRules.md v10.3.0 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted)  
+Source: .agents/rules/InvariantRules.md v10.3.1 @ LCM_AI 2bebbaa + CRP-331 Batch 1-3 + BUG-365 (uncommitted)  
 Authors: Rolf, Claude (Anthropic)  
-Version: 10.6.4
+Version: 10.6.5
 Status: Draft  
-Date: 2026-11-14 22:07:25
+Date: 2026-11-19 11:44:09
 
 ---
 
@@ -30,7 +30,7 @@ Date: 2026-11-14 22:07:25
 - **no-non-ascii-identifiers** Identifiers, variables, functions, file names ASCII-only.
 - **constant-string-apostrophes** Constant strings in single ASCII apostrophes.
 - **indent-2** 2 spaces, no tabs, by default; language rule files take precedence (Go: tabs via `gofmt`, GO-2.5; Python: 4 spaces, RULE-PY-009).
-- **newline-crlf** Windows-native text files end with CRLF; excluded: binary files and `*.sh`. [Claude] Write emits LF: normalize to CRLF after every Write and verify.
+- **newline-lf** Text files end with LF; CRLF only for `*.cmd`, `*.bat`, ANSI `*.reg`, VBA exports (`*.bas`, `*.cls`, `*.frm`); excluded: binary/UTF-16 files, live logs, vendor-signed scripts; policy source `LCM_Inventory/tools/Repair-LcmLineEndings.py` (BUG-365). [Claude] The PostToolUse hook `.claude/hooks/invoke_claude_eol_hook.py` applies it after every Write/Edit.
 - **utf8-without-bom** All text and code files UTF-8 without BOM.
 - **comment-preservation** Comments and docs are first-class; never silently deleted by refactoring, formatting or repair; correcting is allowed; JSON comment properties survive serialization.
 - **no-backtick-line-continuations** Use splatting, pipelines or parentheses.

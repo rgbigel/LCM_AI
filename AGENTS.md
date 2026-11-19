@@ -34,7 +34,7 @@ The following rules govern all code generation, refactoring, and agent behaviors
 
 1. **PowerShell Core Standards**:
    - Use `pwsh` as the primary shell.
-   - Text files must use **UTF-8 without BOM** with **CRLF** line endings.
+   - Text files must use **UTF-8 without BOM** with **LF** line endings (CRLF only for `*.cmd`, `*.bat`, ANSI `*.reg`, VBA exports; BUG-365).
    - Always assign `$_` to an explicit local variable before use in pipeline scriptblocks.
    - Advanced functions must include `[CmdletBinding()]` and explicit parameter blocks.
 

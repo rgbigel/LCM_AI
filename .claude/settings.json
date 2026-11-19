@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "pwsh -NoProfile -File \"D:\\Git_Repositories\\.claude\\hooks\\Invoke-ClaudeCrlfHook.ps1\""
+            "command": "D:\\Tools\\Python314\\python.exe -I \"D:\\Git_Repositories\\.claude\\hooks\\invoke_claude_eol_hook.py\""
           }
         ]
       }

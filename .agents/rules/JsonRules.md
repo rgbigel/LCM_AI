@@ -9,9 +9,9 @@ Module: JsonRules
 Purpose: Authoritative rules for JSON normalization, schema referencing, encoding, and indentation.  
 Path: .agents/rules/JsonRules.md  
 Authors: Rolf  
-Version: 10.2.0
+Version: 10.2.1
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-19 11:44:09
 
 ---
 
@@ -20,7 +20,7 @@ Date: 2026-11-14 21:40:00
 ### JSON-RULES
 - **utf8-without-bom**: All JSON files must be encoded as UTF-8 without BOM.
 - **indent-2**: JSON files must use clean 2-space indentation (e.g. `ConvertTo-Json -Depth 5`).
-- **newline-crlf**: All JSON files must end with CRLF line endings.
+- **newline-lf**: JSON files end with LF (INVARIANT-RULES newline-lf, BUG-365).
 - **schema-declaration**: JSON data files should include a `$schema` property referencing a valid draft schema when applicable.
 - **ascii-default**: ASCII recommended for keys and identifiers; UTF-8 strings permitted for localized values.
 - **deterministic-output**: Predictable, key-ordered serialization (`[ordered]@{ ... }`).

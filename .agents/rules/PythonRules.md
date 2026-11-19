@@ -9,9 +9,9 @@ Module: PythonRules
 Purpose: Authoritative rule definitions for Python code quality, import ordering, string formatting, and linter compliance.  
 Path: .agents/rules/PythonRules.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.2.0
+Version: 10.2.1
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-19 12:01:29
 
 ---
 
@@ -31,6 +31,7 @@ Date: 2026-11-14 21:40:00
   3. **No Embedded Backtick Ambiguity**: When constructing dynamic paths or strings in generated JavaScript, use standard JavaScript string concatenation (`tabName + '_suffix.html'`) rather than backtick template literals (` `${tabName}_...` `) to avoid escape-stripping defects across string generation pipelines.
   4. **Ahead-of-Occurrence Verification**: Python scripts that generate web artifacts (HTML, JS, JSON) must perform pre-emission syntax validation (e.g. `json.loads()` on JSON payloads, or verifying no unexpanded Python expressions `{...}` remain in the emitted text).
 - **python-indentation-standard** (`RULE-PY-009`): All Python source files MUST use 4 spaces per indentation level in accordance with PEP 8. In accordance with the Language Deference Hierarchy (`InvariantRules.md`), this Python language standard takes strict precedence over the workspace-wide 2-space default indentation.
+- **interpreter-registry** (`RULE-PY-010`, CRP-366): The executable that runs LCM Python code comes from the registry table `runtimes` in `LCM_Inventory/data/tools/tools.db` (reader `LCM_Inventory/tools/Get-LcmRuntime.py`; PowerShell callers use `Get-LcmRuntimePath` from `LCM_Inventory/modules/LcmRuntimeAtoms.psm1`; DoT trampolines carry the resolved absolute path, written by `Update-ToolCatalog.ps1`). Never launch through a bare `python`, `py`, `python3` or `pyw` (PATH-, launcher- or Store-alias-dependent). Key `python` is the default for tools, gates and trampolines; `python-venv` only where its packages are needed, named explicitly. Bootstrap exceptions: the registry reader itself may be started by any Python; host hook commands (e.g. `.claude/settings.json`) hold the literal registered path. AI ad-hoc work keeps its logic in `.py` files started as `<runtimes.python> -I <script.py> <args>`: no inline `-c` code and no shell logic around the call.
 
 ---
 

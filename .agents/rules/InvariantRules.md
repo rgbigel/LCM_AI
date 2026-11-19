@@ -9,9 +9,9 @@ Module: InvariantRules
 Purpose: Authoritative invariant rules for workspace behavior, encoding, determinism, language deference, and generation.  
 Path: .agents/rules/InvariantRules.md  
 Authors: Rolf  
-Version: 10.3.0
+Version: 10.3.1
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-19 11:44:09
 
 ---
 
@@ -29,7 +29,7 @@ Date: 2026-11-14 21:40:00
 - **no-non-ascii-identifiers**: Identifiers, variables, function names, and file names must be ASCII-only.
 - **constant-string-apostrophes**: Use single ASCII apostrophes (`'...'`) for constant strings.
 - **indent-2**: Indentation level is exactly 2 spaces (no tabs) by default. **Language Deference**: Generic indentation defaults yield unconditionally to language-specific rule files (e.g. `GoRules.md` mandates hard tabs per `gofmt`; `PythonRules.md` mandates 4 spaces per PEP 8). Any language may define its own authoritative indentation standard in its dedicated rule file.
-- **newline-crlf**: Windows-native text files must end with CRLF. Excluded: binary files and POSIX shell scripts (`*.sh`).
+- **newline-lf**: Text files end with LF. CRLF only for types whose Windows-native consumer mis-parses LF: `*.cmd`, `*.bat`, ANSI `*.reg` and VBA exports (`*.bas`, `*.cls`, `*.frm`). Excluded: binary and UTF-16 files, live logs (`*.log`, `*.jsonl`) and vendor-signed scripts. Policy source: `LCM_Inventory/tools/Repair-LcmLineEndings.py`; enforced by the same table in every repository `.gitattributes`, VS Code `files.eol` and review completion (operator Option B 2026-11-16, BUG-365).
 - **utf8-without-bom**: All text and code files must be saved as UTF-8 without BOM.
 - **structure**: Clear hierarchical markdown sections, bulleted lists, and typed code blocks.
 - **no-assumptions**: State unknown facts rather than guessing; never invent facts or speculate.

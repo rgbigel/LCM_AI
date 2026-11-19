@@ -9,9 +9,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.4
+Version: 10.3.5
 Status: Authoritative Policy  
-Date: 2026-11-18 22:29:49
+Date: 2026-11-19 11:44:09
 
 ---
 
@@ -439,7 +439,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-023: Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant
 1. **Single-Cycle Ephemeral Scope**:
-   - The `-MinimalTests` switch provides a single-cycle execution mode restricting the Test Readiness gate to fast hygiene checks (PowerShell AST parsing, Python compilation, UTF-8/CRLF validation, and English language checks).
+   - The `-MinimalTests` switch provides a single-cycle execution mode restricting the Test Readiness gate to fast hygiene checks (PowerShell AST parsing, Python compilation, UTF-8/line-ending validation, and English language checks).
    - Heavy test cascades (elevated integration suites, Session 0 harnesses, deep subsystem DAGs) are skipped during the single active proposal or declared batch execution.
    - Upon completion of the target item's readiness check, review submission, or turn conclusion, testing scope unconditionally auto-resets to standard full verification (`full`). Minimal testing `MUST NOT` persist as an ambient workspace state.
 2. **Authoritative State Field Representation**:

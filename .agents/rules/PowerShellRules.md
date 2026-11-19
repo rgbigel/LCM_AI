@@ -14,9 +14,9 @@ Module: PowerShellRules
 Purpose: Authoritative rules for PowerShell script generation and normalization.
 Path: .agents/rules/PowerShellRules.md
 Authors: Rolf
-Version: 10.2.1
+Version: 10.2.2
 Status: Authoritative Invariant Rule
-Date: 2026-11-14 21:40:00
+Date: 2026-11-19 11:44:09
 Changelog:
 - 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.
 - 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.
@@ -35,7 +35,7 @@ POWERSHELL-RULES
 - zero-assumption-testing: no tool, script, or proposal may be claimed ready without running either its unit tests or an explicit syntax parse first
 - ascii-default: ASCII required; umlauts allowed in literal strings and comments
 - utf8-without-bom: scripts must be UTF-8 without BOM
-- newline-crlf: scripts must end with CRLF
+- newline-lf: scripts end with LF (INVARIANT-RULES newline-lf, BUG-365)
 - no-backticks: forbidden
 - no-posix-backslash-escapes: backslash (\) is strictly a filesystem path separator, never an escape character; \$ and \" escaping are forbidden
 - null-on-left-in-comparisons: $null MUST always be placed on the left side of equality comparisons ($null -eq $var, $null -ne $var); placing $null on the right ($var -eq $null) is forbidden per RULE-PS-023

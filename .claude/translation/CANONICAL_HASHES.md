@@ -6,12 +6,14 @@ Path: LCM_AI/.claude/translation/CANONICAL_HASHES.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4
 Status: Draft  
-Date: 2026-11-18 22:29:49
+Date: 2026-11-19 12:01:29
 
 ---
 
 Baseline: LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted working tree); content identical to LCM_AI e258f1c (WIP commit 2026-11-15).
 
+- 2026-11-19 12:01:29: PythonRules.md (10.2.1, RULE-PY-010 interpreter registry) re-hashed (CRP-366, operator option B 2026-11-19); adapter line added in the same change set.
+- 2026-11-19 11:45:45: all 21 canonical files re-hashed after the one-time CRLF -> LF conversion (BUG-365, operator 2026-11-19); content changes only in InvariantRules.md (10.3.1, newline-crlf -> newline-lf), JsonRules.md (10.2.1), PowerShellRules.md (10.2.2) and ProposalReviewFlowPolicy.md (10.3.5, MinimalTests wording); adapter lines updated in the same change set.
 - 2026-11-18 22:29:49: ProposalReviewFlowPolicy.md (10.3.4, RULE-LCM-009 / RULE-LCM-011 bundle folders <nnn>_<Kind>-<Slug>) re-hashed (CRP-359 revision 3, operator 2026-11-18); adapter lines updated.
 - 2026-11-18 16:11:02: ProposalReviewFlowPolicy.md (10.3.3, RULE-LCM-009 / RULE-LCM-011 bundle file names carry the item ID) re-hashed (CRP-359, operator 2026-11-18); adapter line updated.
 - 2026-11-18 16:02:48: ProposalReviewFlowPolicy.md (10.3.3, RULE-LCM-002 implied cohort, RULE-LCM-016 multi-repository COMPLETE), ReviewCommitGovernancePolicy.md (10.3.2, RULE-REV-012 window ownership / Full Refresh) and macro-definitions.md (10.3.2, BCR / COMPLETE) re-hashed (CRP-346 revision, operator 2026-11-18); adapter lines updated.
@@ -22,24 +24,24 @@ Baseline: LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted working tree); content
 
 | File | SHA-256 (16) |
 |:---|:---|
-| AnalysisGovernancePolicy.md | 8DFB29AE546AB173 |
-| CMDRules.md | 3D56298EBDEA24D6 |
-| DecisionCascadeGovernancePolicy.md | 5399AB451F3E01FF |
-| DisplayStandardsPolicy.md | AD3FAB77ED95FF9A |
-| DocumentationStandardsPolicy.md | 3399EC0D69823487 |
-| ElevationPolicy.md | DFB5D0060D021B7D |
-| GoalFirstDesignPolicy.md | 57962D994F7A2A38 |
-| GoRules.md | 4C615A00E6A80448 |
-| InvariantRules.md | A253DF80EF9A0D5B |
-| JsonRules.md | C03F3330FFCFB47F |
-| LanguagePolicy.md | 8466F4BA95AB84AA |
-| macro-definitions.md | FE2766E193711B03 |
-| MethodEfficiencyPolicy.md | 27C8B34CFBF3E697 |
-| PowerShellRules.md | 2F23056F652F024C |
-| PowerShellStandardsPolicy.md | 9F6E6DD1DF96AC1C |
-| ProposalReviewFlowPolicy.md | 4B86EA2345F55B19 |
-| PythonRules.md | C14EE91B678EA312 |
-| RepositoryContextPolicy.md | E2EECA66E74F3DE4 |
-| ReviewCommitGovernancePolicy.md | 4768FB9A0A7F9BFE |
-| RuleAuthority.md | 1F4C00CE4DEB20C9 |
-| SubsystemGovernancePolicy.md | 618C0E3B6F6ECC67 |
+| AnalysisGovernancePolicy.md | 878C96A2B0288415 |
+| CMDRules.md | BD5AF92D402E7260 |
+| DecisionCascadeGovernancePolicy.md | C28FB50C4C79A95A |
+| DisplayStandardsPolicy.md | 24882E749C9119E0 |
+| DocumentationStandardsPolicy.md | 384F2190C4A18C40 |
+| ElevationPolicy.md | E5E53A03E949FA3C |
+| GoalFirstDesignPolicy.md | 409783165CD08732 |
+| GoRules.md | 2E2C78109AE78FC4 |
+| InvariantRules.md | FBEE0D8473B71AD7 |
+| JsonRules.md | 5CD7EF7714B3DE8B |
+| LanguagePolicy.md | E930C637A087794E |
+| macro-definitions.md | CBE836EC8B87743A |
+| MethodEfficiencyPolicy.md | 194321B258EF2C6C |
+| PowerShellRules.md | 03F0AF42D5EF8602 |
+| PowerShellStandardsPolicy.md | E7E7CAE86114667D |
+| ProposalReviewFlowPolicy.md | 9A561AC63DA25289 |
+| PythonRules.md | 0B5A0EE4F8F1EB48 |
+| RepositoryContextPolicy.md | 5893A8A24CFB5C22 |
+| ReviewCommitGovernancePolicy.md | 1CDFBA9ED4FA9C74 |
+| RuleAuthority.md | C8DF8FBDB8301634 |
+| SubsystemGovernancePolicy.md | F3DA87C140CCA8A3 |

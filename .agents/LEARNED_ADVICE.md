@@ -92,3 +92,5 @@ How it works:
 
 
 
+
+- [ ] Display option -Pane (IDE pane, 2026-11-19): the -Pane option of the 8 display tools reaches the daemon (/open body "pane": true, sent by Invoke-InteractiveDesktop.ps1, not via do.exe) but no LCM daemon ever evaluated it; displays open in the default browser. Operator: keep -Pane. Antigravity IDE has a built-in browser pane titled "Jetski Preview" (its customized simple-browser extension); it can only be opened from inside the IDE (or by its own agent), not from an outside shell; a VS Code bridge extension with a URI handler (lcm.lcm-pane) was tested in VS Code Insiders and was a dead end. Idea to try: ask the Antigravity agent directly to open http://127.0.0.1:9876/hub in the Jetski pane; if that works, -Pane can be routed there; otherwise the daemon would have to act on "pane" itself. (2026-11-19, Claude)

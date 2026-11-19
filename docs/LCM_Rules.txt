@@ -1,6 +1,6 @@
 ﻿# Lifecycle Model (LCM) Authoritative Governance Framework
 > **Consolidated Master Specification for Gemini AI, Google Drive & Subagents**
-> *Exported on: 2026-11-19 00:01:17 | Host: D5P0-SSD980-Z | Version: 10.0.0*
+> *Exported on: 2026-11-20 00:36:26 | Host: D5P0-SSD980-Z | Version: 10.0.0*
 
 ---
 
@@ -44,7 +44,7 @@ Module: RuleAuthority
 Purpose: Defines canonical rule authority, governance hierarchy, multi-host adapter standards, and mandatory cross-reference synchronization across the workspace.  
 Path: .agents/rules/RuleAuthority.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0
+Version: 10.3.0  
 Status: Authoritative Policy  
 Date: 2026-11-14 22:25:00
 
@@ -109,9 +109,9 @@ Module: InvariantRules
 Purpose: Authoritative invariant rules for workspace behavior, encoding, determinism, language deference, and generation.  
 Path: .agents/rules/InvariantRules.md  
 Authors: Rolf  
-Version: 10.3.0
+Version: 10.3.1  
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-19 11:44:09
 
 ---
 
@@ -129,7 +129,7 @@ Date: 2026-11-14 21:40:00
 - **no-non-ascii-identifiers**: Identifiers, variables, function names, and file names must be ASCII-only.
 - **constant-string-apostrophes**: Use single ASCII apostrophes (`'...'`) for constant strings.
 - **indent-2**: Indentation level is exactly 2 spaces (no tabs) by default. **Language Deference**: Generic indentation defaults yield unconditionally to language-specific rule files (e.g. `GoRules.md` mandates hard tabs per `gofmt`; `PythonRules.md` mandates 4 spaces per PEP 8). Any language may define its own authoritative indentation standard in its dedicated rule file.
-- **newline-crlf**: Windows-native text files must end with CRLF. Excluded: binary files and POSIX shell scripts (`*.sh`).
+- **newline-lf**: Text files end with LF. CRLF only for types whose Windows-native consumer mis-parses LF: `*.cmd`, `*.bat`, ANSI `*.reg` and VBA exports (`*.bas`, `*.cls`, `*.frm`). Excluded: binary and UTF-16 files, live logs (`*.log`, `*.jsonl`) and vendor-signed scripts. Policy source: `LCM_Inventory/tools/Repair-LcmLineEndings.py`; enforced by the same table in every repository `.gitattributes`, VS Code `files.eol` and review completion (operator Option B 2026-11-16, BUG-365).
 - **utf8-without-bom**: All text and code files must be saved as UTF-8 without BOM.
 - **structure**: Clear hierarchical markdown sections, bulleted lists, and typed code blocks.
 - **no-assumptions**: State unknown facts rather than guessing; never invent facts or speculate.
@@ -178,7 +178,7 @@ Module: ElevationPolicy
 Purpose: Defines mandatory elevation, runner delegation, and privilege interception rules across all repositories.  
 Path: .agents/rules/ElevationPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.0
+Version: 10.2.0  
 Status: Authoritative Invariant Rule  
 Date: 2026-11-14 21:40:00
 
@@ -298,7 +298,7 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 10.3.1
+Version: 10.3.1  
 Status: Authoritative Invariant Rule  
 Date: 2026-11-17 15:40:19
 
@@ -361,9 +361,9 @@ Module: ProposalReviewFlowPolicy
 Purpose: Enforces ticket-first proposals, batch commands, Beyond Compare 5 review gates, granularity controls, and LCM_Inventory dual-commit synchronization.  
 Path: .agents/rules/ProposalReviewFlowPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.4
+Version: 10.3.5  
 Status: Authoritative Policy  
-Date: 2026-11-18 22:29:49
+Date: 2026-11-19 11:44:09
 
 ---
 
@@ -791,7 +791,7 @@ The review frequency is governed by `review_granularity` in `LCM_Inventory`:
 
 ### RULE-LCM-023: Minimal Tests Single-Cycle Execution Switch & State Reflection Invariant
 1. **Single-Cycle Ephemeral Scope**:
-   - The `-MinimalTests` switch provides a single-cycle execution mode restricting the Test Readiness gate to fast hygiene checks (PowerShell AST parsing, Python compilation, UTF-8/CRLF validation, and English language checks).
+   - The `-MinimalTests` switch provides a single-cycle execution mode restricting the Test Readiness gate to fast hygiene checks (PowerShell AST parsing, Python compilation, UTF-8/line-ending validation, and English language checks).
    - Heavy test cascades (elevated integration suites, Session 0 harnesses, deep subsystem DAGs) are skipped during the single active proposal or declared batch execution.
    - Upon completion of the target item's readiness check, review submission, or turn conclusion, testing scope unconditionally auto-resets to standard full verification (`full`). Minimal testing `MUST NOT` persist as an ambient workspace state.
 2. **Authoritative State Field Representation**:
@@ -957,7 +957,7 @@ Module: ReviewCommitGovernancePolicy
 Purpose: Defines mandatory review-gated commit rules, review disposition handling, authorized bypass exceptions, audit logging, and single-session directory junction reviews.  
 Path: .agents/rules/ReviewCommitGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.2
+Version: 10.3.2  
 Status: Authoritative Policy  
 Date: 2026-11-18 16:02:15
 
@@ -1102,7 +1102,7 @@ Module: MethodEfficiencyPolicy
 Purpose: Defines auto-acceptance, zero-test-trigger invariants, and method efficiency rules for generated inventory telemetry, logs, DOIT mode execution velocity, and tool discovery.  
 Path: .agents/rules/MethodEfficiencyPolicy.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.2.2
+Version: 10.2.2  
 Status: Authoritative Invariant Rule  
 Date: 2026-11-17 15:05:31
 
@@ -1220,7 +1220,7 @@ Module: PowerShellStandardsPolicy
 Purpose: Defines mandatory PowerShell 7 (pwsh) standards for strict mode resilience, verb compliance, string interpolation, intermediate code execution, and pipeline hygiene.  
 Path: .agents/rules/PowerShellStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0
+Version: 10.3.0  
 Status: Authoritative Policy  
 Date: 2026-11-14 21:40:00
 
@@ -1581,20 +1581,20 @@ In PowerShell equality comparisons (`-eq`, `-ne`), `$null` `MUST ALWAYS` be posi
 
 # File: PowerShellRules.md
 
-Module: PowerShellRules
-Purpose: Authoritative rules for PowerShell script generation and normalization.
-Path: .agents/rules/PowerShellRules.md
-Authors: Rolf
-Version: 10.2.1
-Status: Authoritative Invariant Rule
-Date: 2026-11-14 21:40:00
-Changelog:
-- 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.
-- 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.
-- 2026-10-13: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.
-- 2026-10-13: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.
-- 2026-10-13: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.
-- 2026-10-13: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.
+Module: PowerShellRules  
+Purpose: Authoritative rules for PowerShell script generation and normalization.  
+Path: .agents/rules/PowerShellRules.md  
+Authors: Rolf  
+Version: 10.2.2  
+Status: Authoritative Invariant Rule  
+Date: 2026-11-19 11:44:09  
+Changelog:  
+- 2026-11-06: Added prohibition of implicit confirmation & SupportsShouldProcess over-engineering (RULE-PS-024) mandating bare [CmdletBinding()] and explicit in-code confirmation.  
+- 2026-11-06: Added null-on-left-in-comparisons invariant (RULE-PS-023) enforcing $null on the left side of equality comparisons ($null -eq / $null -ne) per PSScriptAnalyzer PSPossibleIncorrectComparisonWithNull.  
+- 2026-10-13: Added no-posix-backslash-escapes invariant (BUG-264) prohibiting POSIX/Bash-style backslash escaping in PowerShell intermediate commands and scripts.  
+- 2026-10-13: Added mandatory-ast-syntax-gate and zero-assumption-testing invariants to enforce pre-handoff AST validation and prohibit unvalidated completion claims.  
+- 2026-10-13: Added inline-single-quotes invariant and colon-safe-interpolation rule to eliminate host shell pre-expansion and parsing errors.  
+- 2026-10-13: Standardized on PS7 (pwsh) runtime exclusively; parity for intermediate code.  
 - 2026-10-13: Split unified rule file; clarified ASCII constraints; stabilized PS rules.
 
 POWERSHELL-RULES
@@ -1606,7 +1606,7 @@ POWERSHELL-RULES
 - zero-assumption-testing: no tool, script, or proposal may be claimed ready without running either its unit tests or an explicit syntax parse first
 - ascii-default: ASCII required; umlauts allowed in literal strings and comments
 - utf8-without-bom: scripts must be UTF-8 without BOM
-- newline-crlf: scripts must end with CRLF
+- newline-lf: scripts end with LF (INVARIANT-RULES newline-lf, BUG-365)
 - no-backticks: forbidden
 - no-posix-backslash-escapes: backslash (\) is strictly a filesystem path separator, never an escape character; \$ and \" escaping are forbidden
 - null-on-left-in-comparisons: $null MUST always be placed on the left side of equality comparisons ($null -eq $var, $null -ne $var); placing $null on the right ($var -eq $null) is forbidden per RULE-PS-023
@@ -1633,9 +1633,9 @@ Module: PythonRules
 Purpose: Authoritative rule definitions for Python code quality, import ordering, string formatting, and linter compliance.  
 Path: .agents/rules/PythonRules.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.2.0
+Version: 10.2.1  
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-19 12:01:29
 
 ---
 
@@ -1655,6 +1655,7 @@ Date: 2026-11-14 21:40:00
   3. **No Embedded Backtick Ambiguity**: When constructing dynamic paths or strings in generated JavaScript, use standard JavaScript string concatenation (`tabName + '_suffix.html'`) rather than backtick template literals (` `${tabName}_...` `) to avoid escape-stripping defects across string generation pipelines.
   4. **Ahead-of-Occurrence Verification**: Python scripts that generate web artifacts (HTML, JS, JSON) must perform pre-emission syntax validation (e.g. `json.loads()` on JSON payloads, or verifying no unexpanded Python expressions `{...}` remain in the emitted text).
 - **python-indentation-standard** (`RULE-PY-009`): All Python source files MUST use 4 spaces per indentation level in accordance with PEP 8. In accordance with the Language Deference Hierarchy (`InvariantRules.md`), this Python language standard takes strict precedence over the workspace-wide 2-space default indentation.
+- **interpreter-registry** (`RULE-PY-010`, CRP-366): The executable that runs LCM Python code comes from the registry table `runtimes` in `LCM_Inventory/data/tools/tools.db` (reader `LCM_Inventory/tools/Get-LcmRuntime.py`; PowerShell callers use `Get-LcmRuntimePath` from `LCM_Inventory/modules/LcmRuntimeAtoms.psm1`; DoT trampolines carry the resolved absolute path, written by `Update-ToolCatalog.ps1`). Never launch through a bare `python`, `py`, `python3` or `pyw` (PATH-, launcher- or Store-alias-dependent). Key `python` is the default for tools, gates and trampolines; `python-venv` only where its packages are needed, named explicitly. Bootstrap exceptions: the registry reader itself may be started by any Python; host hook commands (e.g. `.claude/settings.json`) hold the literal registered path. AI ad-hoc work keeps its logic in `.py` files started as `<runtimes.python> -I <script.py> <args>`: no inline `-c` code and no shell logic around the call.
 
 ---
 
@@ -1674,7 +1675,7 @@ Module: CMDRules
 Purpose: Authoritative rules for CMD batch generation, echo control, error levels, and normalization.  
 Path: .agents/rules/CMDRules.md  
 Authors: Rolf  
-Version: 10.2.0
+Version: 10.2.0  
 Status: Authoritative Invariant Rule  
 Date: 2026-11-14 21:40:00
 
@@ -1702,9 +1703,9 @@ Module: JsonRules
 Purpose: Authoritative rules for JSON normalization, schema referencing, encoding, and indentation.  
 Path: .agents/rules/JsonRules.md  
 Authors: Rolf  
-Version: 10.2.0
+Version: 10.2.1  
 Status: Authoritative Invariant Rule  
-Date: 2026-11-14 21:40:00
+Date: 2026-11-19 11:44:09
 
 ---
 
@@ -1713,7 +1714,7 @@ Date: 2026-11-14 21:40:00
 ### JSON-RULES
 - **utf8-without-bom**: All JSON files must be encoded as UTF-8 without BOM.
 - **indent-2**: JSON files must use clean 2-space indentation (e.g. `ConvertTo-Json -Depth 5`).
-- **newline-crlf**: All JSON files must end with CRLF line endings.
+- **newline-lf**: JSON files end with LF (INVARIANT-RULES newline-lf, BUG-365).
 - **schema-declaration**: JSON data files should include a `$schema` property referencing a valid draft schema when applicable.
 - **ascii-default**: ASCII recommended for keys and identifiers; UTF-8 strings permitted for localized values.
 - **deterministic-output**: Predictable, key-ordered serialization (`[ordered]@{ ... }`).
@@ -1731,7 +1732,7 @@ Module: DocumentationStandardsPolicy
 Purpose: Defines mandatory tripartite repository documentation standards, audience scoping, and DOX metadata invariants across all governed repositories.  
 Path: .agents/rules/DocumentationStandardsPolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.3.0
+Version: 10.3.0  
 Status: Authoritative Policy  
 Date: 2026-11-14 21:40:00
 
@@ -1921,7 +1922,7 @@ Module: SubsystemGovernancePolicy
 Purpose: Governs disjunct Subsystem repositories (e.g. Home Assistant OS), dedicated subsystem inventories, JIT ephemeral write authentication, host hardware interlocks, and log segregation.  
 Path: .agents/rules/SubsystemGovernancePolicy.md  
 Authors: Rolf, LCM_AI Governance  
-Version: 10.2.0
+Version: 10.2.0  
 Status: Authoritative Policy  
 Date: 2026-11-14 21:40:00
 
@@ -2437,7 +2438,7 @@ All 21 canonical governance policies are organized into three functional tiers u
 
 | Rule File | Rule Identifiers | Domain | Scope | Core Invariant |
 |:---|:---|:---|:---|:---|
-| **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Question Response Invariant, Boundary Ambiguity & Alternatives Invariant, determinism, reproducibility, ASCII default, 2-space indentation, CRLF newlines, UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, Comment & Documentation Preservation Invariant, Universal Header Modification Timestamp Invariant, Single-Commit Version Increment Invariant, and Language Deference Hierarchy (generic formatting yields to language rules). |
+| **[InvariantRules.md](file:///.agents/rules/InvariantRules.md)** | `INVARIANT-RULES` | **Core Formatting & Output** | Workspace-wide | Question Response Invariant, Boundary Ambiguity & Alternatives Invariant, determinism, reproducibility, ASCII default, 2-space indentation, LF newlines (CRLF only for cmd/bat/reg/VBA), UTF-8 without BOM, zero-assumption testing, mandatory pre-handoff syntax/AST validation, Comment & Documentation Preservation Invariant, Universal Header Modification Timestamp Invariant, Single-Commit Version Increment Invariant, and Language Deference Hierarchy (generic formatting yields to language rules). |
 | **[LanguagePolicy.md](file:///.agents/rules/LanguagePolicy.md)** | `LANGUAGE-POLICY`, `RULE-LANG-001` - `005` | **Localization & Naming** | Global Workspace | English-always invariant for code, comments, documentation, filenames, and commit messages. |
 | **[DocumentationStandardsPolicy.md](file:///.agents/rules/DocumentationStandardsPolicy.md)** | `RULE-DOC-001` - `012` | **Documentation Standards** | All `*.md`, `docs/`, `install/` | Tripartite specifications (`Architecture.md`, `Requirements.md`, `Implementation.md`), universal `install/Installation.md` runbook, DOX metadata headers, `M.Y.Z` major parity, $M-2$ retention horizon, App-Centric Modular Architecture (`App: #`) with Constituent Manifests & Contract Governance, Comment & Documentation Preservation Invariant (`RULE-DOC-009`), Mandatory Modification Timestamp Update Invariant (`RULE-DOC-010`), Implementation Choices, Rationale & Caveats Synchronization Invariant (`RULE-DOC-011`), and Data Design Specification Standard (`RULE-DOC-012`). |
 | **[MethodEfficiencyPolicy.md](file:///.agents/rules/MethodEfficiencyPolicy.md)** | `RULE-EFF-001` - `009`, `RULE-ENV-003` | **Method Efficiency** | CM Telemetry & Evidence | Auto-acceptance of mechanical evidence (incl. SQL ledger projections), zero-test cascade on telemetry, bookkeeping never aborts a commit or push (`RULE-EFF-002`), short-circuit on quality gate failures, DOIT autonomous execution velocity, search dispatch routing (`Search-Everything.ps1`/`rg.exe`), tool catalog discovery, zero speculative relative pathing, and Anti-Code-Reading & Direct Goal Execution Invariant (`RULE-EFF-009`). |
@@ -2448,7 +2449,7 @@ All 21 canonical governance policies are organized into three functional tiers u
 |:---|:---|:---|:---|:---|
 | **[PowerShellStandardsPolicy.md](file:///.agents/rules/PowerShellStandardsPolicy.md)** | `RULE-PS-001` - `025` | **PowerShell Standards** | All `*.ps1`, `*.psm1`, `*.psd1` | StrictMode `@(...)` wrapping, Microsoft approved verbs (`Get-Verb`), colon-safe string interpolation, test elevation gating, header metadata & date maintenance, structured logging, `-h` help, interactive desktop dispatch routing, prohibition of bare inline `(if ...)`, `Import-Module -Name`, Smart Inheritance propagation, variable string interpolation & colon boundaries, Mandatory Pre-Handoff AST Syntax Gate (`RULE-PS-021`), Prohibition of POSIX/Bash Backslash Escaping (`RULE-PS-022`), Left-Side Null Equality Comparison Invariant (`RULE-PS-023`), Prohibition of Implicit Confirmation & SupportsShouldProcess (`RULE-PS-024`), and Model-Atom-Controller (MAC) Modular Implementation Invariant (`RULE-PS-025`). |
 | **[PowerShellRules.md](file:///.agents/rules/PowerShellRules.md)** | `POWERSHELL-RULES` | **Scripting Standards** | PowerShell code | StrictMode Latest, `$ErrorActionPreference = 'Stop'`, explicit CmdletBinding. |
-| **[PythonRules.md](file:///.agents/rules/PythonRules.md)** | `RULE-PY-001` - `008` | **Python Standards** | All `*.py` | No redundant f-strings (`F541`), strict import ordering, zero unused imports/variables (`F401`/`F841`), Windows UTF-8 stdout reconfiguration, template/JS interpolation safety, and 4-space indentation deference. |
+| **[PythonRules.md](file:///.agents/rules/PythonRules.md)** | `RULE-PY-001` - `010` | **Python Standards** | All `*.py` | No redundant f-strings (`F541`), strict import ordering, zero unused imports/variables (`F401`/`F841`), Windows UTF-8 stdout reconfiguration, template/JS interpolation safety, and 4-space indentation deference. |
 | **[GoRules.md](file:///.agents/rules/GoRules.md)** | `LCM-RULE-GO-001` | **Go Standards** | All `*.go` | Mandatory file header block, explicit error handling and control flow, resource discipline, memory/slice/type rules, Windows platform rules, and hard tabs deference (`gofmt`). |
 | **[CMDRules.md](file:///.agents/rules/CMDRules.md)** | `CMD-RULES` | **Windows Batch** | `*.cmd`, `*.bat` | Explicit echo control (`@echo off`), errorlevel verification, ASCII character sets. |
 | **[JsonRules.md](file:///.agents/rules/JsonRules.md)** | `JSON-RULES` | **Data Serialization** | `*.json` | UTF-8 without BOM, 2-space indentation, `$schema` references, and comment preservation invariant. |

@@ -12,9 +12,9 @@ Date: 2026-11-17 15:29:34
 
 ## 1. Workspace State
 
-- **Last Updated**: 2026-11-18 23:58:42
-- **Status**: Active (resumed at 2026-11-19 09:05:53; last GoodNight 2026-11-18 23:58:42)
-- **GoodNight Timestamp**: 2026-11-18 23:58:42
+- **Last Updated**: 2026-11-20 00:36:14
+- **Status**: Quiescent (GoodNight completed at 2026-11-20 00:36:14)
+- **GoodNight Timestamp**: 2026-11-20 00:36:14
 - **Resumption Timestamp**: 2026-11-19 09:05:53
 - **LCM Version**: 10.7.4 (`.agents/version.json`)
 - **Active Cohort**: none open (COH-331 pushed 2026-11-17)
@@ -42,14 +42,15 @@ Date: 2026-11-17 15:29:34
 - **Attention Items**: Block refreshed by Claude on operator instruction 2026-11-17 15:29:34 (stale state removed; CRP-350 item 9).
 
 ### Host: Claude Code
-- **Status**: Active
+- **Status**: Closed (2026-11-20 00:36:05)
 - **Session ID**: `5900ab1e-4ea6-46cb-b869-4317142a75ec` (continues `2c4744ca-6d37-46fe-8993-f737b1c54280` on operator instruction 2026-11-19)
-- **Last Activity**: 2026-11-19 17:18:36
-- **Current Task**: Gate 2 pending (BCR launched) for BUG-364 (lifecycle matrix follows the rule table), CRP-361 segments 1-3 (DO-Little: local/daemon route, one log format, /open_editor removed, placement atom Set-LcmWindowZone.py; do.exe 10.2.8 deployed), BUG-368 (Python intents name the registered interpreter). Completed and committed today: BUG-365, CRP-366, BUG-367; BUG-365 renormalization commits in 19 repositories.
-- **Next Step**: (0) Operator Gate 2 for CRP-361, BUG-364, BUG-368, BUG-370, then COMPLETE (carries the staged BUG-365 line-ending sets of the root and LCM_Inventory). (1) After the accepts: BUG-370 hook exit 2 + root-relative hook command (next session, test); CRP-361 segment 4 (async Python failure visibility); CRP-372 normalized rule hashes. (2) CRP-358 JSON stores retired (Gate 0 written 2026-11-19; tables win, JSON never again, delete ASAP), together with CRP-369 (VS Code settings) and then CRP-361 T4 statistics; CRP-363 atoms after. (3) CRP-371 git-root-relative references (rule + 240 files). (4) CRP-373 readiness completeness + Python tests in gate 4. (5) CRP-374 language direction + PowerShell pitfalls. (6) CRP-343 steps 7-10, BUG-348.
-- **Open Operator Decisions**: Gate 2 for BUG-364 / CRP-361 / BUG-368; CRP-361: wire placement into the Notepad++ buttons?; admin level of Set-LcmWindowZone (0 = TBD); LCM baseline release 10.7.5?; CRP-355 re-stamped legacy ids >= 100; CRP-337 vs CRP-343 consolidation; D-24.
+- **Last Activity**: 2026-11-20 00:36:05
+- **Current Task**: Session 2026-11-19/20 closed. Completed and committed: BUG-365, CRP-366, BUG-367, CRP-361 (DO-Little segments 1-3, live-tested by the operator: 9 steps passed), BUG-364, BUG-368, CRP-369, BUG-370, BUG-375, BUG-376. BUG-348 in_progress (items 2, 5 done). Registered: CRP-379 goodies, BUG-380 baddies (B1-B11 from the live test), CRP-381 navigation hierarchy, CRP-382 live display data from SQLite views; CRP-358 decision "eliminate ALL JSON stores" incl. elevation_policy.json.
+- **Next Step**: (1) Operator: CRP-382 driver decision (A Go SQLite driver / B Python helper per request / C resident Python data service); then CRP-358 + CRP-382 as one block. (2) Remaining live test: Tool Explorer "Code editor" (open http://127.0.0.1:9876/tools directly; ShowTools times out, BUG-380 B11). (3) Follow-ups: BUG-370 hook exit 2 + root-relative hook command (test at session start); CRP-361 segment 4; BUG-348 items 1 and 6; BUG-377. (4) Combined-Plan: CRP-372, CRP-374, CRP-371, CRP-373. Note: four restored test lines (operator dispositions F2/F5/F6) fail by design in readiness gate 4.
+- **Open Operator Decisions**: CRP-382 driver; release of BUG-380 baddies for fixing; CRP-381 fundamental displays and Back/Close; CRP-361 Notepad++ auto-placement, Set-LcmWindowZone admin level; LCM baseline release 10.7.5?; CRP-355 re-stamped legacy ids >= 100; CRP-337 vs CRP-343; D-24.
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
+  - -Pane: the flag reaches the daemon (/open body "pane": true, sent directly by Invoke-InteractiveDesktop.ps1, not via do.exe) but no daemon in the git history ever evaluated it; displays open in the default browser. Feasibility test of an IDE-pane bridge (mini extension lcm.lcm-pane with URI handler) failed: the extension never activated, test extension uninstalled. Operator 2026-11-19: keep -Pane (may work in Antigravity IDE).
   - 76 of 187 PowerShell tools/modules still write CRLF (top: Update-ToolCatalog.ps1, ProposalManager.psm1, Sync-LcmCatalogMacros.ps1, Save-AllSessionMemory.ps1); repository content stays LF (text=auto eol=lf, completion-time normalization); fixed when rewritten in Python.
   - Root commit d49cb27 carries the CRP-355 rollup change under the CRP-346 message (root `docs` junction to `LCM_AI\docs`, both repos track the file). BUG-360 visual review pending (exception).
   - Bundle purge at push is on hold by decision D-31 (not a defect).

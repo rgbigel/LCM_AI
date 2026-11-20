@@ -35,7 +35,7 @@ Date: 2026-11-17 15:29:34
 ### Host: Antigravity (Gemini)
 - **Status**: Closed (2026-11-14 22:37:21)
 - **Conversation ID**: `777d3833-90fc-46ed-abe9-3ede0d9320a1`
-- **Last Activity**: 2026-11-14 22:37:21
+- **Last Activity**: 2026-11-20 21:56:45
 - **Current Task**: None. Its last task (CRP-331 Batch 1-3) was completed and pushed with COH-331 on 2026-11-17 by Claude.
 - **Next Step**: Steps to take (operator instruction 2026-11-20, ticket CRP-339, written by Claude on operator instruction): CHECK whether Antigravity offers hook points (session start, after file write) usable for host-neutral LCM hooks; report which exist and how they are configured, in the CRP-339 bundle. Nothing else (no other next step without operator permission; common Next Step per CRP-385).
 - **Open Operator Decisions**: None.
@@ -44,12 +44,13 @@ Date: 2026-11-17 15:29:34
 ### Host: Claude Code
 - **Status**: Active
 - **Session ID**: `e1a5a5a0-fcda-44d7-8465-af1cc64e25b6`
-- **Last Activity**: 2026-11-20 17:33:16
+- **Last Activity**: 2026-11-20 21:02:19
 - **Current Task**: Session 2026-11-20 closed. LCM 10.8.4 released and pushed. Completed and pushed: BUG-380 (B1, B9, B12-B16), BUG-384 (skills invocable, session-title hook, acceptEdits default), BUG-383 (RULE-CTX-005: learned advice never blocks a push; contradictions marked and reported by GoodMorning), BUG-389 (governed repositories outside the core held by default; push bookkeeping), BUG-388 (trampolines without -NoExit). One-time exception: line endings applied everywhere, the five held repositories pushed outside LCM. BUG-377 verified, NOT committed (hooks -B, __pycache__/ ignored in LCM_AI, LCM_Shared, LCM_Supervision, LCM_Tools).
-- **Next Step**: Gate 2 (operator, in the open BC on G:, no relaunch): BUG-348 verified (items 1 -> CRP-358, 4 done by BUG-364, 6 Test-MountedBaselineCurrency) plus the CRP-358 tools step (tools.db only tool store, JSON files deleted; CRP-363 atom tables; CRP-382 T3 for tool displays). Then COMPLETE + repeat the push dry run with commits ahead; next CRP-358 steps strategies.json, proposals.json; CRP-382 data service (decision C).
+- **Next Step**: Operator text review (CRP-358 Spec consolidated storage rules, DataDesign-Tools/-Proposals, CRP-358 Walkthrough); then CRP-358 proposals step implementation (accepted blob-free ledger design, docs/Proposals/_blobs/). Uncommitted: CRP-358 strategies step, data design docs, LCM_Supervision/docs/LCM-Use-Case-Overview.md (first draft, Gate 1 = CDR). PUBLISH of BUG-348 commit waits for the operator.
 - **Open Operator Decisions**: BUG-348 items 1, 4, 6; CRP-363 state; Q3 wording of the verified ground rule (a)-(d); CRP-386 where the guided run lives; CRP-387 language (Python/Go).
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
+  - Use Case Overview (LCM_Supervision/docs, draft 2026-11-20): when finished, rename Gate 1 -> CDR, Gate 2 -> AR in rules, adapters, ledger texts and displays (open item section 5).
   - Efficiency (operator 2026-11-20): agreed instructions run straight through; no repeated tests; no new tickets unless unavoidable; open items must go down.
   - Uncommitted in LCM_AI / LCM_Inventory / LCM_Shared / LCM_Supervision / LCM_Tools: BUG-377 changes (.gitignore, settings.json) and post-push bookkeeping.
   - Baselines: F: = -10-10.mrimgx, G: = -11-11.mrimgx (today, mounted 12:02 for the operator's review).

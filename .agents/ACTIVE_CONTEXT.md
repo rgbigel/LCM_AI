@@ -93,7 +93,7 @@ All rules in [.agents/rules/](file:///d:/Git_Repositories/.agents/rules/) are au
    * `RULE-CTX-002`: Fast-tier ingestion (`data/inventory.json`, `README.md`, proposals) with unonboarded candidate fallback.
    * `RULE-CTX-003`: Zero redundant scan invariant.
    * `RULE-CTX-004`: Continuous methodology triad awareness.
-   * `RULE-CTX-005`: Learned advice; read `ACTIVE_CONTEXT.md` and `LEARNED_ADVICE.md` at session start, accepted entries are binding, `/learn` adds candidates, review no later than push.
+   * `RULE-CTX-005`: Learned advice; read `ACTIVE_CONTEXT.md` and `LEARNED_ADVICE.md` at session start, accepted entries are binding, `/learn` adds candidates, accepted by the contributing host; learned advice never blocks a push (BUG-383).
    * `RULE-CTX-006`: GoodMorning session start, run by the operator or on operator instruction by an AI host (CRP-350); the AI changes only what RULE-LCM-030 (5) allows and reports attention items across all registered hosts.
 
 ---

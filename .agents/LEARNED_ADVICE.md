@@ -11,10 +11,10 @@ How it works:
 - **New advice is always added at the top** of the relevant section (newest first).
 - **Non-Removal Invariant**: Unless an advice entry was actively corrected via a formal proposal (`requires crp-nnn`) and properly codified as an enforceable rule, gate, or reliable contract, it `MUST NOT` be removed. Removal can happen in the middle of a section only when accompanied by explicit CRP documentation.
 - **AI Observance & Non-Ignorance Invariant**: Every insight in this file `MUST` be actively taken up and followed by the AI. If an entry is ever ignored for a specific action, the AI `MUST` provide an explicit comment stating that it is being ignored and providing the concrete reason.
-- `/learn <text>` (operator or AI) adds a **candidate** at the top of the Candidates section. Candidates are visible guidance but not binding.
-- A review accepts, rejects or promotes each candidate. It happens no later than push: publishing is refused while candidates are pending.
+- `/learn <text>` (operator or AI) adds a **candidate** at the top of the Candidates section; the contributing host accepts it right away (`-Accept`). Learned advice is administrative data: it needs no operator review and never blocks a push; a push is maintenance and backup, not a publication (BUG-383).
+- Every accepted change to how learned advice works is reflected here in the same change set. An entry that contradicts an accepted decision or rule is marked `[CONTRADICTS: <source>]` (marking is not removal); GoodMorning reports each marked entry until it is resolved (BUG-383).
 - **Accepted** entries are binding for every AI. Entries marked `[->rule]` are to be moved into the rules.
-- Tool: `LCM_Inventory\tools\Invoke-LearnedAdviceReview.ps1` (list, accept, reject, promote).
+- Tool: `LCM_Inventory\tools\Invoke-LearnedAdviceReview.ps1` (list, accept, reject, promote; `-Check` is informational only).
 
 ## Accepted
 
@@ -75,7 +75,7 @@ How it works:
 
 ### Files
 - **2026-11-10** (Directory Modification Timestamps Exclusively Operator-Controlled): The operator maintains a tool that sets each encompassing folder's LastWriteTime to the maximum timestamp of its constituent files, executed at irregular intervals. Therefore, directory modification timestamps across drive D: are strictly operator-owned. AI and automation MUST NOT use, mutate, or base freshness/ordering decisions on directory modification dates. (operator)
-- Write byte-sensitive files with latin1 or the edit tool and keep CRLF/BOM; a UTF-8 round-trip corrupted a script once. (2026-10-13, Copilot)
+- [CONTRADICTS: InvariantRules newline-lf and utf8-without-bom (BUG-365, 2026-11-19)] Write byte-sensitive files with latin1 or the edit tool and keep CRLF/BOM; a UTF-8 round-trip corrupted a script once. (2026-10-13, Copilot)
 
 ### Versioning
 - A reset to 10.0.0 is a major release and WILL set all constituent versions (every LCM component) to 10.0.0 at once. During a major release run the normal versioning rules (parity, version lead by LCM_AI, no hand edits) stay in place; they are not suspended by the reset. (2026-10-13, operator)

@@ -6,12 +6,13 @@ Path: LCM_AI/.claude/translation/CANONICAL_HASHES.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4  
 Status: Draft  
-Date: 2026-11-19 16:52:29
+Date: 2026-11-20 16:19:09
 
 ---
 
 Baseline: LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted working tree); content identical to LCM_AI e258f1c (WIP commit 2026-11-15).
 
+- 2026-11-20 16:19:09: RepositoryContextPolicy.md (10.3.2, RULE-CTX-005 item 7 no review gate, item 9 reflection and contradictions) re-hashed (BUG-383, operator 2026-11-20); adapter line updated in the same change set.
 - 2026-11-19 16:52:29: 18 canonical files re-hashed: DOX header Markdown line breaks added (formatting only, operator Gate 2 review 2026-11-19); adapters fixed the same way, no re-mapping
 - 2026-11-19 12:01:29: PythonRules.md (10.2.1, RULE-PY-010 interpreter registry) re-hashed (CRP-366, operator option B 2026-11-19); adapter line added in the same change set.
 - 2026-11-19 11:45:45: all 21 canonical files re-hashed after the one-time CRLF -> LF conversion (BUG-365, operator 2026-11-19); content changes only in InvariantRules.md (10.3.1, newline-crlf -> newline-lf), JsonRules.md (10.2.1), PowerShellRules.md (10.2.2) and ProposalReviewFlowPolicy.md (10.3.5, MinimalTests wording); adapter lines updated in the same change set.
@@ -42,7 +43,7 @@ Baseline: LCM_AI 2bebbaa + CRP-331 Batch 1-3 (uncommitted working tree); content
 | PowerShellStandardsPolicy.md | 3378E44422E3B192 |
 | ProposalReviewFlowPolicy.md | 99100811587BDD9A |
 | PythonRules.md | 3E32C3CB2977B924 |
-| RepositoryContextPolicy.md | CC31994E40E7446A |
+| RepositoryContextPolicy.md | 334C043DFD50BBBA |
 | ReviewCommitGovernancePolicy.md | C2C3B9965B246F5B |
 | RuleAuthority.md | D7EC2A3B607A8EEC |
 | SubsystemGovernancePolicy.md | F8E7035D21978D7F |

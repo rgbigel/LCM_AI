@@ -9,9 +9,9 @@ Module: RepositoryContextPolicy
 Purpose: Defines automatic active-document repository detection, fast-tier context priming, candidate fallback, and scan optimization invariants.  
 Path: .agents/rules/RepositoryContextPolicy.md  
 Authors: Rolf, LCM_AI  
-Version: 10.3.1  
+Version: 10.3.2  
 Status: Authoritative Invariant Rule  
-Date: 2026-11-17 15:40:19
+Date: 2026-11-20 16:18:50
 
 ---
 
@@ -49,8 +49,9 @@ The agent `MUST` remain aware of the global LCM triad at all times:
 4. **Non-Removal Invariant**: Unless an advice entry was actively corrected via a formal proposal (`requires crp-nnn`) and properly set into function as an enforceable rule, quality gate, or reliable contract, it `MUST NOT` be removed. Removal can happen in the middle of a section only when accompanied by explicit CRP citation.
 5. **AI Observance & Non-Ignorance Invariant**: The insights in `LEARNED_ADVICE.md` `MUST` be actively taken up and followed by the AI. If an entry is ever ignored for a specific action, the AI `MUST` provide an explicit comment stating that it is being ignored and explaining why.
 6. **Intake Flow**: When the operator writes `/learn <text>` the agent `MUST` add the text as a candidate (`Save-AllSessionMemory.ps1 -Learn "<text>" -Author <AI name>`), without changing anything else. An agent `MAY` also propose a candidate on its own when it learns something durable; it `MUST` tell the operator.
-7. **Review Gate**: Candidates `MUST` be reviewed (`Invoke-LearnedAdviceReview.ps1`: accept, reject, or promote to a rule) no later than publishing. `Invoke-LCM_Push.ps1` refuses to publish while candidates are pending.
+7. **No Review Gate** (BUG-383): Learned advice is administrative data. A candidate is accepted by the contributing host when it is written (`Invoke-LearnedAdviceReview.ps1 -Accept`); it needs no operator review and `MUST NOT` block a push. A push is administrative maintenance and backup, not a publication of the LCM payload.
 8. **Rule Promotion**: Entries marked `[->rule]` are written into the matching rule file, after which the entry is replaced by a reference to that rule.
+9. **Reflection & Contradictions** (BUG-383): Every accepted change to the learned-advice regime `MUST` be reflected in `LEARNED_ADVICE.md` itself (header and affected entries) in the same change set. An entry that contradicts an accepted decision or rule `MUST` be marked `[CONTRADICTS: <source>]` (marking is not removal); `Invoke-LCM_GoodMorning.ps1` reports every marked entry as an attention item until it is resolved.
 
 ### `RULE-CTX-006` (GoodMorning Session Start)
 1. **Day Routine Trigger**: `Invoke-LCM_GoodMorning.ps1` is run by the operator or, on explicit operator instruction, by any sanctioned AI host (`RULE-LCM-030` (6), CRP-350). An AI assistant `MUST NEVER` launch it on its own initiative, nor as an envelope to obtain a baseline or perform multi-repo research.

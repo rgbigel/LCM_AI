@@ -44,10 +44,10 @@ Date: 2026-11-17 15:29:34
 ### Host: Claude Code
 - **Status**: Active
 - **Session ID**: `b005d476-a1c9-4351-9e8f-b54e1ad18824`
-- **Last Activity**: 2026-11-20 15:49:24
-- **Current Task**: Session 2026-11-20 (operator list items 1-9). Done: Antigravity Next Step removed; BUG-384 (skill flag removed, session-title hook) verified; BUG-380 B12 push eligibility implemented (in_progress, Pester 12/12, push dry run 15 repos); CRP-385 (common Next Step at GoodNight) and CRP-386 (formal guided live review) registered suggested; BUG-383 extended (learned advice must reflect accepted changes; push is maintenance, not publish); CRP-381 T3 (browser history per item view); today's image 0BFC8B1DF80AFC5F-@B_D4P3+4-WDB850-AD-11-11.mrimgx mounted on G: (F: keeps -10-10).
-- **Next Step**: Operator live tests 1-6 (BUG-384, BUG-380), then COMPLETE BUG-384 + BUG-380, PUSH 10.8.4, audit; then BUG-383 DOIT. Announced: Antigravity block Next Step set to the CRP-339 hook check on operator instruction 2026-11-20.
-- **Open Operator Decisions**: Q3 wording of the verified ground rule (a)-(d) (operator chose B: reword first); CRP-386 open decision (where the guided run lives). Standing: close all open items ASAP, interrupt only at real decision points.
+- **Last Activity**: 2026-11-20 16:23:17
+- **Current Task**: Session 2026-11-20: LCM 10.8.4 released and pushed (16:01): 10 repositories, 12 proposals to pushed (incl. BUG-380, BUG-384); 5 governed repositories held back (not converged). Audit 16:03: GlobalLCMVersion 10.8.4. Registered: CRP-385, CRP-386 (accepted, deferred), CRP-387 (next release), BUG-388 (trampolines -NoExit), BUG-389 (convergence test, prio 7). Post-push bookkeeping in LCM_Inventory uncommitted (inventory, dashboard, catalog, ledger, spec status mirrors).
+- **Next Step**: Gate 2 (operator, BC on G:): BUG-383 + BUG-389 verified; then COMPLETE and PUBLISH again (operator: that state is "clean"); then BUG-388.
+- **Open Operator Decisions**: Gate 2 BUG-383/389; Q3 wording of the verified ground rule; CRP-386 where the guided run lives; CRP-387 language. Standing: close all open items ASAP, interrupt only at real decision points.
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
   - -Pane: the flag reaches the daemon (/open body "pane": true, sent directly by Invoke-InteractiveDesktop.ps1, not via do.exe) but no daemon in the git history ever evaluated it; displays open in the default browser. Feasibility test of an IDE-pane bridge (mini extension lcm.lcm-pane with URI handler) failed: the extension never activated, test extension uninstalled. Operator 2026-11-19: keep -Pane (may work in Antigravity IDE).

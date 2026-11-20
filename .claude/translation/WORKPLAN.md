@@ -6,7 +6,7 @@ Path: LCM_AI/.claude/translation/WORKPLAN.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4  
 Status: Draft  
-Date: 2026-11-20 16:54:52
+Date: 2026-11-20 22:22:14
 
 ---
 
@@ -43,7 +43,7 @@ Check the quality of the LCM_* repositories against the rule set they contain NO
 |:---|:---|
 | D-01 | Root junction `D:\Git_Repositories\.claude` -> `LCM_AI\.claude`. Further junctions: ask first. |
 | D-02 | Git: hide only root items via root `.git/info/exclude` (`/.claude/`, `/CLAUDE.md`). Otherwise ignore git as much as practical; files on disk are the only trusted state. |
-| D-03 | Every produced file: DOX header, `Version:` = current LCM version (`.agents/version.json`, now 10.6.4), `Status: Draft`, CRLF, UTF-8 without BOM (verify after writing). |
+| D-03 | Every produced file: DOX header, `Version:` = current LCM version (`.agents/version.json`), `Status: Draft`, LF (CRLF only `*.cmd`/`*.bat`, D-28 / BUG-365), UTF-8 without BOM (verify after writing). |
 | D-04 | Entry point: root `CLAUDE.md`, decoupled from `AGENTS.md`; rule-set synchronization via a future tool. |
 | D-05 | Rule baseline: LCM_AI commit `2bebbaa` (2026-11-14 18:58:18, LCM 10.6.4) + CRP-331 Batch 1-3 working tree (uncommitted, converged 2026-11-14 22:07); hashes in `translation/CANONICAL_HASHES.md`; previous `43e36b0`. |
 | D-06 | Quality audit runs without LEV (prototype-phase speed-up; rigor matters at publish). |
@@ -63,6 +63,9 @@ Check the quality of the LCM_* repositories against the rule set they contain NO
 | D-22 | (2026-11-14) Change-detection contract: the operator only tells Claude THAT Antigravity has finished (and with what); Claude determines WHAT changed via git from its last recorded baseline (log/diff, plus working-tree status/diff), then reads the changed files (disk is the truth). Not visible via git: git-ignored data (`proposals.db`, `tools.db`), untracked/outside-repo files - reported as "not verifiable via git". Corollary (operator): Antigravity changes `proposals.db` and `tools.db` only after CRP acceptance, at the latest at Gate 2. Claude may dump the databases to `.sql` at any time for comparison (into its scratchpad, never over the tracked dumps). Scope (operator, case A): the corollary covers structural/content changes a CRP brings to the databases; routine lifecycle bookkeeping through the governed tools continues at any time. |
 | D-23 | (2026-11-14) At every convergence Claude writes `translation/CANONICAL_HASHES.md` (SHA-256 per canonical rule file), so uncommitted batches stay distinguishable (git alone cannot separate them). |
 | D-29 | (2026-11-15) Amends D-17: the host that writes a CRP bundle also registers it in the ledger through the governed function (`New-LCM_Proposal` in `ProposalManager.psm1`; the title slug must equal the bundle folder name so the existing `Specification.md` is kept) and announces it in its `ACTIVE_SESSION.md` block. First case: CRP-332 by Claude. If it goes wrong, rewind and let Antigravity register (operator). |
+| D-41 | (2026-11-20) Storage rules (CRP-358): SQLite tables are the only stores; no document/JSON blobs (child tables); text in `.md` / small `.json` files linked both ways (item texts `docs/Proposals/_blobs/<nnn>_<CRP-ID>/<column_name>.md`, other tables `docs/DataDesign-<Domain>/blobs/`; row key CRP-ID + secondary keys + `column_name`); `.sql` only as publish projection (push) and rebuilt at pull; restructuring backups automatic in git-ignored `scratch/db-backups/`, purged by COMPLETE. |
+| D-42 | (2026-11-20) Gate names: Gate 1 = CDR (Critical Design Review), Gate 2 = AR (Acceptance Review); rules renamed when the Use Case Overview concept is finished (LCM_Supervision/docs/LCM-Use-Case-Overview.md). |
+| D-43 | (2026-11-20) Working style: no trivial questions or questions answerable from own data; decide and name in one line; presentation style canonical in the Use Case Overview section 4; wording "columns", never "fields". |
 | D-39 | (2026-11-20) Claude sessions: a SessionStart hook names every new session after its start timestamp; `permissions.defaultMode: acceptEdits` is the LCM default (BUG-384); a first message `goodmorning` is the start check itself, no separate start report (`CLAUDE.md` section 4). |
 | D-40 | (2026-11-20) Working mode: general acceptance to close all open items ASAP; agreed instructions (e.g. "doit X, publish") run straight through; no repeated tests; no new tickets unless unavoidable; live tests offered as a confirmable list with trampoline names; the Next step line restates every open question with its choices. |
 | D-38 | (2026-11-17) Convergence target: while one host works, no open item may be executable only by the other host; the working host takes over everything, incl. the other host's adapter files for accepted CRPs (amends D-17 / D-18 and RULE-LCM-030 (1) via CRP-350 item 9). |

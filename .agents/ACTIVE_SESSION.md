@@ -12,9 +12,9 @@ Date: 2026-11-17 15:29:34
 
 ## 1. Workspace State
 
-- **Last Updated**: 2026-11-20 12:09:40
-- **Status**: Active (resumed at 2026-11-20 16:55:31; last GoodNight 2026-11-20 00:40:55)
-- **GoodNight Timestamp**: 2026-11-20 00:40:55
+- **Last Updated**: 2026-11-20 22:22:24
+- **Status**: Quiescent (GoodNight completed at 2026-11-20 22:22:24)
+- **GoodNight Timestamp**: 2026-11-20 22:22:24
 - **Resumption Timestamp**: 2026-11-20 16:55:31
 - **LCM Version**: 10.7.4 (`.agents/version.json`)
 - **Active Cohort**: none open (COH-331 pushed 2026-11-17)
@@ -35,32 +35,32 @@ Date: 2026-11-17 15:29:34
 ### Host: Antigravity (Gemini)
 - **Status**: Closed (2026-11-14 22:37:21)
 - **Conversation ID**: `777d3833-90fc-46ed-abe9-3ede0d9320a1`
-- **Last Activity**: 2026-11-20 21:56:45
+- **Last Activity**: 2026-11-20 22:17:57
 - **Current Task**: None. Its last task (CRP-331 Batch 1-3) was completed and pushed with COH-331 on 2026-11-17 by Claude.
 - **Next Step**: Steps to take (operator instruction 2026-11-20, ticket CRP-339, written by Claude on operator instruction): CHECK whether Antigravity offers hook points (session start, after file write) usable for host-neutral LCM hooks; report which exist and how they are configured, in the CRP-339 bundle. Nothing else (no other next step without operator permission; common Next Step per CRP-385).
 - **Open Operator Decisions**: None.
 - **Attention Items**: Block refreshed by Claude on operator instruction 2026-11-17 15:29:34 (stale state removed; CRP-350 item 9).
 
 ### Host: Claude Code
-- **Status**: Active
+- **Status**: Closed (2026-11-20 22:22:14)
 - **Session ID**: `e1a5a5a0-fcda-44d7-8465-af1cc64e25b6`
-- **Last Activity**: 2026-11-20 21:02:19
-- **Current Task**: Session 2026-11-20 closed. LCM 10.8.4 released and pushed. Completed and pushed: BUG-380 (B1, B9, B12-B16), BUG-384 (skills invocable, session-title hook, acceptEdits default), BUG-383 (RULE-CTX-005: learned advice never blocks a push; contradictions marked and reported by GoodMorning), BUG-389 (governed repositories outside the core held by default; push bookkeeping), BUG-388 (trampolines without -NoExit). One-time exception: line endings applied everywhere, the five held repositories pushed outside LCM. BUG-377 verified, NOT committed (hooks -B, __pycache__/ ignored in LCM_AI, LCM_Shared, LCM_Supervision, LCM_Tools).
-- **Next Step**: Operator text review (CRP-358 Spec consolidated storage rules, DataDesign-Tools/-Proposals, CRP-358 Walkthrough); then CRP-358 proposals step implementation (accepted blob-free ledger design, docs/Proposals/_blobs/). Uncommitted: CRP-358 strategies step, data design docs, LCM_Supervision/docs/LCM-Use-Case-Overview.md (first draft, Gate 1 = CDR). PUBLISH of BUG-348 commit waits for the operator.
-- **Open Operator Decisions**: BUG-348 items 1, 4, 6; CRP-363 state; Q3 wording of the verified ground rule (a)-(d); CRP-386 where the guided run lives; CRP-387 language (Python/Go).
+- **Last Activity**: 2026-11-20 22:22:14
+- **Current Task**: Session 2026-11-20 (afternoon/evening) closed. BUG-377 pushed; BUG-348 completed (items 1 -> CRP-358, 4 by BUG-364, 6 Test-MountedBaselineCurrency; baseline safety in LCM_Inventory Implementation.md 3.4). CRP-358 AR accepted for: tools step (tools.db only tool store, no blobs, child tables, JSON stores deleted, tools.sql only at push, restore at pull), strategies step (strategies.json retired, hydrate restores strategies.sql, hooks template), restructuring backups (lcm_db_backup.py, purge at COMPLETE), accepted blob-free ledger design with ER diagrams, consolidated storage rules (_blobs/ text root, CRP-ID row key). CRP-363 atom tables built; CRP-382 declared running task (T3 tool displays done); CRP-390 registered (UX uniformity, prio 4; BUG-380 B2-B8 moved from CRP-381). LCM Use Case Overview first draft (LCM_Supervision/docs; Gate 1 = CDR, Gate 2 = AR). Poster LCM-Cheops-Pyramid.pdf in LCM_Inventory/scratch/poster.
+- **Next Step**: CRP-358 proposals step from the accepted design (data/analysis/CRP-358/DataDesign-Proposals-NoBlob-Draft.md sections 4-5): restructuring backup (automatic), new columns and tables, one-time fill incl. _blobs/ texts and the 117 timestamps, export equals proposals.json, then switch ProposalManager.psm1 and the 31 readers, Control Hub, Go daemon reference, BUG-348 item 1 routes; delete proposals.json.
+- **Open Operator Decisions**: Q3 wording of the verified ground rule (a)-(d); CRP-386 where the guided run lives; CRP-390 Gate 0 contract at its CDR; live tests open: ShowToolIntents, ShowTools, ShowCM Maintenance button.
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
   - Use Case Overview (LCM_Supervision/docs, draft 2026-11-20): when finished, rename Gate 1 -> CDR, Gate 2 -> AR in rules, adapters, ledger texts and displays (open item section 5).
-  - Efficiency (operator 2026-11-20): agreed instructions run straight through; no repeated tests; no new tickets unless unavoidable; open items must go down.
-  - Uncommitted in LCM_AI / LCM_Inventory / LCM_Shared / LCM_Supervision / LCM_Tools: BUG-377 changes (.gitignore, settings.json) and post-push bookkeeping.
-  - Baselines: F: = -10-10.mrimgx, G: = -11-11.mrimgx (today, mounted 12:02 for the operator's review).
-  - DO rollback copies in `LCM_Inventory/scratch/` (incl. `do-before-bug380-b13.exe`); do.exe 10.2.9 deployed.
+  - Efficiency (operator 2026-11-20): agreed instructions run straight through; no repeated tests; no new tickets unless unavoidable; no trivial questions; open items must go down.
+  - Stale test: tests/ControlHubSafety.Tests.ps1 expects a template line BUG-380 removed (recorded in CRP-382); ProposalLifecycle can fail in joint Pester runs (ordering, BUG-375 / CRP-373).
+  - Git hooks post-checkout / post-merge call bare `python` (RULE-PY-010), kept as found.
+  - Baselines: F: = -10-10.mrimgx, G: = -11-11.mrimgx (operator BC session on G:).
+  - DO rollback copies in `LCM_Inventory/scratch/` (incl. `do-before-bug380-b13.exe`); CRP-358 backups in `LCM_Inventory/scratch/CRP-358/`.
   - Push banner still reads the stale HKLM MRPushTimeStamp (GoodMorning uses cm_activity.log since BUG-389).
   - -Pane flag unevaluated by the daemon (kept on operator decision 2026-11-19).
   - 76 PowerShell tools still write CRLF in the working tree (Git stores LF).
   - Root commit d49cb27 carries the CRP-355 rollup under the CRP-346 message; BUG-360 visual review pending.
-  - Bundle purge at push on hold (D-31).
-  - `ACTIVE_CONTEXT.md` line 68 (files.eol CRLF) and the CRP-332 note are stale; operator remark 6 (BUG-299) awaits confirmation.
+  - Operator remark 6 (BUG-299) in ACTIVE_CONTEXT awaits confirmation.
   - Never write to LCM INBOX (D-15).
 ---
 

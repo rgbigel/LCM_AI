@@ -75,7 +75,6 @@ How it works:
 
 ### Files
 - **2026-11-10** (Directory Modification Timestamps Exclusively Operator-Controlled): The operator maintains a tool that sets each encompassing folder's LastWriteTime to the maximum timestamp of its constituent files, executed at irregular intervals. Therefore, directory modification timestamps across drive D: are strictly operator-owned. AI and automation MUST NOT use, mutate, or base freshness/ordering decisions on directory modification dates. (operator)
-- [CONTRADICTS: InvariantRules newline-lf and utf8-without-bom (BUG-365, 2026-11-19)] Write byte-sensitive files with latin1 or the edit tool and keep CRLF/BOM; a UTF-8 round-trip corrupted a script once. (2026-10-13, Copilot)
 
 ### Versioning
 - A reset to 10.0.0 is a major release and WILL set all constituent versions (every LCM component) to 10.0.0 at once. During a major release run the normal versioning rules (parity, version lead by LCM_AI, no hand edits) stay in place; they are not suspended by the reset. (2026-10-13, operator)

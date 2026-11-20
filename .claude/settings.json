@@ -9,7 +9,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "D:\\Tools\\Python314\\python.exe -I \"D:\\Git_Repositories\\.claude\\hooks\\invoke_claude_session_title_hook.py\""
+            "command": "D:\\Tools\\Python314\\python.exe -I -B \"D:\\Git_Repositories\\.claude\\hooks\\invoke_claude_session_title_hook.py\""
           }
         ]
       }
@@ -20,7 +20,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "D:\\Tools\\Python314\\python.exe -I \"D:\\Git_Repositories\\.claude\\hooks\\invoke_claude_eol_hook.py\""
+            "command": "D:\\Tools\\Python314\\python.exe -I -B \"D:\\Git_Repositories\\.claude\\hooks\\invoke_claude_eol_hook.py\""
           }
         ]
       }

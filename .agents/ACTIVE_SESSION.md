@@ -13,9 +13,9 @@ Date: 2026-11-17 15:29:34
 ## 1. Workspace State
 
 - **Last Updated**: 2026-11-20 12:09:40
-- **Status**: Active (resumed at 2026-11-20 15:48:48; last GoodNight 2026-11-20 00:40:55)
+- **Status**: Active (resumed at 2026-11-20 16:55:31; last GoodNight 2026-11-20 00:40:55)
 - **GoodNight Timestamp**: 2026-11-20 00:40:55
-- **Resumption Timestamp**: 2026-11-20 15:48:48
+- **Resumption Timestamp**: 2026-11-20 16:55:31
 - **LCM Version**: 10.7.4 (`.agents/version.json`)
 - **Active Cohort**: none open (COH-331 pushed 2026-11-17)
 - **Commits** (git, read 2026-11-17 15:29):
@@ -43,20 +43,23 @@ Date: 2026-11-17 15:29:34
 
 ### Host: Claude Code
 - **Status**: Active
-- **Session ID**: `b005d476-a1c9-4351-9e8f-b54e1ad18824`
-- **Last Activity**: 2026-11-20 16:23:17
-- **Current Task**: Session 2026-11-20: LCM 10.8.4 released and pushed (16:01): 10 repositories, 12 proposals to pushed (incl. BUG-380, BUG-384); 5 governed repositories held back (not converged). Audit 16:03: GlobalLCMVersion 10.8.4. Registered: CRP-385, CRP-386 (accepted, deferred), CRP-387 (next release), BUG-388 (trampolines -NoExit), BUG-389 (convergence test, prio 7). Post-push bookkeeping in LCM_Inventory uncommitted (inventory, dashboard, catalog, ledger, spec status mirrors).
-- **Next Step**: Gate 2 (operator, BC on G:): BUG-383 + BUG-389 verified; then COMPLETE and PUBLISH again (operator: that state is "clean"); then BUG-388.
-- **Open Operator Decisions**: Gate 2 BUG-383/389; Q3 wording of the verified ground rule; CRP-386 where the guided run lives; CRP-387 language. Standing: close all open items ASAP, interrupt only at real decision points.
+- **Session ID**: `e1a5a5a0-fcda-44d7-8465-af1cc64e25b6`
+- **Last Activity**: 2026-11-20 16:56:03
+- **Current Task**: Session 2026-11-20 closed. LCM 10.8.4 released and pushed. Completed and pushed: BUG-380 (B1, B9, B12-B16), BUG-384 (skills invocable, session-title hook, acceptEdits default), BUG-383 (RULE-CTX-005: learned advice never blocks a push; contradictions marked and reported by GoodMorning), BUG-389 (governed repositories outside the core held by default; push bookkeeping), BUG-388 (trampolines without -NoExit). One-time exception: line endings applied everywhere, the five held repositories pushed outside LCM. BUG-377 verified, NOT committed (hooks -B, __pycache__/ ignored in LCM_AI, LCM_Shared, LCM_Supervision, LCM_Tools).
+- **Next Step**: BUG-377 publish (operator), then close BUG-348 by moving its open parts (item 1 -> CRP-382, item 4 -> CRP-387, item 6 accept as limit: operator choices), CRP-363 hold?; aim: open-item count goes down (18 open at close).
+- **Open Operator Decisions**: BUG-377 publish; BUG-348 items 1, 4, 6; CRP-363 state; Q3 wording of the verified ground rule (a)-(d); CRP-386 where the guided run lives; CRP-387 language (Python/Go).
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
-  - -Pane: the flag reaches the daemon (/open body "pane": true, sent directly by Invoke-InteractiveDesktop.ps1, not via do.exe) but no daemon in the git history ever evaluated it; displays open in the default browser. Feasibility test of an IDE-pane bridge (mini extension lcm.lcm-pane with URI handler) failed: the extension never activated, test extension uninstalled. Operator 2026-11-19: keep -Pane (may work in Antigravity IDE).
-  - 76 of 187 PowerShell tools/modules still write CRLF (top: Update-ToolCatalog.ps1, ProposalManager.psm1, Sync-LcmCatalogMacros.ps1, Save-AllSessionMemory.ps1); repository content stays LF (text=auto eol=lf, completion-time normalization); fixed when rewritten in Python.
-  - Root commit d49cb27 carries the CRP-355 rollup change under the CRP-346 message (root `docs` junction to `LCM_AI\docs`, both repos track the file). BUG-360 visual review pending (exception).
-  - Bundle purge at push is on hold by decision D-31 (not a defect).
-  - `ACTIVE_CONTEXT.md` line 68 (files.eol CRLF, Option B pending) and the CRP-332 "pending" note are stale; operator remark item 6 (BUG-299) awaits operator confirmation.
-  - DO rollback copies in `LCM_Inventory/scratch/` (`do-before-crp335.exe`, `do-before-bug347.exe`, `do-before-crp343.exe`); build artifacts in `scratch/` must not be committed.
-  - CRP-363 (suggested, deferred until stabilization): ShowAtoms display after a proper atom data design; ShowToolIntents shows privilege only as ADMIN/USER, no elevation column, no intents -> atoms linkage.
+  - Efficiency (operator 2026-11-20): agreed instructions run straight through; no repeated tests; no new tickets unless unavoidable; open items must go down.
+  - Uncommitted in LCM_AI / LCM_Inventory / LCM_Shared / LCM_Supervision / LCM_Tools: BUG-377 changes (.gitignore, settings.json) and post-push bookkeeping.
+  - Baselines: F: = -10-10.mrimgx, G: = -11-11.mrimgx (today, mounted 12:02 for the operator's review).
+  - DO rollback copies in `LCM_Inventory/scratch/` (incl. `do-before-bug380-b13.exe`); do.exe 10.2.9 deployed.
+  - Push banner still reads the stale HKLM MRPushTimeStamp (GoodMorning uses cm_activity.log since BUG-389).
+  - -Pane flag unevaluated by the daemon (kept on operator decision 2026-11-19).
+  - 76 PowerShell tools still write CRLF in the working tree (Git stores LF).
+  - Root commit d49cb27 carries the CRP-355 rollup under the CRP-346 message; BUG-360 visual review pending.
+  - Bundle purge at push on hold (D-31).
+  - `ACTIVE_CONTEXT.md` line 68 (files.eol CRLF) and the CRP-332 note are stale; operator remark 6 (BUG-299) awaits confirmation.
   - Never write to LCM INBOX (D-15).
 ---
 

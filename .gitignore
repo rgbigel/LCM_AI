@@ -23,3 +23,5 @@ data/readiness/
 .copilot/Atoms/
 
 .copilot/Methods/
+# Python byte-code caches (BUG-377)
+__pycache__/

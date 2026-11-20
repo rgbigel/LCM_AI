@@ -6,7 +6,7 @@ Path: LCM_AI/.claude/translation/WORKPLAN.md
 Authors: Rolf, Claude (Anthropic)  
 Version: 10.6.4  
 Status: Draft  
-Date: 2026-11-17 15:40:19
+Date: 2026-11-20 16:54:52
 
 ---
 
@@ -63,6 +63,8 @@ Check the quality of the LCM_* repositories against the rule set they contain NO
 | D-22 | (2026-11-14) Change-detection contract: the operator only tells Claude THAT Antigravity has finished (and with what); Claude determines WHAT changed via git from its last recorded baseline (log/diff, plus working-tree status/diff), then reads the changed files (disk is the truth). Not visible via git: git-ignored data (`proposals.db`, `tools.db`), untracked/outside-repo files - reported as "not verifiable via git". Corollary (operator): Antigravity changes `proposals.db` and `tools.db` only after CRP acceptance, at the latest at Gate 2. Claude may dump the databases to `.sql` at any time for comparison (into its scratchpad, never over the tracked dumps). Scope (operator, case A): the corollary covers structural/content changes a CRP brings to the databases; routine lifecycle bookkeeping through the governed tools continues at any time. |
 | D-23 | (2026-11-14) At every convergence Claude writes `translation/CANONICAL_HASHES.md` (SHA-256 per canonical rule file), so uncommitted batches stay distinguishable (git alone cannot separate them). |
 | D-29 | (2026-11-15) Amends D-17: the host that writes a CRP bundle also registers it in the ledger through the governed function (`New-LCM_Proposal` in `ProposalManager.psm1`; the title slug must equal the bundle folder name so the existing `Specification.md` is kept) and announces it in its `ACTIVE_SESSION.md` block. First case: CRP-332 by Claude. If it goes wrong, rewind and let Antigravity register (operator). |
+| D-39 | (2026-11-20) Claude sessions: a SessionStart hook names every new session after its start timestamp; `permissions.defaultMode: acceptEdits` is the LCM default (BUG-384); a first message `goodmorning` is the start check itself, no separate start report (`CLAUDE.md` section 4). |
+| D-40 | (2026-11-20) Working mode: general acceptance to close all open items ASAP; agreed instructions (e.g. "doit X, publish") run straight through; no repeated tests; no new tickets unless unavoidable; live tests offered as a confirmable list with trampoline names; the Next step line restates every open question with its choices. |
 | D-38 | (2026-11-17) Convergence target: while one host works, no open item may be executable only by the other host; the working host takes over everything, incl. the other host's adapter files for accepted CRPs (amends D-17 / D-18 and RULE-LCM-030 (1) via CRP-350 item 9). |
 | D-37 | (2026-11-17, option A) The ban on AI-run `Invoke-LCM_GoodMorning.ps1` / `Invoke-LCM_GoodNight.ps1` ends with CRP-350 (Session Continuity Schema Convergence, registered by Claude). Implemented in DOIT 2026-11-17 (RULE-LCM-030 (5)/(6), RULE-CTX-006, skills, D-26 / D-27); binding once CRP-350 passes Gate 2. |
 | D-36 | (2026-11-17) DO security model (CRP-343): the daemon stays elevated (cannot run non-elevated); it launches `elevated = 0` atoms with a non-elevated token and `elevated = 1` atoms elevated; neither may limit operator access to tasks needing operator responses (interactive Session 1). Caller authentication by a secret a web page cannot obtain, never by a self-declared caller field (CRP-309 tokens inadequate). BUG-347 guard (foreign origin 403, non-JSON 415) is the first layer. |

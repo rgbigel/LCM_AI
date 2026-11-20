@@ -1,7 +1,6 @@
 ---
 name: goodmorning
 description: 'Claude''s own session resumption (host good-morning per RULE-LCM-030 (4)-(6) and RULE-CTX-006). Runs Invoke-LCM_GoodMorning.ps1 -Force -NoBaseline on the operator''s /goodmorning, reads the continuity layer, checks the rule baseline, reports gaps and attention items, then waits.'
-disable-model-invocation: true
 ---
 # File: SKILL.md
 

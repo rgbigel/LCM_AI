@@ -1,5 +1,19 @@
 {
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  },
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "D:\\Tools\\Python314\\python.exe -I \"D:\\Git_Repositories\\.claude\\hooks\\invoke_claude_session_title_hook.py\""
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",

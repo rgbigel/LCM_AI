@@ -2,9 +2,9 @@
 
 ModulePath: docs/Requirements.md  
 Authors: Rolf, LCM_AI Engine  
-Version: 10.7.4
+Version: 10.8.4
 Status: Authoritative Requirements  
-Date: 2026-11-17 12:16:27
+Date: 2026-11-20 15:59:45
 
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: goodnight
 description: 'Claude''s own session close (host close per RULE-LCM-030 (5)). Updates only the "Host: Claude Code" block of .agents/ACTIVE_SESSION.md and the Claude WORKPLAN; runs the workspace GoodNight (Invoke-LCM_GoodNight.ps1 [-Push]) only when the operator asks for it.'
-disable-model-invocation: true
 ---
 # File: SKILL.md
 

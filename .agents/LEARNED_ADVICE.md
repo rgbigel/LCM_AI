@@ -21,6 +21,7 @@ How it works:
 - **2026-11-09** (Caller Admin Dependency Disclosure & Anti-Staleness): Whenever a caller tool invokes or relies upon an admin-mode tool, it `MUST` declare that dependency in its `-h` / `-Help` usage reference and header block. Conversely, when no longer needed, the caller `MUST` purge that dependency immediately to avoid stale elevation assumptions (`RULE-ELEV-007`, `RULE-PS-010.3`).
 
 ### Working agreement
+- Operator 2026-11-20: general acceptance to close ALL open items ASAP. The AI arranges the sequence itself, carries out every already-decided part automatically and interrupts the flow only at a decision point that really makes sense (a choice only the operator can make). Decisions that are not visible or understandable to the operator are explained when they come up, not listed in bulk. (2026-11-20, Claude)
 - Display option -Pane (IDE pane, 2026-11-19): the -Pane option of the 8 display tools reaches the daemon (/open body "pane": true, sent by Invoke-InteractiveDesktop.ps1, not via do.exe) but no LCM daemon ever evaluated it; displays open in the default browser. Operator: keep -Pane. Antigravity IDE has a built-in browser pane titled "Jetski Preview" (its customized simple-browser extension); it can only be opened from inside the IDE (or by its own agent), not from an outside shell; a VS Code bridge extension with a URI handler (lcm.lcm-pane) was tested in VS Code Insiders and was a dead end. Idea to try: ask the Antigravity agent directly to open http://127.0.0.1:9876/hub in the Jetski pane; if that works, -Pane can be routed there; otherwise the daemon would have to act on "pane" itself. (2026-11-19, Claude)
 - new rule: another safeguard: when restructuring any table, precede it with a dump so we have a .sql backup before you start. Only after completion checks those dumps may be and should be deleted. Apply this for future crps, not the current run. (2026-11-18, AI)
 - Open items must be specified, not "walked through" (Specification or Implementation Plan, never the Walkthrough). The operator live tests are guided in the chat window rather than mentioned in the Walkthrough, and they are not part of the specs. The Walkthrough documents the (guided) live test results. (2026-11-18, AI)
@@ -80,6 +81,7 @@ How it works:
 - A reset to 10.0.0 is a major release and WILL set all constituent versions (every LCM component) to 10.0.0 at once. During a major release run the normal versioning rules (parity, version lead by LCM_AI, no hand edits) stay in place; they are not suspended by the reset. (2026-10-13, operator)
 
 ## Candidates (pending review)
+
 
 
 

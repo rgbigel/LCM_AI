@@ -44,10 +44,10 @@ Date: 2026-11-17 15:29:34
 ### Host: Claude Code
 - **Status**: Active
 - **Session ID**: `e1a5a5a0-fcda-44d7-8465-af1cc64e25b6`
-- **Last Activity**: 2026-11-20 16:56:03
+- **Last Activity**: 2026-11-20 17:33:16
 - **Current Task**: Session 2026-11-20 closed. LCM 10.8.4 released and pushed. Completed and pushed: BUG-380 (B1, B9, B12-B16), BUG-384 (skills invocable, session-title hook, acceptEdits default), BUG-383 (RULE-CTX-005: learned advice never blocks a push; contradictions marked and reported by GoodMorning), BUG-389 (governed repositories outside the core held by default; push bookkeeping), BUG-388 (trampolines without -NoExit). One-time exception: line endings applied everywhere, the five held repositories pushed outside LCM. BUG-377 verified, NOT committed (hooks -B, __pycache__/ ignored in LCM_AI, LCM_Shared, LCM_Supervision, LCM_Tools).
-- **Next Step**: BUG-377 publish (operator), then close BUG-348 by moving its open parts (item 1 -> CRP-382, item 4 -> CRP-387, item 6 accept as limit: operator choices), CRP-363 hold?; aim: open-item count goes down (18 open at close).
-- **Open Operator Decisions**: BUG-377 publish; BUG-348 items 1, 4, 6; CRP-363 state; Q3 wording of the verified ground rule (a)-(d); CRP-386 where the guided run lives; CRP-387 language (Python/Go).
+- **Next Step**: Gate 2 (operator, in the open BC on G:, no relaunch): BUG-348 verified (items 1 -> CRP-358, 4 done by BUG-364, 6 Test-MountedBaselineCurrency) plus the CRP-358 tools step (tools.db only tool store, JSON files deleted; CRP-363 atom tables; CRP-382 T3 for tool displays). Then COMPLETE + repeat the push dry run with commits ahead; next CRP-358 steps strategies.json, proposals.json; CRP-382 data service (decision C).
+- **Open Operator Decisions**: BUG-348 items 1, 4, 6; CRP-363 state; Q3 wording of the verified ground rule (a)-(d); CRP-386 where the guided run lives; CRP-387 language (Python/Go).
 - **Charter & Decisions**: `LCM_AI/.claude/translation/WORKPLAN.md` (Claude host workplan); commands `/goodmorning`, `/goodnight`, `/sessionlog`.
 - **Attention Items**:
   - Efficiency (operator 2026-11-20): agreed instructions run straight through; no repeated tests; no new tickets unless unavoidable; open items must go down.
